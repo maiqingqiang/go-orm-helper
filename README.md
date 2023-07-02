@@ -2,7 +2,7 @@
 English | [简体中文](./README-zh_CN.md)
 
 <div align="center">
-    <img src="https://github.com/maiqingqiang/go-orm-helper/raw/main/src/main/resources/icons/icon64x64.svg" alt="Go ORM Helper"/>
+    <img src="https://blog.johnmai.top/go-orm-helper/src/main/resources/icons/icon64x64.svg" alt="Go ORM Helper"/>
     <h1 align="center">Go ORM Helper</h1>
 </div>
 
@@ -41,3 +41,9 @@ English | [简体中文](./README-zh_CN.md)
 ![guide.gif](assets%2Fguide.gif)
 
 <!-- Plugin description end -->
+
+## Installation
+
+<a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
+    <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
+</a>

@@ -1,7 +1,7 @@
 [English](./README.md) | 简体中文
 
 <div align="center">
-    <img src="https://github.com/maiqingqiang/go-orm-helper/raw/main/src/main/resources/icons/icon64x64.svg" alt="Go ORM Helper"/>
+    <img src="https://blog.johnmai.top/go-orm-helper/src/main/resources/icons/icon64x64.svg" alt="Go ORM Helper"/>
     <h1 align="center">Go ORM Helper</h1>
 </div>
 
@@ -40,3 +40,9 @@
 ## 使用
 
 ![guide.gif](assets%2Fguide.gif)
+
+## 安装
+
+<a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
+    <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
+</a>
