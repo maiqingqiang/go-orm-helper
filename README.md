@@ -1,7 +1,7 @@
 <!-- Plugin description -->
 
 <div align="center">
-    <img src="./src/main/resources/icons/icon64x64.svg" alt="Go ORM Helper"/>
+    <img src="https://github.com/maiqingqiang/go-orm-helper/raw/main/src/main/resources/icons/icon64x64.svg" alt="Go ORM Helper"/>
     <h1 align="center">Go ORM Helper</h1>
 </div>
 
