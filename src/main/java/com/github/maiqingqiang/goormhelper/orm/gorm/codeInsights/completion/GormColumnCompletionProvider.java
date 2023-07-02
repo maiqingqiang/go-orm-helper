@@ -193,7 +193,6 @@ public class GormColumnCompletionProvider extends CompletionProvider<CompletionP
         for (PsiReference psiReference : GoReferencesSearch.search(goVarDefinition)) {
             GoStatement statement = (GoStatement) PsiTreeUtil.findFirstParent(psiReference.getElement(), element -> element instanceof GoStatement);
             if (statement == null) continue;
-            System.out.println("statement " + statement.getText());
             schema = findSchema(statement);
             if (!schema.isEmpty()) return schema;
 
@@ -225,13 +224,11 @@ public class GormColumnCompletionProvider extends CompletionProvider<CompletionP
         if (!schema.isEmpty()) return schema;
 
         for (GoCallExpr goCallExpr : PsiTreeUtil.findChildrenOfType(statement, GoCallExpr.class)) {
+
             GoCallableDescriptor descriptor = GormTypes.ORM_MODEL_CALLABLES_SET.find(goCallExpr, false);
             if (descriptor == null) continue;
 
             Integer argumentIndex = GormTypes.GORM_MODEL_CALLABLES.get(descriptor);
-
-            System.out.println("argumentIndex " + argumentIndex);
-            System.out.println("getExpressionList " + goCallExpr.getArgumentList().getExpressionList().get(argumentIndex));
 
             GoExpression argument = goCallExpr.getArgumentList().getExpressionList().get(argumentIndex);
 
@@ -240,14 +237,19 @@ public class GormColumnCompletionProvider extends CompletionProvider<CompletionP
                     if (goCompositeLit.getTypeReferenceExpression() == null) continue;
                     schema = goCompositeLit.getTypeReferenceExpression().getIdentifier().getText();
                 } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
-                    GoVarDefinition goVarDefinition = (GoVarDefinition) goReferenceExpression.resolve();
+                    if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
+                        GoType goType = goVarDefinition.getGoType(ResolveState.initial());
+                        if (goType == null || goType.getTypeReferenceExpression() == null) continue;
 
-                    if (goVarDefinition == null) continue;
-
-                    GoType goType = goVarDefinition.getGoType(ResolveState.initial());
-                    if (goType == null || goType.getTypeReferenceExpression() == null) continue;
-
-                    schema = goType.getTypeReferenceExpression().getIdentifier().getText();
+                        schema = goType.getTypeReferenceExpression().getIdentifier().getText();
+                    } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
+                        GoPointerType goPointerType = PsiTreeUtil.findChildOfType(goParamDefinition.getParent(), GoPointerType.class);
+                        GoType goType = PsiTreeUtil.findChildOfType(goPointerType, GoType.class);
+                        if (goType != null) {
+                            if (goType.getTypeReferenceExpression() == null) continue;
+                            schema = goType.getTypeReferenceExpression().getIdentifier().getText();
+                        }
+                    }
                 }
             } else if (argument instanceof GoBuiltinCallExpr goBuiltinCallExpr) {
                 GoType goType = PsiTreeUtil.findChildOfType(goBuiltinCallExpr, GoType.class);

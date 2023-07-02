@@ -242,14 +242,19 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
                     if (goCompositeLit.getTypeReferenceExpression() == null) continue;
                     schema = goCompositeLit.getTypeReferenceExpression().getIdentifier().getText();
                 } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
-                    GoVarDefinition goVarDefinition = (GoVarDefinition) goReferenceExpression.resolve();
+                    if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
+                        GoType goType = goVarDefinition.getGoType(ResolveState.initial());
+                        if (goType == null || goType.getTypeReferenceExpression() == null) continue;
 
-                    if (goVarDefinition == null) continue;
-
-                    GoType goType = goVarDefinition.getGoType(ResolveState.initial());
-                    if (goType == null || goType.getTypeReferenceExpression() == null) continue;
-
-                    schema = goType.getTypeReferenceExpression().getIdentifier().getText();
+                        schema = goType.getTypeReferenceExpression().getIdentifier().getText();
+                    } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
+                        GoPointerType goPointerType = PsiTreeUtil.findChildOfType(goParamDefinition.getParent(), GoPointerType.class);
+                        GoType goType = PsiTreeUtil.findChildOfType(goPointerType, GoType.class);
+                        if (goType != null) {
+                            if (goType.getTypeReferenceExpression() == null) continue;
+                            schema = goType.getTypeReferenceExpression().getIdentifier().getText();
+                        }
+                    }
                 }
             } else if (argument instanceof GoBuiltinCallExpr goBuiltinCallExpr) {
                 GoType goType = PsiTreeUtil.findChildOfType(goBuiltinCallExpr, GoType.class);
