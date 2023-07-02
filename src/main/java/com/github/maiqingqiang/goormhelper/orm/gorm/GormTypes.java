@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface GormTypes {
-    Map<GoCallableDescriptor, Integer> GORM_CALLABLES = Map.ofEntries(
+    Map<GoCallableDescriptor, Integer> CALLABLES = Map.ofEntries(
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Where"), 0),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Select"), -1),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Distinct"), -1),
@@ -41,7 +41,7 @@ public interface GormTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Delete"), 1)
     );
 
-    Map<GoCallableDescriptor, Integer> GORM_MODEL_CALLABLES = Map.ofEntries(
+    Map<GoCallableDescriptor, Integer> SCHEMA_CALLABLES = Map.ofEntries(
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Model"), 0),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).First"), 0),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Find"), 0),
@@ -65,14 +65,14 @@ public interface GormTypes {
    List<String> OPERATOR_EXPR = List.of(
             "%s = ?", "%s <> ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s BETWEEN ? AND ?");
 
-    Map<GoCallableDescriptor, List<String>> GORM_WHERE_EXPR = Map.ofEntries(
+    Map<GoCallableDescriptor, List<String>> QUERY_EXPR = Map.ofEntries(
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Where"), OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Having"), OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Where"), OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Having"), OPERATOR_EXPR)
     );
 
-    GoCallableDescriptorSet ORM_MODEL_CALLABLES_SET = new GoCallableDescriptorSet(GORM_MODEL_CALLABLES.keySet());
+    GoCallableDescriptorSet SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(SCHEMA_CALLABLES.keySet());
 
-    GoCallableDescriptorSet GORM_CALLABLES_SET = new GoCallableDescriptorSet(GORM_CALLABLES.keySet());
+    GoCallableDescriptorSet CALLABLES_SET = new GoCallableDescriptorSet(CALLABLES.keySet());
 }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface XormTypes {
-    Map<GoCallableDescriptor, Integer> XORM_CALLABLES = Map.ofEntries(
+    Map<GoCallableDescriptor, Integer> CALLABLES = Map.ofEntries(
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Engine).Where"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Where"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).And"), 0),
@@ -31,7 +31,7 @@ public interface XormTypes {
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Having"), 0)
     );
 
-    Map<GoCallableDescriptor, Integer> XORM_MODEL_CALLABLES = Map.ofEntries(
+    Map<GoCallableDescriptor, Integer> SCHEMA_CALLABLES = Map.ofEntries(
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Get"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Find"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Count"), 0),
@@ -45,14 +45,14 @@ public interface XormTypes {
     List<String> OPERATOR_EXPR = List.of(
             "%s = ?", "%s <> ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s BETWEEN ? AND ?");
 
-    Map<GoCallableDescriptor, List<String>> XORM_WHERE_EXPR = Map.ofEntries(
+    Map<GoCallableDescriptor, List<String>> QUERY_EXPR = Map.ofEntries(
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Engine).Where"), OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Where"), OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).And"), OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Or"), OPERATOR_EXPR)
     );
 
-    GoCallableDescriptorSet XORM_MODEL_CALLABLES_SET = new GoCallableDescriptorSet(XORM_MODEL_CALLABLES.keySet());
+    GoCallableDescriptorSet SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(SCHEMA_CALLABLES.keySet());
 
-    GoCallableDescriptorSet XORM_CALLABLES_SET = new GoCallableDescriptorSet(XORM_CALLABLES.keySet());
+    GoCallableDescriptorSet CALLABLES_SET = new GoCallableDescriptorSet(CALLABLES.keySet());
 }
