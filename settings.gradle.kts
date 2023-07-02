@@ -1,1 +1,1 @@
-rootProject.name = "go-orm-helper"
+rootProject.name = "Go ORM Helper"
