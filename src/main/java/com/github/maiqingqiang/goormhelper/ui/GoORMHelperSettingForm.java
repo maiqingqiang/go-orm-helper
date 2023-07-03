@@ -6,15 +6,11 @@ import com.github.maiqingqiang.goormhelper.services.GoORMHelperManager;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurableUi;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.TableView;
@@ -22,11 +18,9 @@ import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.ListTableModel;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -84,6 +78,27 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
             }
         });
 
+        decorator.setRemoveAction(button -> {
+            int[] selectedRows = scanPathTableView.getSelectedRows();
+            for (int i = selectedRows.length - 1; i >= 0; i--) {
+                scanPathListTableModel.removeRow(selectedRows[i]);
+            }
+        });
+
+        decorator.setMoveDownAction(button -> {
+            int[] selectedRows = scanPathTableView.getSelectedRows();
+            for (int selectedRow : selectedRows) {
+                scanPathListTableModel.exchangeRows(selectedRow, selectedRow + 1);
+            }
+        });
+
+        decorator.setMoveUpAction(button -> {
+            int[] selectedRows = scanPathTableView.getSelectedRows();
+            for (int selectedRow : selectedRows) {
+                scanPathListTableModel.exchangeRows(selectedRow, selectedRow - 1);
+            }
+        });
+
         JPanel scanPathPanel = decorator.createPanel();
 
         UIUtil.addBorder(scanPathPanel, IdeBorderFactory.createTitledBorder(GoORMHelperBundle.message("setting.decorator.title"), false));
@@ -103,7 +118,7 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         databaseComboBox.setSelectedItem(state.defaultDatabase);
 //        sqlPathTextField.setText(state.sqlPath);
         enableGlobalScanCheckBox.setSelected(state.enableGlobalScan);
-        scanPathListTableModel.setItems(state.scanPathList);
+        scanPathListTableModel.setItems(new ArrayList<>(state.scanPathList));
         scanPathTableView.setEnabled(!state.enableGlobalScan);
     }
 
@@ -116,12 +131,11 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
                 && databaseComboBox.getSelectedItem() == state.defaultDatabase
 //                && sqlPathTextField.getText().equals(state.sqlPath)
                 && enableGlobalScanCheckBox.isSelected() == state.enableGlobalScan
-                && scanPathListTableModel.getItems().equals(state.scanPathList));
+                && scanPathTableView.getItems().equals(state.scanPathList));
     }
 
     @Override
     public void apply(@NotNull GoORMHelperProjectSettings settings) {
-
         boolean oldEnableGlobalScan = Objects.requireNonNull(settings.getState()).enableGlobalScan;
         List<String> oldscanPathList = scanPathListTableModel.getItems();
 

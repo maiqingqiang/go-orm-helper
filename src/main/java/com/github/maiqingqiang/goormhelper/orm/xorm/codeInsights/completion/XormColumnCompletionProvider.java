@@ -137,7 +137,7 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
                 }
                 case ')' -> {
                     inBigQuote = false;
-                    if (!inQuote) {
+                    if (!inQuote && curTag != null) {
                         curTag.getParams().add(tagStr.substring(paramStart, i));
                     }
                 }
