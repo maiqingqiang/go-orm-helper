@@ -43,6 +43,8 @@
 
 ## 安装
 
+> 插件正在审核中，暂时不支持在线安装
+
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
 </a>

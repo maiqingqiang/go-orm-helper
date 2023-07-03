@@ -44,6 +44,8 @@
 
 ## インストール
 
+> プラグインは現在審査中で、オンラインインストールは一時的に利用できません。
+
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
 </a>

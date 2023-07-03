@@ -43,6 +43,8 @@ English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [
 
 ## Installation
 
+> The plugin is currently under review and online installation is temporarily unavailable.
+
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
 </a>
