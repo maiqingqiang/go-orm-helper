@@ -1,9 +1,8 @@
 [versions]
 # libraries
 annotations = "24.0.1"
-snakeyaml = "2.0"
 lombok = "1.18.28"
-guava = "32.0.1-jre"
+guava = "32.1.1-jre"
 druid = "1.2.18"
 jsqlparser = "4.6"
 
@@ -18,7 +17,6 @@ kover = "0.7.1"
 
 [libraries]
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
-snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 druid = { group = "com.alibaba", name = "druid", version.ref = "druid" }

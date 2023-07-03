@@ -24,7 +24,6 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
 //    implementation(libs.annotations)
-    implementation(libs.snakeyaml)
     implementation(libs.guava)
     implementation(libs.druid)
     implementation(libs.jsqlparser)
