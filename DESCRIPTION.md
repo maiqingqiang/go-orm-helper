@@ -34,7 +34,9 @@
     <li>More packages waiting to be discovered and improved...</li>
 </ul>
 
+<br/>
 <hr/>
+<br/>
 
 <p><b>基于 JetBrains IDE 的 Go ORM 助手插件。</b></p>
 <br/>
@@ -71,7 +73,9 @@
     <li>更多等你去发现与改进...</li>
 </ul>
 
+<br/>
 <hr/>
+<br/>
 
 <p><b>JetBrains IDEベースのGo ORMアシスタントプラグイン。</b></p>
 <br/>
@@ -109,7 +113,9 @@
     <li>発見と改善を待っています...</li>
 </ul>
 
+<br/>
 <hr/>
+<br/>
 
 <p><b>JetBrains IDE 기반 Go ORM 지원 플러그인.</b></p>
 <br/>

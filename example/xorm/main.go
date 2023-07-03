@@ -5,8 +5,8 @@ import (
 )
 
 type Order struct {
-	ID    uint
-	Name  string
+	ID    uint   // 主键
+	Name  string `xorm:"varchar(25) notnull unique 'usr_name' comment('姓名')"`
 	Price *string
 }
 
@@ -15,6 +15,6 @@ func main() {
 
 	var order Order
 
-	qq := engine.Where("id IN ?", "")
+	qq := engine.Where("n", "")
 	qq.And("name").Asc().Get(&order)
 }
