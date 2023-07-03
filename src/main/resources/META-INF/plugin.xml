@@ -19,7 +19,7 @@
                                 implementationClass="com.github.maiqingqiang.goormhelper.orm.gorm.codeInsights.completion.GormCompletionContributor"/>
 
         <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.xorm.completion.XormCompletionContributor"/>
+                                implementationClass="com.github.maiqingqiang.goormhelper.orm.xorm.codeInsights.completion.XormCompletionContributor"/>
 
         <highlightVisitor
                 implementation="com.github.maiqingqiang.goormhelper.codeInsights.GoORMHelperHighlightVisitor"/>
@@ -46,8 +46,12 @@
     </projectListeners>
 
     <actions>
-        <action class="com.github.maiqingqiang.goormhelper.actions.SQL2StructAction" text="SQL2Struct">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </action>
+        <group id="GoORMHelper.EditorPopupMenu" popup="true"
+               icon="com.github.maiqingqiang.goormhelper.ui.Icons.Icon16x16">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+
+            <action id="GoORMHelper.SQL2StructAction"
+                    class="com.github.maiqingqiang.goormhelper.actions.SQL2StructAction"/>
+        </group>
     </actions>
 </idea-plugin>

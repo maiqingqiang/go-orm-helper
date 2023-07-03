@@ -37,7 +37,7 @@ func main() {
 
 	// @Model(User)
 	query1 := db.Select("id", "name")
-	query1 = query1.Where("name = ?", "")
+	query1 = query1.Where("name", "")
 
 	var user2 User2
 	query2 := db.Where("name <> ?", "")

@@ -24,7 +24,6 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
 //    implementation(libs.annotations)
-    implementation(libs.snakeyaml)
     implementation(libs.guava)
     implementation(libs.druid)
     implementation(libs.jsqlparser)
@@ -84,17 +83,7 @@ tasks {
         untilBuild = properties("pluginUntilBuild")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription = providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
-            val start = "<!-- Plugin description -->"
-            val end = "<!-- Plugin description end -->"
-
-            with (it.lines()) {
-                if (!containsAll(listOf(start, end))) {
-                    throw GradleException("Plugin description section not found in README.md:\n$start ... $end")
-                }
-                subList(indexOf(start) + 1, indexOf(end)).joinToString("\n").let(::markdownToHTML)
-            }
-        }
+        pluginDescription = projectDir.resolve("DESCRIPTION.md").readText()
 
         val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
@@ -120,8 +109,8 @@ tasks {
     }
 
     signPlugin {
-        certificateChain = environment("CERTIFICATE_CHAIN")
-        privateKey = environment("PRIVATE_KEY")
+        certificateChain = File(environment("CERTIFICATE_CHAIN_FILE").get()).readText(Charsets.UTF_8)
+        privateKey =  File(environment("PRIVATE_KEY_FILE").get()).readText(Charsets.UTF_8)
         password = environment("PRIVATE_KEY_PASSWORD")
     }
 

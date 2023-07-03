@@ -1,4 +1,4 @@
-package com.github.maiqingqiang.goormhelper.orm.xorm.completion;
+package com.github.maiqingqiang.goormhelper.orm.xorm.codeInsights.completion;
 
 import com.github.maiqingqiang.goormhelper.orm.xorm.XormTypes;
 import com.goide.GoParserDefinition;
@@ -17,7 +17,7 @@ public class XormCompletionContributor extends CompletionContributor {
                         .withSuperParent(3, new PsiElementPattern.Capture<>(GoCallExpr.class) {
                             @Override
                             public boolean accepts(@Nullable Object o, ProcessingContext context) {
-                                return o instanceof GoCallExpr && XormTypes.XORM_CALLABLES_SET.find((GoCallExpr) o, false) != null;
+                                return o instanceof GoCallExpr && XormTypes.CALLABLES_SET.find((GoCallExpr) o, false) != null;
                             }
                         }),
                 new XormColumnCompletionProvider());
@@ -27,7 +27,7 @@ public class XormCompletionContributor extends CompletionContributor {
                         .withSuperParent(7, new PsiElementPattern.Capture<>(GoCallExpr.class) {
                             @Override
                             public boolean accepts(@Nullable Object o, ProcessingContext context) {
-                                return o instanceof GoCallExpr && XormTypes.XORM_CALLABLES_SET.find((GoCallExpr) o, false) != null;
+                                return o instanceof GoCallExpr && XormTypes.CALLABLES_SET.find((GoCallExpr) o, false) != null;
                             }
                         }),
                 new XormColumnCompletionProvider());

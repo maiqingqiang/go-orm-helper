@@ -1,12 +1,12 @@
-package com.github.maiqingqiang.goormhelper.orm.xorm.completion;
+package com.github.maiqingqiang.goormhelper.orm;
 
 import com.github.maiqingqiang.goormhelper.Types;
-import com.github.maiqingqiang.goormhelper.orm.xorm.XormTypes;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperManager;
 import com.github.maiqingqiang.goormhelper.ui.Icons;
 import com.github.maiqingqiang.goormhelper.utils.Strings;
 import com.goide.documentation.GoDocumentationProvider;
 import com.goide.inspections.core.GoCallableDescriptor;
+import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.*;
 import com.goide.psi.impl.GoPsiUtil;
 import com.google.common.base.CaseFormat;
@@ -14,7 +14,6 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -27,33 +26,20 @@ import com.intellij.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import javax.swing.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 
-public class XormColumnCompletionProvider extends CompletionProvider<CompletionParameters> {
+public abstract class ORMCompletionProvider extends CompletionProvider<CompletionParameters> {
 
-    private static final Logger LOG = Logger.getInstance(XormColumnCompletionProvider.class);
-
-    @lombok.Data
-    static class Tag {
-        private String name;
-        private List<String> params;
-
-        public Tag(String name, List<String> params) {
-            this.name = name;
-            this.params = params;
-        }
-    }
-
-    static boolean hasArgumentAtIndex(@NotNull GoCallExpr call, int argumentIndex, @NotNull PsiElement argument) {
+    private static boolean hasArgumentAtIndex(@NotNull GoCallExpr call, int argumentIndex, @NotNull PsiElement argument) {
         if (argumentIndex == -1) return true;
         argument = GoPsiUtil.skipParens(argument);
         return argument == ContainerUtil.getOrElse(call.getArgumentList().getExpressionList(), argumentIndex, (Object) null);
     }
 
-    @Override
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
         Project project = parameters.getPosition().getProject();
 
@@ -61,13 +47,13 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
 
         if (goCallExpr == null) return;
 
-        GoCallableDescriptor descriptor = XormTypes.XORM_CALLABLES_SET.find(goCallExpr, false);
-
+        GoCallableDescriptor descriptor = callablesSet().find(goCallExpr, false);
         if (descriptor == null) return;
 
-        Integer argumentIndex = XormTypes.XORM_CALLABLES.get(descriptor);
+        Integer argumentIndex = callables().get(descriptor);
 
-        if (!hasArgumentAtIndex(goCallExpr, argumentIndex, parameters.getPosition().getParent())) return;
+        if (!hasArgumentAtIndex(goCallExpr, argumentIndex, parameters.getPosition().getParent()) && !(parameters.getPosition().getParent().getParent() instanceof GoKey))
+            return;
 
         String schema = scanSchema(parameters.getPosition());
 
@@ -98,31 +84,26 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
     private void scanFields(GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec) {
         if (goTypeSpec.getSpecType().getType() instanceof GoStructType goStructType) {
             for (GoFieldDeclaration field : goStructType.getFieldDeclarationList()) {
-                String column = "";
-                String comment = "";
+                String column = getColumn(field);
+                String comment = getComment(field);
                 String type = "";
 
                 if (field.getType() != null) {
                     type = field.getType().getPresentationText();
                 }
 
-                GoTag tag = field.getTag();
-                if (tag != null && tag.getValue("xorm") != null) {
-                    @NotNull List<Tag> tags = parseTag(tag.getValue("xorm"));
-
-                    for (Tag t : tags) {
-                        if (t.getName().startsWith("'") && t.getParams().size() == 0) {
-                            column = t.getName().replaceAll("'", "");
-                        }
-
-                        if (t.getName().equals("comment") && t.getParams().size() > 0) {
-                            comment = t.getParams().get(0).replaceAll("'", "");
-                        }
-                    }
-                }
-
-
                 if (column.isEmpty()) {
+                    if (field.getFieldDefinitionList().size() == 0 && field.getAnonymousFieldDefinition() != null) {
+                        GoType goType = field.getAnonymousFieldDefinition().getGoType(ResolveState.initial());
+                        if (goType == null) continue;
+
+                        GoTypeSpec spec = (GoTypeSpec) goType.resolve(ResolveState.initial());
+                        if (spec == null) continue;
+
+                        scanFields(descriptor, result, spec);
+                        continue;
+                    }
+
                     String name = field.getFieldDefinitionList().get(0).getName();
 
                     if (name != null) {
@@ -138,7 +119,7 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
 
                 addElement(result, column, comment, type);
 
-                List<String> whereExpr = XormTypes.XORM_WHERE_EXPR.get(descriptor);
+                List<String> whereExpr = queryExpr().get(descriptor);
                 if (whereExpr != null) {
                     for (String s : whereExpr) {
                         addElement(result, String.format(s, column), comment, type);
@@ -170,7 +151,7 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
 
         for (GoReferenceExpression goReferenceExpression : PsiTreeUtil.findChildrenOfType(currentStatement, GoReferenceExpression.class)) {
             GoType goType = goReferenceExpression.getGoType(ResolveState.initial());
-            if (goType != null && (goType.getPresentationText().equals("*Session") || goType.getPresentationText().equals("*DB"))) {
+            if (goType != null && goType.getPresentationText().equals("*DB")) {
                 lastGoReferenceExpression = goReferenceExpression;
             }
         }
@@ -202,7 +183,7 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
             for (GoVarDefinition varDefinition : PsiTreeUtil.findChildrenOfType(statement, GoVarDefinition.class)) {
                 GoType goType = varDefinition.getGoType(ResolveState.initial());
 
-                if (goType != null && (goType.getPresentationText().equals("*Session") || goType.getPresentationText().equals("*DB"))) {
+                if (goType != null && goType.getPresentationText().equals("*DB")) {
                     return searchGoVarDefinitionReferences(varDefinition);
                 }
             }
@@ -210,14 +191,18 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
         return schema;
     }
 
-    private static void addElement(@NotNull CompletionResultSet result, String column, String comment, String type) {
+    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type) {
         result.addElement(LookupElementBuilder.create(column)
                 .withTypeText(type)
-                .withIcon(Icons.Xorm19x12)
+                .withIcon(getIcon())
                 .withTailText(" " + comment, true));
     }
 
-    private static String findSchema(@NotNull GoStatement statement) {
+    protected Icon getIcon() {
+        return Icons.Icon12x12;
+    }
+
+    private String findSchema(@NotNull GoStatement statement) {
         String schema = "";
 
         String comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(statement), false);
@@ -227,13 +212,11 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
         if (!schema.isEmpty()) return schema;
 
         for (GoCallExpr goCallExpr : PsiTreeUtil.findChildrenOfType(statement, GoCallExpr.class)) {
-            GoCallableDescriptor descriptor = XormTypes.XORM_MODEL_CALLABLES_SET.find(goCallExpr, false);
+
+            GoCallableDescriptor descriptor = schemaCallablesSet().find(goCallExpr, false);
             if (descriptor == null) continue;
 
-            Integer argumentIndex = XormTypes.XORM_MODEL_CALLABLES.get(descriptor);
-
-            System.out.println("argumentIndex " + argumentIndex);
-            System.out.println("getExpressionList " + goCallExpr.getArgumentList().getExpressionList().get(argumentIndex));
+            Integer argumentIndex = schemaCallables().get(descriptor);
 
             GoExpression argument = goCallExpr.getArgumentList().getExpressionList().get(argumentIndex);
 
@@ -276,67 +259,18 @@ public class XormColumnCompletionProvider extends CompletionProvider<CompletionP
         return schema;
     }
 
-    private static @NotNull List<Tag> parseTag(String tagStr) {
-        tagStr = tagStr.trim();
-        boolean inQuote = false;
-        boolean inBigQuote = false;
-        int lastIdx = 0;
-        Tag curTag = null;
-        int paramStart = 0;
-        List<Tag> tags = new ArrayList<>();
+    public abstract Map<GoCallableDescriptor, Integer> callables();
 
-        for (int i = 0; i < tagStr.length(); i++) {
-            char t = tagStr.charAt(i);
-            switch (t) {
-                case '\'' -> inQuote = !inQuote;
-                case ' ' -> {
-                    if (!inQuote && !inBigQuote) {
-                        if (lastIdx < i) {
-                            if (curTag == null || curTag.getName().isEmpty()) {
-                                curTag = new Tag(tagStr.substring(lastIdx, i), new ArrayList<>());
-                            }
-                            tags.add(curTag);
-                            lastIdx = i + 1;
-                            curTag = null;
-                        } else if (lastIdx == i) {
-                            lastIdx = i + 1;
-                        }
-                    } else if (inBigQuote && !inQuote) {
-                        paramStart = i + 1;
-                    }
-                }
-                case ',' -> {
-                    if (!inQuote && !inBigQuote) {
-                        throw new IllegalArgumentException("Comma[" + i + "] of " + tagStr + " should be in quote or big quote");
-                    }
-                    if (!inQuote) {
-                        curTag.getParams().add(tagStr.substring(paramStart, i).trim());
-                        paramStart = i + 1;
-                    }
-                }
-                case '(' -> {
-                    inBigQuote = true;
-                    if (!inQuote) {
-                        curTag = new Tag(tagStr.substring(lastIdx, i), new ArrayList<>());
-                        paramStart = i + 1;
-                    }
-                }
-                case ')' -> {
-                    inBigQuote = false;
-                    if (!inQuote) {
-                        curTag.getParams().add(tagStr.substring(paramStart, i));
-                    }
-                }
-            }
-        }
+    public abstract GoCallableDescriptorSet callablesSet();
 
-        if (lastIdx < tagStr.length()) {
-            if (curTag == null || curTag.getName().isEmpty()) {
-                curTag = new Tag(tagStr.substring(lastIdx), new ArrayList<>());
-            }
-            tags.add(curTag);
-        }
+    public abstract Map<GoCallableDescriptor, Integer> schemaCallables();
 
-        return tags;
-    }
+    public abstract GoCallableDescriptorSet schemaCallablesSet();
+
+    public abstract Map<GoCallableDescriptor, List<String>> queryExpr();
+
+    public abstract String getColumn(@NotNull GoFieldDeclaration field);
+
+    public abstract String getComment(@NotNull GoFieldDeclaration field);
+
 }

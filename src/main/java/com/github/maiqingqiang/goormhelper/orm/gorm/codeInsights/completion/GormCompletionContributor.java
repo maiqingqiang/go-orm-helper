@@ -17,7 +17,7 @@ public class GormCompletionContributor extends CompletionContributor {
                         .withSuperParent(3, new PsiElementPattern.Capture<>(GoCallExpr.class) {
                             @Override
                             public boolean accepts(@Nullable Object o, ProcessingContext context) {
-                                return o instanceof GoCallExpr && GormTypes.GORM_CALLABLES_SET.find((GoCallExpr) o, false) != null;
+                                return o instanceof GoCallExpr && GormTypes.CALLABLES_SET.find((GoCallExpr) o, false) != null;
                             }
                         }).andOr(PlatformPatterns.psiElement()),
                 new GormColumnCompletionProvider());
@@ -27,7 +27,7 @@ public class GormCompletionContributor extends CompletionContributor {
                         .withSuperParent(7, new PsiElementPattern.Capture<>(GoCallExpr.class) {
                             @Override
                             public boolean accepts(@Nullable Object o, ProcessingContext context) {
-                                return o instanceof GoCallExpr && GormTypes.GORM_CALLABLES_SET.find((GoCallExpr) o, false) != null;
+                                return o instanceof GoCallExpr && GormTypes.CALLABLES_SET.find((GoCallExpr) o, false) != null;
                             }
                         }),
                 new GormColumnCompletionProvider());
