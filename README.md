@@ -1,12 +1,11 @@
-<!-- Plugin description -->
-English | [简体中文](./README-zh_CN.md)
+English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [한국어](./README-ko_KR.md)
 
 <div align="center">
     <img src="https://blog.johnmai.top/go-orm-helper/src/main/resources/icons/icon64x64.svg" alt="Go ORM Helper"/>
     <h1 align="center">Go ORM Helper</h1>
 </div>
 
-<p align="center">A JetBrains plugin for GoLand that automatically provides database field autocompletion, tags, and generates Structs for writing ORM code. Supports: gorm, xorm, beego, database/sql, etc.</p>
+<p align="center">A JetBrains plugin for GoLand that automatically provides database field autocompletion, tags, and generates Structs for writing ORM code. Supports: Gorm、Xorm、Beego、GoFrame, etc.</p>
 
 > Inspired by [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) & 
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html). When using ORM packages in Golang,
@@ -15,18 +14,18 @@ English | [简体中文](./README-zh_CN.md)
 > extremely useful. Hence, this plugin was developed.
 
 ## Features
-- [x] ORM code autocompletion
-  - [x] Assisted completion with @Model annotation
-  - [ ] Assisted completion with @Table annotation 🚧[WIP]
-  - [ ] Assisted completion for custom SQL 🚧[WIP]
-- [x] SQL to Struct conversion
+- [x] ORM Code Completion.
+  - [x] Assisted code completion with @Model annotation.
+  - [ ] Assisted code completion with @Table annotation. 🚧[WIP]
+  - [ ] Assisted code completion for custom SQL. 🚧[WIP]
+- [x] SQL to Struct conversion.
   - [x] Gorm
   - [x] Xorm
   - [x] Generic Struct
   - [ ] GoFrame
   - [ ] Beego
   - [ ] sqlx
-- [ ] Tag code autocompletion 🚧[WIP]
+- [ ] Tag Code Completion. 🚧[WIP]
 - More features waiting to be discovered and improved...
 
 ## Supported ORM Packages
