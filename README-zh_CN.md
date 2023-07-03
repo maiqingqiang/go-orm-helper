@@ -46,3 +46,8 @@
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
 </a>
+
+### 本地安装
+
+- 下载 Go ORM Helper 插件包 [Releases](https://github.com/maiqingqiang/go-orm-helper/releases)
+- 安装插件教程: https://www.jetbrains.com/help/idea/managing-plugins.html
