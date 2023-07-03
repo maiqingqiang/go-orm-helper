@@ -46,7 +46,7 @@
     </projectListeners>
 
     <actions>
-        <action class="com.github.maiqingqiang.goormhelper.actions.SQL2StructAction" text="SQL2Struct">
+        <action id="GoORMHelper.SQL2StructAction" class="com.github.maiqingqiang.goormhelper.actions.SQL2StructAction">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
     </actions>
