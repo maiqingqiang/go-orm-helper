@@ -1,4 +1,4 @@
-package com.github.maiqingqiang.goormhelper.orm.xorm.completion;
+package com.github.maiqingqiang.goormhelper.orm.xorm.codeInsights.completion;
 
 import com.github.maiqingqiang.goormhelper.orm.ORMCompletionProvider;
 import com.github.maiqingqiang.goormhelper.orm.xorm.XormTypes;

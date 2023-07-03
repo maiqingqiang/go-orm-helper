@@ -19,7 +19,7 @@
                                 implementationClass="com.github.maiqingqiang.goormhelper.orm.gorm.codeInsights.completion.GormCompletionContributor"/>
 
         <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.xorm.completion.XormCompletionContributor"/>
+                                implementationClass="com.github.maiqingqiang.goormhelper.orm.xorm.codeInsights.completion.XormCompletionContributor"/>
 
         <highlightVisitor
                 implementation="com.github.maiqingqiang.goormhelper.codeInsights.GoORMHelperHighlightVisitor"/>
