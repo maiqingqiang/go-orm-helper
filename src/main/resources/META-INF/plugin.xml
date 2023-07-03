@@ -46,8 +46,12 @@
     </projectListeners>
 
     <actions>
-        <action id="GoORMHelper.SQL2StructAction" class="com.github.maiqingqiang.goormhelper.actions.SQL2StructAction">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-        </action>
+        <group id="GoORMHelper.EditorPopupMenu" popup="true"
+               icon="com.github.maiqingqiang.goormhelper.ui.Icons.Icon16x16">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+
+            <action id="GoORMHelper.SQL2StructAction"
+                    class="com.github.maiqingqiang.goormhelper.actions.SQL2StructAction"/>
+        </group>
     </actions>
 </idea-plugin>
