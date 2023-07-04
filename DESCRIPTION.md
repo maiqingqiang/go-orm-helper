@@ -22,6 +22,7 @@
     <li>ORM Code Completion.
         <ul>
             <li>Assisted code completion with @Model annotation.</li>
+            <li>Assisted code completion with @Table annotation.</li>
         </ul>
     </li>
     <li>SQL to Struct conversion.</li>
@@ -61,6 +62,7 @@
     <li>ORM 代码补全
         <ul>
             <li>@Model 注解辅助补全</li>
+            <li>@Table 注解辅助补全</li>
         </ul>
     </li>
     <li>SQL 转 Struct</li>
@@ -100,7 +102,8 @@
 <ul>
     <li>ORMコード補完
         <ul>
-            <li>@Model注記補助補完</li>
+            <li>@Model 注記補助補完</li>
+            <li>@Table 注記補助補完</li>
         </ul>
     </li>
     <li>SQL 変換 Struct</li>
@@ -139,6 +142,7 @@
     <li>ORM 코드 완성
         <ul>
             <li>@Model 메모 보조 완성</li>
+            <li>@Table 메모 보조 완성</li>
         </ul>
     </li>
     <li>SQL 변환 Struct</li>
