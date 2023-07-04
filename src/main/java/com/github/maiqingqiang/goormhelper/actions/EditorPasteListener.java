@@ -86,10 +86,14 @@ public class EditorPasteListener extends EditorActionHandler {
     }
 
     private boolean verifySQL(String sql) {
-        Validation validation = new Validation(Collections.singletonList(FeaturesAllowed.CREATE), sql);
-        List<ValidationError> errors = validation.validate();
+        try {
+            Validation validation = new Validation(Collections.singletonList(FeaturesAllowed.CREATE), sql);
+            List<ValidationError> errors = validation.validate();
 
-        return errors.size() == 0;
+            return errors.size() == 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
