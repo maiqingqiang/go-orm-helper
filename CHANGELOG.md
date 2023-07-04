@@ -8,6 +8,7 @@
 
 ### Added
 - Assisted code completion with @Table annotation.
+- Support ORM's table method.
 
 ## [1.0.2] - 2023-07-04
 
