@@ -62,6 +62,10 @@ public interface GormTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Create"), 0)
     );
 
+    Map<GoCallableDescriptor, Integer> TABLE_CALLABLES = Map.ofEntries(
+            Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Table"), 0)
+    );
+
    List<String> OPERATOR_EXPR = List.of(
             "%s = ?", "%s <> ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s BETWEEN ? AND ?");
 
@@ -73,6 +77,7 @@ public interface GormTypes {
     );
 
     GoCallableDescriptorSet SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(SCHEMA_CALLABLES.keySet());
+    GoCallableDescriptorSet TABLE_CALLABLES_SET = new GoCallableDescriptorSet(TABLE_CALLABLES.keySet());
 
     GoCallableDescriptorSet CALLABLES_SET = new GoCallableDescriptorSet(CALLABLES.keySet());
 }

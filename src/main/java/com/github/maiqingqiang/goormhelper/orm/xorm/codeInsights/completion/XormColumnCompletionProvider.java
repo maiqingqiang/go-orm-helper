@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,16 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
     @Override
     public GoCallableDescriptorSet schemaCallablesSet() {
         return XormTypes.SCHEMA_CALLABLES_SET;
+    }
+
+    @Override
+    public Map<GoCallableDescriptor, Integer> tableCallables() {
+        return null;
+    }
+
+    @Override
+    public GoCallableDescriptorSet tableCallablesSet() {
+        return null;
     }
 
     @Override

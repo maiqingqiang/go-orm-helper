@@ -17,7 +17,7 @@
 
 - [x] ORM コード補完
     - [x] @Model 注記補助補完
-    - [ ] @Table 注記補助補完 🚧[WIP]
+    - [x] @Table 注記補助補完
     - [ ] カスタムSQLアクセシビリティ不全 🚧[WIP]
 - [x] SQL 変換 Struct
     - [x] Gorm

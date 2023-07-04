@@ -16,7 +16,7 @@ English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [
 ## Features
 - [x] ORM Code Completion.
   - [x] Assisted code completion with @Model annotation.
-  - [ ] Assisted code completion with @Table annotation. 🚧[WIP]
+  - [x] Assisted code completion with @Table annotation.
   - [ ] Assisted code completion for custom SQL. 🚧[WIP]
 - [x] SQL to Struct conversion.
   - [x] Gorm

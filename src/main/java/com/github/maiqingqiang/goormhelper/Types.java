@@ -14,6 +14,8 @@ public interface Types {
     String TABLE_ANNOTATION = "@Table";
     Pattern TABLE_ANNOTATION_PATTERN = Pattern.compile(TABLE_ANNOTATION + "\\((.*?)\\)");
 
+    String TABLE_NAME_FUNC = "TableName";
+
     enum ORM {
         AskEveryTime(GoORMHelperBundle.message("orm.AskEveryTime")),
         General(GoORMHelperBundle.message("orm.General")),
