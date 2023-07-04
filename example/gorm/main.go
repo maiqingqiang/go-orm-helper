@@ -13,7 +13,7 @@ type User struct {
 }
 
 func (u *User) TableName() string {
-	return "testusers"
+	return "test_users"
 }
 
 type User2 struct {
@@ -35,7 +35,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	test := "testusers"
+	test := "test_users"
 	query1 := db.Table(test).Select("id", "name")
 	query1 = query1.Where("name", "")
 

@@ -5,12 +5,12 @@ import com.github.maiqingqiang.goormhelper.orm.xorm.XormTypes;
 import com.github.maiqingqiang.goormhelper.ui.Icons;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
-import com.goide.psi.*;
+import com.goide.psi.GoFieldDeclaration;
+import com.goide.psi.GoTag;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,12 +49,12 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
 
     @Override
     public Map<GoCallableDescriptor, Integer> tableCallables() {
-        return null;
+        return XormTypes.TABLE_CALLABLES;
     }
 
     @Override
     public GoCallableDescriptorSet tableCallablesSet() {
-        return null;
+        return XormTypes.TABLE_CALLABLES_SET;
     }
 
     @Override

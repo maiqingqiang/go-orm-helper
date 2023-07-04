@@ -15,6 +15,9 @@ func main() {
 
 	var order Order
 
-	qq := engine.Where("n", "")
+	engine.Table(&order).Where("id", "")
+	engine.Table("orders").Where("id", "")
+
+	qq := engine.Table("order").Where("", "")
 	qq.And("name").Asc().Get(&order)
 }
