@@ -18,6 +18,9 @@ func main() {
 	engine.Table(&order).Where("id", "")
 	engine.Table("orders").Where("id", "")
 
+	// @Table(orders)
+	engine.Where("id", "")
+
 	qq := engine.Table("order").Where("", "")
 	qq.And("name").Asc().Get(&order)
 }
