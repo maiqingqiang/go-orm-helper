@@ -111,9 +111,12 @@ public class SQL2Struct implements ISQL2Struct {
 
         generateStructTags(stringBuilder, definition);
 
-        stringBuilder.append("// ")
-                .append(getComment(definition))
-                .append("\n");
+        String comment = getComment(definition);
+        if (!comment.isEmpty()) {
+            stringBuilder.append("// ").append(comment);
+        }
+
+        stringBuilder.append("\n");
     }
 
     protected void generateStructTags(@NotNull StringBuilder stringBuilder, @NotNull SQLColumnDefinition definition) {
