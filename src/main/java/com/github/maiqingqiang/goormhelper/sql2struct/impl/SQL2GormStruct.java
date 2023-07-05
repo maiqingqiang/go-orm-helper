@@ -14,8 +14,12 @@ public class SQL2GormStruct extends SQL2Struct {
     protected void generateORMTag(@NotNull StringBuilder stringBuilder, @NotNull SQLColumnDefinition definition) {
         stringBuilder.append("gorm:\"")
                 .append("column:").append(getColumn(definition)).append(";")
-                .append("type:").append(getDBType(definition)).append(";")
-                .append("comment:").append(getComment(definition)).append(";");
+                .append("type:").append(getDBType(definition)).append(";");
+
+        String comment = getComment(definition);
+        if (!comment.isEmpty()){
+            stringBuilder.append("comment:").append(comment).append(";");
+        }
 
         if (definition.isPrimaryKey()) {
             stringBuilder.append("primaryKey;");

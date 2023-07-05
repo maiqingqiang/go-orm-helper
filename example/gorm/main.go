@@ -7,13 +7,13 @@ import (
 )
 
 type User struct {
-	ID    uint    // 主键
+	ID    uint    // 主键sss
 	Name  string  // 姓名
 	Email *string // 邮箱
 }
 
 func (u *User) TableName() string {
-	return "users"
+	return "test_users"
 }
 
 type User2 struct {
@@ -35,8 +35,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// @Model(User)
-	query1 := db.Select("id", "name")
+	test := "test_users"
+	query1 := db.Table(test).Select("id", "name")
 	query1 = query1.Where("name", "")
 
 	var user2 User2

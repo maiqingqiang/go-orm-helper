@@ -111,9 +111,12 @@ public class SQL2Struct implements ISQL2Struct {
 
         generateStructTags(stringBuilder, definition);
 
-        stringBuilder.append("// ")
-                .append(getComment(definition))
-                .append("\n");
+        String comment = getComment(definition);
+        if (!comment.isEmpty()) {
+            stringBuilder.append("// ").append(comment);
+        }
+
+        stringBuilder.append("\n");
     }
 
     protected void generateStructTags(@NotNull StringBuilder stringBuilder, @NotNull SQLColumnDefinition definition) {
@@ -137,16 +140,22 @@ public class SQL2Struct implements ISQL2Struct {
     }
 
     protected String getDBType(@NotNull SQLColumnDefinition definition) {
+        if (definition.getDbType() == null) return "";
+
         return definition.getDataType().toString();
     }
 
     @NotNull
     protected String getColumn(@NotNull SQLColumnDefinition definition) {
+        if (definition.getName() == null) return "";
+
         return Strings.clearQuote(definition.getName().getSimpleName());
     }
 
     @NotNull
     protected String getComment(@NotNull SQLColumnDefinition definition) {
+        if (definition.getComment() == null) return "";
+
         return Strings.clearSingleQuotn(definition.getComment().toString());
     }
 

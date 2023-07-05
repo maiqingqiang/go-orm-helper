@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.guava)
     implementation(libs.druid)
     implementation(libs.jsqlparser)
+    implementation(libs.evoInflector)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)

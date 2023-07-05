@@ -16,7 +16,11 @@ public class SQL2XormStruct extends SQL2Struct {
 
         stringBuilder.append(getDBType(definition)).append(" ");
         stringBuilder.append("'").append(getColumn(definition)).append("' ");
-        stringBuilder.append("comment('").append(getComment(definition)).append("') ");
+
+        String comment = getComment(definition);
+        if (!comment.isEmpty()){
+            stringBuilder.append("comment('").append(comment).append("') ");
+        }
 
         if (definition.isPrimaryKey()) {
             stringBuilder.append("pk ");

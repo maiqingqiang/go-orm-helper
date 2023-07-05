@@ -16,7 +16,7 @@
 
 - [x] ORM 코드 완성
     - [x] @Model 메모 보조 완성
-    - [ ] @Table 메모 보조 완성 🚧[WIP]
+    - [x] @Table 메모 보조 완성
     - [ ] 사용자 정의 SQL 보조 불완전 🚧[WIP]
 - [x] SQL 변환 Struct
     - [x] Gorm

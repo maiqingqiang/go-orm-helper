@@ -34,6 +34,16 @@ public class GormColumnCompletionProvider extends ORMCompletionProvider {
     }
 
     @Override
+    public Map<GoCallableDescriptor, Integer> tableCallables() {
+        return GormTypes.TABLE_CALLABLES;
+    }
+
+    @Override
+    public GoCallableDescriptorSet tableCallablesSet() {
+        return GormTypes.TABLE_CALLABLES_SET;
+    }
+
+    @Override
     public Map<GoCallableDescriptor, List<String>> queryExpr() {
         return GormTypes.QUERY_EXPR;
     }
