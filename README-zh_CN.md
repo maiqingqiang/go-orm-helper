@@ -5,7 +5,7 @@
     <h1 align="center">Go ORM 助手</h1>
 </div>
 
-<p align="center">一个为了让你在 Goland 上写 ORM 能自动补全数据库字段、Tag、生成Struct 的 Jetbrains 插件。支持：Gorm、Xorm、Beego、GoFrame...）</p>
+<p align="center">一个为了让你在 GoLand 上写 ORM 能自动补全数据库字段、Tag、生成Struct 的插件。支持：Gorm、Xorm、Beego、GoFrame...）</p>
 
 > 灵感来源 [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html)。 本人使用 Go 的 ORM 包时，
@@ -43,7 +43,7 @@
 
 ## 安装
 
-> 插件正在审核中，暂时不支持在线安装
+> 兼容范围：GoLand — 2022.2 — 2023.2 (eap)
 
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">

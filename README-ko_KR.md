@@ -5,7 +5,7 @@
     <h1 align="center">Go ORM 도우미</h1>
 </div>
 
-<p align="center">Goland에 ORM을 쓸 수 있도록 데이터베이스 필드, Tag, Struct를 자동으로 완성하는 Jetbrains 플러그인지원: Gorm, Xorm, Beego, GoFrame...)</p>
+<p align="center">GoLand 에 ORM을 쓸 수 있도록 데이터베이스 필드, Tag, Struct를 자동으로 완성하는 플러그인지원: Gorm, Xorm, Beego, GoFrame...)</p>
 
 > [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html) 에서영감을 받았습니다.본인이 Go의 ORM 
@@ -43,7 +43,7 @@
 
 ## 설치
 
-> プラグインは現在審査中で、オンラインインストールは一時的に利用できません。
+> 호환성 범위: GoLand — 2022.2 — 2023.2 (eap)
 
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">

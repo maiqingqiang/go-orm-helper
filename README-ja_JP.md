@@ -5,7 +5,7 @@
     <h1 align="center">Go ORM アシスタント</h1>
 </div>
 
-<p align="center">Goland にORMを書くためにデータベースフィールド、Tag、Struct を自動的に補完する Jetbrains プラグイン。サポート：Gorm、Xorm、Beego、GoFrame...）</p>
+<p align="center">GoLand にORMを書くためにデータベースフィールド、Tag、Struct を自動的に補完する Jetbrains プラグイン。サポート：Gorm、Xorm、Beego、GoFrame...）</p>
 
 > インスピレーション源の  [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html).
@@ -44,7 +44,7 @@
 
 ## インストール
 
-> プラグインは現在審査中で、オンラインインストールは一時的に利用できません。
+> 互換性範囲: GoLand — 2022.2 — 2023.2 (eap)
 
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
