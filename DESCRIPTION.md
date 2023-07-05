@@ -1,4 +1,4 @@
-<p><b>Go ORM Helper plugin for JetBrains based IDEs.</b></p>
+<p><b>Go ORM Helper plugin for GoLand.</b></p>
 <br/>
 <p>
     <b>
@@ -38,7 +38,7 @@
 <hr/>
 <br/>
 
-<p><b>基于 JetBrains IDE 的 Go ORM 助手插件。</b></p>
+<p><b>基于 GoLand 的 Go ORM 助手插件。</b></p>
 <br/>
 <p>
     <b>
@@ -77,7 +77,7 @@
 <hr/>
 <br/>
 
-<p><b>JetBrains IDEベースのGo ORMアシスタントプラグイン。</b></p>
+<p><b>GoLand IDEベースのGo ORMアシスタントプラグイン。</b></p>
 <br/>
 <p>
     <b>
@@ -117,7 +117,7 @@
 <hr/>
 <br/>
 
-<p><b>JetBrains IDE 기반 Go ORM 지원 플러그인.</b></p>
+<p><b>GoLand 기반 Go ORM 지원 플러그인.</b></p>
 <br/>
 <p>
     <b>

@@ -5,7 +5,7 @@ English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [
     <h1 align="center">Go ORM Helper</h1>
 </div>
 
-<p align="center">A JetBrains plugin for GoLand that automatically provides database field autocompletion, tags, and generates Structs for writing ORM code. Supports: Gorm、Xorm、Beego、GoFrame, etc.</p>
+<p align="center">A GoLand plugin that automatically provides database field autocompletion, tags, and generates Structs for writing ORM code. Supports: Gorm、Xorm、Beego、GoFrame, etc.</p>
 
 > Inspired by [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) & 
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html). When using ORM packages in Golang,
@@ -43,7 +43,7 @@ English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [
 
 ## Installation
 
-> The plugin is currently under review and online installation is temporarily unavailable.
+> Compatibility Range: GoLand — 2022.2 — 2023.2 (eap)
 
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
