@@ -10,6 +10,9 @@
 - Assisted code completion with @Table annotation.
 - Support ORM's table method.
 
+### Fixed
+- Fix SQL to Struct error.
+
 ## [1.0.2] - 2023-07-04
 
 ### Fixed
