@@ -7,6 +7,7 @@ import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.*;
@@ -34,13 +35,13 @@ public class GormColumnCompletionProvider extends ORMCompletionProvider {
     }
 
     @Override
-    public Map<GoCallableDescriptor, Integer> tableCallables() {
-        return GormTypes.TABLE_CALLABLES;
+    public @Nullable Map<GoCallableDescriptor, Integer> otherSchemaCallables() {
+        return GormTypes.OTHER_SCHEMA_CALLABLES;
     }
 
     @Override
-    public GoCallableDescriptorSet tableCallablesSet() {
-        return GormTypes.TABLE_CALLABLES_SET;
+    public @Nullable GoCallableDescriptorSet otherSchemaCallablesSet() {
+        return GormTypes.OTHER_SCHEMA_CALLABLES_SET;
     }
 
     @Override
@@ -79,6 +80,11 @@ public class GormColumnCompletionProvider extends ORMCompletionProvider {
             }
         }
         return comment;
+    }
+
+    @Override
+    public @NotNull String allowType() {
+        return GormTypes.ALLOW_TYPE;
     }
 
     public static @NotNull Map<String, String> parseTag(@NotNull String str) {

@@ -22,16 +22,16 @@ English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [
   - [x] Gorm
   - [x] Xorm
   - [x] Generic Struct
-  - [ ] GoFrame
-  - [ ] Beego
-  - [ ] sqlx
+  - [x] GoFrame
+  - [ ] Beego  🚧[WIP]
+  - [ ] sqlx  🚧[WIP]
 - [ ] Tag Code Completion. 🚧[WIP]
 - More features waiting to be discovered and improved...
 
 ## Supported ORM Packages
 - [x] [Gorm](https://github.com/go-gorm/gorm)
 - [x] [Xorm](https://gitea.com/xorm/xorm)
-- [ ] [GoFrame](https://github.com/gogf/gf) 🚧[WIP]
+- [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
 - More packages waiting to be discovered and improved...

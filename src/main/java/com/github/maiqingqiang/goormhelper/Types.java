@@ -2,6 +2,7 @@ package com.github.maiqingqiang.goormhelper;
 
 import com.alibaba.druid.DbType;
 import com.github.maiqingqiang.goormhelper.sql2struct.ISQL2Struct;
+import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2GoFrameStruct;
 import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2GormStruct;
 import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2Struct;
 import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2XormStruct;
@@ -20,7 +21,8 @@ public interface Types {
         AskEveryTime(GoORMHelperBundle.message("orm.AskEveryTime")),
         General(GoORMHelperBundle.message("orm.General")),
         Gorm("Gorm"),
-        Xorm("Xorm");
+        Xorm("Xorm"),
+        GoFrame("GoFrame");
 
         private final String name;
 
@@ -38,6 +40,7 @@ public interface Types {
                 case General -> new SQL2Struct(sql, dbType);
                 case Gorm -> new SQL2GormStruct(sql, dbType);
                 case Xorm -> new SQL2XormStruct(sql, dbType);
+                case GoFrame -> new SQL2GoFrameStruct(sql, dbType);
                 default -> null;
             };
         }

@@ -8,6 +8,7 @@ import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.GoFieldDeclaration;
 import com.goide.psi.GoTag;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -48,13 +49,13 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
     }
 
     @Override
-    public Map<GoCallableDescriptor, Integer> tableCallables() {
-        return XormTypes.TABLE_CALLABLES;
+    public @Nullable Map<GoCallableDescriptor, Integer> otherSchemaCallables() {
+        return XormTypes.OTHER_SCHEMA_CALLABLES;
     }
 
     @Override
-    public GoCallableDescriptorSet tableCallablesSet() {
-        return XormTypes.TABLE_CALLABLES_SET;
+    public @Nullable GoCallableDescriptorSet otherSchemaCallablesSet() {
+        return XormTypes.OTHER_CALLABLES_SET;
     }
 
     @Override
@@ -94,6 +95,11 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
         }
 
         return comment;
+    }
+
+    @Override
+    public @NotNull String allowType() {
+        return XormTypes.ALLOW_TYPE;
     }
 
     @Override

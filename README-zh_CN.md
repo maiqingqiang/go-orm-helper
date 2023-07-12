@@ -22,7 +22,7 @@
     - [x] Gorm
     - [x] Xorm
     - [x] 通用 Struct
-    - [ ] GoFrame 🚧[WIP]
+    - [x] GoFrame
     - [ ] Beego 🚧[WIP]
     - [ ] sqlx 🚧[WIP]
 - [ ] Tag 代码补全 🚧[WIP]
@@ -32,7 +32,7 @@
 
 - [x] [Gorm](https://github.com/go-gorm/gorm)
 - [x] [Xorm](https://gitea.com/xorm/xorm)
-- [ ] [GoFrame](https://github.com/gogf/gf) 🚧[WIP]
+- [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
 - 更多等你去发现与改进...

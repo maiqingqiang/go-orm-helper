@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2023-07-04
+
+### Added
+- Support GoFrame ORM.
+
 ## [1.1.0] - 2023-07-04
 
 ### Added

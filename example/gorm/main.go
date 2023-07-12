@@ -35,16 +35,34 @@ func main() {
 		log.Fatal(err)
 	}
 
+	var user User
+
+	db1 := db.Where("11111111")
+	db1.Model(&user)
+
+	db2 := db.Where("name")
+	db2 = db2.Model("test_users")
+	db2 = db2.Where("name")
+
+	db1 = db2
+	db2 = db1.Where("name")
+
+	db3 := db2.Where("")
+	db3.Model("2").Where("11")
+
 	test := "test_users"
 	query1 := db.Table(test).Select("id", "name")
 	query1 = query1.Where("name", "")
 
 	var user2 User2
-	query2 := db.Where("name <> ?", "")
+	query2 := db.Where("n <> ?", "")
 	query2.Where("id > ?").Find(&user2)
 
 	var post Post
 	query3 := db.Select("body", "created_at")
 	query3 = query3.Where("id IN ?", "")
 	query3.Find(&post)
+
+	db4 := db.Where("id")
+	db4.Where("name")
 }

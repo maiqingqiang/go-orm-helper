@@ -31,7 +31,16 @@ public interface XormTypes {
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Having"), 0)
     );
 
+    GoCallableDescriptorSet CALLABLES_SET = new GoCallableDescriptorSet(CALLABLES.keySet());
+
     Map<GoCallableDescriptor, Integer> SCHEMA_CALLABLES = Map.ofEntries(
+            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Engine).Table"), 0)
+    );
+
+    GoCallableDescriptorSet SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(SCHEMA_CALLABLES.keySet());
+
+
+    Map<GoCallableDescriptor, Integer> OTHER_SCHEMA_CALLABLES = Map.ofEntries(
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Get"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Find"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Count"), 0),
@@ -39,13 +48,10 @@ public interface XormTypes {
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Rows"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Sum"), 0),
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Update"), 0),
-            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Delete"), 0),
-            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Engine).Table"), 0)
+            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Delete"), 0)
     );
 
-    Map<GoCallableDescriptor, Integer> TABLE_CALLABLES = Map.ofEntries(
-            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Engine).Table"), 0)
-    );
+    GoCallableDescriptorSet OTHER_CALLABLES_SET = new GoCallableDescriptorSet(OTHER_SCHEMA_CALLABLES.keySet());
 
     List<String> OPERATOR_EXPR = List.of(
             "%s = ?", "%s <> ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s BETWEEN ? AND ?");
@@ -57,8 +63,5 @@ public interface XormTypes {
             Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Or"), OPERATOR_EXPR)
     );
 
-    GoCallableDescriptorSet SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(SCHEMA_CALLABLES.keySet());
-    GoCallableDescriptorSet TABLE_CALLABLES_SET = new GoCallableDescriptorSet(TABLE_CALLABLES.keySet());
-
-    GoCallableDescriptorSet CALLABLES_SET = new GoCallableDescriptorSet(CALLABLES.keySet());
+    String ALLOW_TYPE = "*Session";
 }
