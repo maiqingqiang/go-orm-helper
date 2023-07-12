@@ -5,7 +5,8 @@
     <h1 align="center">Go ORM 도우미</h1>
 </div>
 
-<p align="center">GoLand 에 ORM을 쓸 수 있도록 데이터베이스 필드, Tag, Struct를 자동으로 완성하는 플러그인지원: Gorm, Xorm, Beego, GoFrame...)</p>
+<p align="center">GoLand 에 ORM을 쓸 수 있도록 데이터베이스 필드, Tag, Struct를 자동으로 완성하는 플러그인지원: Gorm, Xorm, Beego, GoFrame...)
+<br>우리의 작업을 지원하기 위해 ⭐️스타를 부탁드립니다!</p>
 
 > [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html) 에서영감을 받았습니다.본인이 Go의 ORM 

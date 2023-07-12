@@ -5,7 +5,7 @@
     <h1 align="center">Go ORM アシスタント</h1>
 </div>
 
-<p align="center">GoLand にORMを書くためにデータベースフィールド、Tag、Struct を自動的に補完する Jetbrains プラグイン。サポート：Gorm、Xorm、Beego、GoFrame...）</p>
+<p align="center">GoLand にORMを書くためにデータベースフィールド、Tag、Struct を自動的に補完する Jetbrains プラグイン。サポート：Gorm、Xorm、Beego、GoFrame...）<br>私たちの仕事をサポートするために ⭐️スター をください！</p>
 
 > インスピレーション源の  [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html).

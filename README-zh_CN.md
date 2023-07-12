@@ -5,7 +5,8 @@
     <h1 align="center">Go ORM 助手</h1>
 </div>
 
-<p align="center">一个为了让你在 GoLand 上写 ORM 能自动补全数据库字段、Tag、生成Struct 的插件。支持：Gorm、Xorm、Beego、GoFrame...）</p>
+<p align="center">一个为了让你在 GoLand 上写 ORM 能自动补全数据库字段、Tag、生成Struct 的插件。支持：Gorm、Xorm、Beego、GoFrame...）
+<br>给个 ⭐️Star 支持我们的工作吧！</p>
 
 > 灵感来源 [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html)。 本人使用 Go 的 ORM 包时，
