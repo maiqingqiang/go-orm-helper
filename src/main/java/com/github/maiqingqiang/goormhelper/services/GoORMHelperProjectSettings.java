@@ -16,17 +16,21 @@ import java.util.List;
 @Service(Service.Level.PROJECT)
 @State(name = "GoORMHelperProjectSettings", storages = @Storage("goORMHelperSettings.xml"))
 public final class GoORMHelperProjectSettings implements PersistentStateComponent<GoORMHelperProjectSettings.State> {
-
-    private State state;
     private final Project project;
 
-    public GoORMHelperProjectSettings(@NotNull Project project) {
-        this(project, new State());
+    public static class State extends SimpleModificationTracker {
+        public Types.ORM defaultORM = Types.ORM.AskEveryTime;
+        public Types.Database defaultDatabase = Types.Database.AskEveryTime;
+        public boolean enableGlobalScan = true;
+        public List<String> scanPathList = new SmartList<>();
+
+        public String sqlPath = "";
     }
 
+    private State state = new State();
+
     @NonInjectable
-    private GoORMHelperProjectSettings(@NotNull Project project, State state) {
-        this.state = state;
+    private GoORMHelperProjectSettings(@NotNull Project project) {
         this.project = project;
     }
 
@@ -64,12 +68,5 @@ public final class GoORMHelperProjectSettings implements PersistentStateComponen
         state.sqlPath = customTableCompletion;
     }
 
-    public static class State extends SimpleModificationTracker {
-        public Types.ORM defaultORM = Types.ORM.AskEveryTime;
-        public Types.Database defaultDatabase = Types.Database.AskEveryTime;
-        public boolean enableGlobalScan = true;
-        public List<String> scanPathList = new SmartList<>();
 
-        public String sqlPath = "";
-    }
 }

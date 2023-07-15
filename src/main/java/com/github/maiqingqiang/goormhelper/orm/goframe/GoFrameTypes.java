@@ -1,5 +1,6 @@
 package com.github.maiqingqiang.goormhelper.orm.goframe;
 
+import com.github.maiqingqiang.goormhelper.inspections.GoTypeSpecDescriptor;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.inspections.core.GoFunctionDescriptor;
@@ -7,6 +8,7 @@ import com.goide.inspections.core.GoMethodDescriptor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface GoFrameTypes {
     Map<GoCallableDescriptor, Integer> CALLABLES = Map.<GoCallableDescriptor, Integer>ofEntries(
@@ -119,5 +121,10 @@ public interface GoFrameTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Having"), OPERATOR_EXPR)
     );
 
-    String ALLOW_TYPE = "*Model";
+    Set<GoCallableDescriptor> ALLOW_TYPES = Set.of(
+            GoTypeSpecDescriptor.of("github.com/gogf/gf/database/gdb.Model")
+    );
+
+    GoTypeSpecDescriptor G_META = GoTypeSpecDescriptor.of("github.com/gogf/gf/frame/g.Meta");
+    GoTypeSpecDescriptor GMETA_META = GoTypeSpecDescriptor.of("github.com/gogf/gf/util/gmeta.Meta");
 }

@@ -33,7 +33,7 @@ public class GoORMHelperHighlightVisitor implements HighlightVisitor {
         }
     }
 
-    private void modelAnnotation(PsiComment psiComment) {
+    private void modelAnnotation(@NotNull PsiComment psiComment) {
         int index = psiComment.getText().indexOf(Types.MODEL_ANNOTATION);
 
         if (index > -1) {
@@ -53,7 +53,7 @@ public class GoORMHelperHighlightVisitor implements HighlightVisitor {
         }
     }
 
-    private void tableAnnotation(PsiComment psiComment) {
+    private void tableAnnotation(@NotNull PsiComment psiComment) {
         int index = psiComment.getText().indexOf(Types.TABLE_ANNOTATION);
 
         if (index > -1) {

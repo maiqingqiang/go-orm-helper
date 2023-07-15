@@ -83,8 +83,8 @@ public class GormColumnCompletionProvider extends ORMCompletionProvider {
     }
 
     @Override
-    public @NotNull String allowType() {
-        return GormTypes.ALLOW_TYPE;
+    public @NotNull Set<GoCallableDescriptor> allowTypes() {
+        return GormTypes.ALLOW_TYPES;
     }
 
     public static @NotNull Map<String, String> parseTag(@NotNull String str) {

@@ -2,11 +2,13 @@ package com.github.maiqingqiang.goormhelper.ui;
 
 import com.github.maiqingqiang.goormhelper.GoORMHelperBundle;
 import com.github.maiqingqiang.goormhelper.Types;
-import com.github.maiqingqiang.goormhelper.services.GoORMHelperManager;
+import com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurableUi;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.NlsContexts;
@@ -32,7 +34,7 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
     private ComboBox<Types.Database> databaseComboBox;
     private JCheckBox enableGlobalScanCheckBox;
     private ListTableModel<String> scanPathListTableModel;
-//    private TextFieldWithBrowseButton sqlPathTextField;
+    //    private TextFieldWithBrowseButton sqlPathTextField;
     private TableView<String> scanPathTableView;
 
     public GoORMHelperSettingForm(Project project) {
@@ -146,9 +148,9 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
 //        settings.setSQLPath(sqlPathTextField.getText());
 
         if (oldEnableGlobalScan != enableGlobalScanCheckBox.isSelected() || !oldscanPathList.equals(scanPathListTableModel.getItems())) {
-            GoORMHelperManager goORMHelperManager = GoORMHelperManager.getInstance(project);
-            goORMHelperManager.clear();
-            goORMHelperManager.scan();
+            GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
+            manager.reset();
+            manager.scan();
         }
     }
 

@@ -1,11 +1,14 @@
 package com.github.maiqingqiang.goormhelper.orm.gorm;
 
+import com.github.maiqingqiang.goormhelper.Types;
+import com.github.maiqingqiang.goormhelper.inspections.GoTypeSpecDescriptor;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.inspections.core.GoMethodDescriptor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface GormTypes {
     Map<GoCallableDescriptor, Integer> CALLABLES = Map.ofEntries(
@@ -23,6 +26,7 @@ public interface GormTypes {
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Pluck"), 0),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Omit"), -1),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).UpdateColumn"), 0),
+            Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Update"), 0),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Delete"), 1),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Where"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Select"), -1),
@@ -38,6 +42,7 @@ public interface GormTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Pluck"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Omit"), -1),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).UpdateColumn"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Update"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Delete"), 1)
     );
 
@@ -72,15 +77,16 @@ public interface GormTypes {
     );
     GoCallableDescriptorSet OTHER_SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(OTHER_SCHEMA_CALLABLES.keySet());
 
-    List<String> OPERATOR_EXPR = List.of(
-            "%s = ?", "%s <> ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s BETWEEN ? AND ?");
-
     Map<GoCallableDescriptor, List<String>> QUERY_EXPR = Map.ofEntries(
-            Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Where"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Having"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Where"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Having"), OPERATOR_EXPR)
+            Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Where"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Having"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Where"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Having"), Types.OPERATOR_EXPR)
     );
 
-    String ALLOW_TYPE = "*DB";
+    Set<GoCallableDescriptor> ALLOW_TYPES = Set.of(
+            GoTypeSpecDescriptor.of("gorm.io/gorm.DB"),
+            GoTypeSpecDescriptor.of("github.com/jinzhu/gorm.DB")
+    );
+
 }

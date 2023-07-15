@@ -7,9 +7,14 @@ import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2GormStruct;
 import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2Struct;
 import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2XormStruct;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 public interface Types {
+
+    List<String> OPERATOR_EXPR = List.of(
+            "%s = ?", "%s <> ?", "%s != ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s >= ?", "%s < ?", "%s <= ?", "%s BETWEEN ? AND ?"
+    );
     String MODEL_ANNOTATION = "@Model";
     Pattern MODEL_ANNOTATION_PATTERN = Pattern.compile(MODEL_ANNOTATION + "\\((.*?)\\)");
     String TABLE_ANNOTATION = "@Table";
@@ -71,4 +76,7 @@ public interface Types {
         }
     }
 
+    List<String> EXCLUDED_SCAN_LIST = List.of(
+            "vendor", "node_modules", "third_party", "third-party", "third party", "test", "tests", "example", "examples"
+    );
 }

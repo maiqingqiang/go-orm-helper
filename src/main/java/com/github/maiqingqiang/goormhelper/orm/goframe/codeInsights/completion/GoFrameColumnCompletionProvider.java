@@ -7,6 +7,7 @@ import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.GoFieldDeclaration;
 import com.goide.psi.GoTag;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +15,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
 
@@ -71,8 +73,8 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
     }
 
     @Override
-    public @NotNull String allowType() {
-        return GoFrameTypes.ALLOW_TYPE;
+    public @NotNull Set<GoCallableDescriptor> allowTypes() {
+        return GoFrameTypes.ALLOW_TYPES;
     }
 
     @Override
@@ -80,7 +82,8 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
         return Icons.GoFrame18x12;
     }
 
-    private static String[] parseTag(String tagStr) {
+    @Contract(pure = true)
+    private static String @NotNull [] parseTag(@NotNull String tagStr) {
         return tagStr.split(",");
     }
 }

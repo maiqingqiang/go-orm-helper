@@ -1,11 +1,14 @@
 package com.github.maiqingqiang.goormhelper.orm.xorm;
 
+import com.github.maiqingqiang.goormhelper.Types;
+import com.github.maiqingqiang.goormhelper.inspections.GoTypeSpecDescriptor;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.inspections.core.GoMethodDescriptor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface XormTypes {
     Map<GoCallableDescriptor, Integer> CALLABLES = Map.ofEntries(
@@ -53,15 +56,14 @@ public interface XormTypes {
 
     GoCallableDescriptorSet OTHER_CALLABLES_SET = new GoCallableDescriptorSet(OTHER_SCHEMA_CALLABLES.keySet());
 
-    List<String> OPERATOR_EXPR = List.of(
-            "%s = ?", "%s <> ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s BETWEEN ? AND ?");
-
     Map<GoCallableDescriptor, List<String>> QUERY_EXPR = Map.ofEntries(
-            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Engine).Where"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Where"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).And"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Or"), OPERATOR_EXPR)
+            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Engine).Where"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Where"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).And"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*xorm.io/xorm.Session).Or"), Types.OPERATOR_EXPR)
     );
 
-    String ALLOW_TYPE = "*Session";
+    Set<GoCallableDescriptor> ALLOW_TYPES = Set.of(
+            GoTypeSpecDescriptor.of("xorm.io/xorm.Session")
+    );
 }

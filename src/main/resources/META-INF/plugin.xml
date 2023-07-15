@@ -11,7 +11,7 @@
     <resource-bundle>messages.GoORMHelperBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperManager"/>
+        <projectService serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager"/>
         <projectService
                 serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings"/>
 

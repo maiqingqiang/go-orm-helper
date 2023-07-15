@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class XormColumnCompletionProvider extends ORMCompletionProvider {
 
@@ -98,8 +99,8 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
     }
 
     @Override
-    public @NotNull String allowType() {
-        return XormTypes.ALLOW_TYPE;
+    public @NotNull Set<GoCallableDescriptor> allowTypes() {
+        return XormTypes.ALLOW_TYPES;
     }
 
     @Override
