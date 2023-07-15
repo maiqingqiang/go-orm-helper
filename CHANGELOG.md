@@ -4,10 +4,12 @@
 
 ## [Unreleased]
 
-## [1.2.0] - 2023-07-04
+## [1.2.0] - 2023-07-15
 
 ### Added
 - Support GoFrame ORM.
+- Refactor Code Completion. Better Performance!
+- Refactor GoORMHelperCacheManager.
 
 ## [1.1.0] - 2023-07-04
 
