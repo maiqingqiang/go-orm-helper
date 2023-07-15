@@ -62,7 +62,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         LOG.info("argument: " + argument);
 
-        GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(argument.getProject());
+        GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
 
         if (argument instanceof GoStatement) {
             String comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(argument), false);
@@ -88,8 +88,17 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                 } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
                     if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
                         handleGoType(result, descriptor, goVarDefinition.getGoType(ResolveState.initial()));
-                    } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition && goParamDefinition.getGoTypeInner(ResolveState.initial()) instanceof GoPointerType goPointerType) {
-                        handleGoType(result, descriptor, goPointerType.getType());
+                    } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
+
+                        GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
+
+                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                            goType = goArrayOrSliceType.getType();
+                        }
+
+                        if (goType instanceof GoPointerType goPointerType) {
+                            handleGoType(result, descriptor, goPointerType.getType());
+                        }
                     }
                 }
             } else if (argument instanceof GoBuiltinCallExpr goBuiltinCallExpr) {
