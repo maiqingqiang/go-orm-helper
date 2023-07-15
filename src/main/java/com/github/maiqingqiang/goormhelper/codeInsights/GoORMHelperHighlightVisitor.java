@@ -15,7 +15,6 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class GoORMHelperHighlightVisitor implements HighlightVisitor {
     private HighlightInfoHolder holder;

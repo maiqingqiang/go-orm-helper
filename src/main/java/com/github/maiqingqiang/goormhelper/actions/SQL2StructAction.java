@@ -3,7 +3,6 @@ package com.github.maiqingqiang.goormhelper.actions;
 import com.github.maiqingqiang.goormhelper.Types;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings;
 import com.github.maiqingqiang.goormhelper.sql2struct.ISQL2Struct;
-import com.github.maiqingqiang.goormhelper.sql2struct.impl.SQL2GormStruct;
 import com.github.maiqingqiang.goormhelper.ui.ConvertSettingDialogWrapper;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;

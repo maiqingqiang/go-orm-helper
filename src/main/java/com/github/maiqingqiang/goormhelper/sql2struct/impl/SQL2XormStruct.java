@@ -18,7 +18,7 @@ public class SQL2XormStruct extends SQL2Struct {
         stringBuilder.append("'").append(getColumn(definition)).append("' ");
 
         String comment = getComment(definition);
-        if (!comment.isEmpty()){
+        if (!comment.isEmpty()) {
             stringBuilder.append("comment('").append(comment).append("') ");
         }
 
@@ -26,7 +26,7 @@ public class SQL2XormStruct extends SQL2Struct {
             stringBuilder.append("pk ");
         }
 
-        if (definition.isAutoIncrement()){
+        if (definition.isAutoIncrement()) {
             stringBuilder.append("autoincr ");
         }
 

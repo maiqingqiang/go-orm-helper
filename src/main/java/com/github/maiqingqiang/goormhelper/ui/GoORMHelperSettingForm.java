@@ -4,11 +4,9 @@ import com.github.maiqingqiang.goormhelper.GoORMHelperBundle;
 import com.github.maiqingqiang.goormhelper.Types;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurableUi;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.NlsContexts;
@@ -42,6 +40,18 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         initComponent();
     }
 
+    private static FileChooserDescriptor getFileChooserDescriptor(@NlsContexts.DialogTitle String title) {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true)
+                .withShowFileSystemRoots(true)
+                .withShowHiddenFiles(true);
+
+        if (title != null) {
+            descriptor.setTitle(title);
+        }
+
+        return descriptor;
+    }
+
     private void initComponent() {
         ormComboBox = new ComboBox<>(Types.ORM.values());
         databaseComboBox = new ComboBox<>(Types.Database.values());
@@ -59,9 +69,7 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
                 .getPanel();
 
 
-        enableGlobalScanCheckBox.addChangeListener(e -> {
-            scanPathTableView.setEnabled(!enableGlobalScanCheckBox.isSelected());
-        });
+        enableGlobalScanCheckBox.addChangeListener(e -> scanPathTableView.setEnabled(!enableGlobalScanCheckBox.isSelected()));
     }
 
     private @NotNull JPanel initScanPathComponent() {
@@ -124,7 +132,6 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         scanPathTableView.setEnabled(!state.enableGlobalScan);
     }
 
-
     @Override
     public boolean isModified(@NotNull GoORMHelperProjectSettings settings) {
         GoORMHelperProjectSettings.State state = Objects.requireNonNull(settings.getState());
@@ -157,18 +164,6 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
     @Override
     public @NotNull JComponent getComponent() {
         return panel;
-    }
-
-    private static FileChooserDescriptor getFileChooserDescriptor(@NlsContexts.DialogTitle String title) {
-        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true)
-                .withShowFileSystemRoots(true)
-                .withShowHiddenFiles(true);
-
-        if (title != null) {
-            descriptor.setTitle(title);
-        }
-
-        return descriptor;
     }
 
 }

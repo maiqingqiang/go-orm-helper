@@ -19,6 +19,11 @@ import java.util.Set;
 
 public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
 
+    @Contract(pure = true)
+    private static String @NotNull [] parseTag(@NotNull String tagStr) {
+        return tagStr.split(",");
+    }
+
     @Override
     public Map<GoCallableDescriptor, Integer> callables() {
         return GoFrameTypes.CALLABLES;
@@ -80,10 +85,5 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
     @Override
     protected Icon getIcon() {
         return Icons.GoFrame18x12;
-    }
-
-    @Contract(pure = true)
-    private static String @NotNull [] parseTag(@NotNull String tagStr) {
-        return tagStr.split(",");
     }
 }

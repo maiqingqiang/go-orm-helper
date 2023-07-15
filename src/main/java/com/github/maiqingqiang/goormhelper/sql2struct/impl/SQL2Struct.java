@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SQL2Struct implements ISQL2Struct {
-    private final String sql;
-    private final DbType dbType;
-
     private static final Map<String, String> dataType = Map.ofEntries(
             Map.entry("numeric", "int32"),
             Map.entry("integer", "int32"),
@@ -52,8 +49,9 @@ public class SQL2Struct implements ISQL2Struct {
             Map.entry("bit", "[]uint8"),
             Map.entry("boolean", "bool")
     );
-
     private static final String defaultDataType = "string";
+    private final String sql;
+    private final DbType dbType;
 
 
     public SQL2Struct(String sql, DbType dbType) {

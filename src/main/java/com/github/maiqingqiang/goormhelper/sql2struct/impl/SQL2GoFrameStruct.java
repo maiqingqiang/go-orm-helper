@@ -2,7 +2,6 @@ package com.github.maiqingqiang.goormhelper.sql2struct.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
-import com.github.maiqingqiang.goormhelper.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 
 public class SQL2GoFrameStruct extends SQL2Struct {

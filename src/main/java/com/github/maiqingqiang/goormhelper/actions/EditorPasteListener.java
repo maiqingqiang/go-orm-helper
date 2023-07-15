@@ -8,7 +8,6 @@ import com.goide.psi.GoFile;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
@@ -27,8 +26,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class EditorPasteListener extends EditorActionHandler {
-
-    private static final Logger LOG = Logger.getInstance(EditorPasteListener.class);
 
     private final EditorActionHandler handler;
 

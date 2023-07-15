@@ -21,6 +21,9 @@ public interface Types {
     Pattern TABLE_ANNOTATION_PATTERN = Pattern.compile(TABLE_ANNOTATION + "\\((.*?)\\)");
 
     String TABLE_NAME_FUNC = "TableName";
+    List<String> EXCLUDED_SCAN_LIST = List.of(
+            "vendor", "node_modules", "third_party", "third-party", "third party", "test", "tests", "example", "examples"
+    );
 
     enum ORM {
         AskEveryTime(GoORMHelperBundle.message("orm.AskEveryTime")),
@@ -75,8 +78,4 @@ public interface Types {
             return name;
         }
     }
-
-    List<String> EXCLUDED_SCAN_LIST = List.of(
-            "vendor", "node_modules", "third_party", "third-party", "third party", "test", "tests", "example", "examples"
-    );
 }

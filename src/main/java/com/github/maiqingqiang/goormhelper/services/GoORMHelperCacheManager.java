@@ -40,17 +40,6 @@ public class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHe
     private static final Logger LOG = Logger.getInstance(GoORMHelperCacheManager.class);
 
     public final Project project;
-
-    static class State {
-        public long lastTimeChecked = 0L;
-
-        public final Map<String, Set<String>> schemaMapping = new HashMap<>();
-
-        public final Map<String, ScannedPath> scannedPathMapping = new HashMap<>();
-
-        public final Map<String, String> tableStructMapping = new HashMap<>();
-    }
-
     private State state = new State();
 
     @NonInjectable
@@ -232,5 +221,12 @@ public class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHe
 
     public void reset() {
         this.state.lastTimeChecked = 0L;
+    }
+
+    static class State {
+        public final Map<String, Set<String>> schemaMapping = new HashMap<>();
+        public final Map<String, ScannedPath> scannedPathMapping = new HashMap<>();
+        public final Map<String, String> tableStructMapping = new HashMap<>();
+        public long lastTimeChecked = 0L;
     }
 }

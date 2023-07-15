@@ -18,27 +18,6 @@ public class GoTypeSpecDescriptor implements GoCallableDescriptor {
         this.name = name;
     }
 
-    @Override
-    public @NotNull String getName() {
-        return name;
-    }
-
-    @Override
-    public @NotNull String getImportPath() {
-        return importPath;
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o != null && this.getClass() == o.getClass()) {
-            GoTypeSpecDescriptor that = (GoTypeSpecDescriptor) o;
-            return this.importPath.equals(that.importPath) && this.name.equals(that.name);
-        } else {
-            return false;
-        }
-    }
-
     public static @NotNull GoTypeSpecDescriptor of(@NotNull String descriptorText) {
         int lastDot = descriptorText.lastIndexOf(".");
         if (lastDot != -1 && lastDot != 0 && lastDot != descriptorText.length() - 1) {
@@ -60,6 +39,27 @@ public class GoTypeSpecDescriptor implements GoCallableDescriptor {
                 importPath = ignoreVersion ? GoImportPathUtil.removeVersion(importPath) : importPath;
                 return new GoTypeSpecDescriptor(importPath, name);
             }
+        }
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return name;
+    }
+
+    @Override
+    public @NotNull String getImportPath() {
+        return importPath;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        } else if (o != null && this.getClass() == o.getClass()) {
+            GoTypeSpecDescriptor that = (GoTypeSpecDescriptor) o;
+            return this.importPath.equals(that.importPath) && this.name.equals(that.name);
+        } else {
+            return false;
         }
     }
 }

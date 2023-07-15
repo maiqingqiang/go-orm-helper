@@ -1,6 +1,6 @@
 package com.github.maiqingqiang.goormhelper.utils;
 
-import com.goide.psi.*;
+import com.goide.psi.GoCallExpr;
 import com.goide.psi.impl.GoPsiUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -16,27 +16,6 @@ public class ORMPsiTreeUtil {
         }
 
         return result;
-    }
-
-    public static String getText(GoTypeReferenceExpression expression) {
-        if (expression != null) {
-            return expression.getIdentifier().getText();
-        }
-        return "";
-    }
-
-    public static String getText(GoType type) {
-        if (type != null) {
-            return getText(type.getTypeReferenceExpression());
-        }
-        return "";
-    }
-
-    public static String getText(GoCompositeLit compositeLit) {
-        if (compositeLit != null) {
-            return getText(compositeLit.getTypeReferenceExpression());
-        }
-        return "";
     }
 
     public static boolean callHasArgumentAtIndex(@NotNull GoCallExpr call, int argumentIndex, @NotNull PsiElement argument) {

@@ -17,7 +17,7 @@ public class SQL2GormStruct extends SQL2Struct {
                 .append("type:").append(getDBType(definition)).append(";");
 
         String comment = getComment(definition);
-        if (!comment.isEmpty()){
+        if (!comment.isEmpty()) {
             stringBuilder.append("comment:").append(comment).append(";");
         }
 

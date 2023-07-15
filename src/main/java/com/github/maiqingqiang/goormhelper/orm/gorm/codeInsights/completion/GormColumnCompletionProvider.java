@@ -5,7 +5,8 @@ import com.github.maiqingqiang.goormhelper.orm.gorm.GormTypes;
 import com.github.maiqingqiang.goormhelper.ui.Icons;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
-import com.goide.psi.*;
+import com.goide.psi.GoFieldDeclaration;
+import com.goide.psi.GoTag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,33 @@ import javax.swing.*;
 import java.util.*;
 
 public class GormColumnCompletionProvider extends ORMCompletionProvider {
+
+    public static @NotNull Map<String, String> parseTag(@NotNull String str) {
+        Map<String, String> settings = new HashMap<>();
+        String[] names = str.split(";");
+
+        for (int i = 0; i < names.length; i++) {
+            int j = i;
+            if (names[j].length() > 0) {
+                while (names[j].charAt(names[j].length() - 1) == '\\') {
+                    i++;
+                    names[j] = names[j].substring(0, names[j].length() - 1) + ";" + names[i];
+                    names[i] = "";
+                }
+            }
+
+            String[] values = names[j].split(":");
+            String k = values[0].trim().toUpperCase();
+
+            if (values.length >= 2) {
+                settings.put(k, String.join(":", Arrays.copyOfRange(values, 1, values.length)));
+            } else if (!k.equals("")) {
+                settings.put(k, k);
+            }
+        }
+
+        return settings;
+    }
 
     @Override
     public Map<GoCallableDescriptor, Integer> callables() {
@@ -85,32 +113,5 @@ public class GormColumnCompletionProvider extends ORMCompletionProvider {
     @Override
     public @NotNull Set<GoCallableDescriptor> allowTypes() {
         return GormTypes.ALLOW_TYPES;
-    }
-
-    public static @NotNull Map<String, String> parseTag(@NotNull String str) {
-        Map<String, String> settings = new HashMap<>();
-        String[] names = str.split(";");
-
-        for (int i = 0; i < names.length; i++) {
-            int j = i;
-            if (names[j].length() > 0) {
-                while (names[j].charAt(names[j].length() - 1) == '\\') {
-                    i++;
-                    names[j] = names[j].substring(0, names[j].length() - 1) + ";" + names[i];
-                    names[i] = "";
-                }
-            }
-
-            String[] values = names[j].split(":");
-            String k = values[0].trim().toUpperCase();
-
-            if (values.length >= 2) {
-                settings.put(k, String.join(":", Arrays.copyOfRange(values, 1, values.length)));
-            } else if (!k.equals("")) {
-                settings.put(k, k);
-            }
-        }
-
-        return settings;
     }
 }
