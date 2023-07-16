@@ -10,7 +10,7 @@
 - Support GoFrame ORM.
 - Support Go ORM Tags Live Template.
 - Refactor Code Completion. Better Performance!
-- Refactor GoORMHelperCacheManager.
+- Refactor GoORMHelper Cache Manager.
 
 ## [1.1.0] - 2023-07-04
 
