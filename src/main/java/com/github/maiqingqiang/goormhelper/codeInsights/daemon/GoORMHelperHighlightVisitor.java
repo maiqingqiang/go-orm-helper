@@ -1,4 +1,4 @@
-package com.github.maiqingqiang.goormhelper.codeInsights;
+package com.github.maiqingqiang.goormhelper.codeInsights.daemon;
 
 import com.github.maiqingqiang.goormhelper.Types;
 import com.goide.psi.GoFile;

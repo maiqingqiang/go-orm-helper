@@ -11,6 +11,12 @@
     <resource-bundle>messages.GoORMHelperBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
+
+<!--        <liveTemplateContext implementation="com.github.maiqingqiang.goormhelper.codeInsights.template.GoORMTemplateContextType"/>-->
+<!--        <liveTemplateContext implementation="com.goide.editor.template.GoLiveTemplateContextType$Tag"/>-->
+        <defaultLiveTemplates file="liveTemplates/Go ORM Tags.xml"/>
+
+
         <projectService serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager"/>
         <projectService
                 serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings"/>
@@ -25,7 +31,7 @@
                                 implementationClass="com.github.maiqingqiang.goormhelper.orm.goframe.codeInsights.completion.GoFrameCompletionContributor"/>
 
         <highlightVisitor
-                implementation="com.github.maiqingqiang.goormhelper.codeInsights.GoORMHelperHighlightVisitor"/>
+                implementation="com.github.maiqingqiang.goormhelper.codeInsights.daemon.GoORMHelperHighlightVisitor"/>
 
         <editorActionHandler action="EditorPaste"
                              implementationClass="com.github.maiqingqiang.goormhelper.actions.EditorPasteListener"

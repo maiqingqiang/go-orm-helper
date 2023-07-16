@@ -192,7 +192,18 @@ public class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHe
                 if (descriptor == null) continue;
 
                 if (descriptor.equals(GoFrameTypes.G_META) || descriptor.equals(GoFrameTypes.GMETA_META)) {
-                    System.out.println("666 " + goTypeSpec.getName());
+                    GoTag tag = goFieldDeclaration.getTag();
+                    if (tag != null) {
+                        String ormText = tag.getValue("orm");
+                        if (ormText != null && ormText.contains("table:")) {
+                            String[] ormPropertyList = ormText.split(",");
+                            for (String s : ormPropertyList) {
+                                if (s.contains("table:")) {
+                                    return s.replace("table:", "").trim();
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
