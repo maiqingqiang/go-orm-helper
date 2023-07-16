@@ -150,6 +150,9 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
                     for (GoTypeSpec goTypeSpec : PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class)) {
                         if (!Objects.equals(goTypeSpec.getName(), schema)) continue;
+
+                        LOG.info("handleSchema path: " + path);
+
                         scanFields(descriptor, result, goTypeSpec);
                     }
                 }
@@ -315,14 +318,14 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                     comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(field), false);
                 }
 
-                addElement(result, column, comment, type);
+                addElement(result, column, comment, type, goTypeSpec);
 
                 Map<GoCallableDescriptor, List<String>> queryExpr = queryExpr();
                 if (queryExpr != null) {
                     List<String> whereExpr = queryExpr.get(descriptor);
                     if (whereExpr != null) {
                         for (String s : whereExpr) {
-                            addElement(result, String.format(s, column), comment, type);
+                            addElement(result, String.format(s, column), comment, type, goTypeSpec);
                         }
                     }
                 }
@@ -330,11 +333,25 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         }
     }
 
-    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type) {
-        result.addElement(LookupElementBuilder.create(column)
+    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
+        LookupElementBuilder builder = LookupElementBuilder
+                .createWithSmartPointer(column, goTypeSpec)
+                .withPresentableText(column)
                 .withTypeText(type)
                 .withIcon(getIcon())
-                .withTailText(" " + comment, true));
+                .withTailText(" " + comment, true);
+
+        if (goTypeSpec.getContainingFile().getVirtualFile() != null) {
+            String path = goTypeSpec.getContainingFile().getVirtualFile().getCanonicalPath();
+            if (path != null) {
+                String basePath = goTypeSpec.getProject().getBasePath();
+                if (basePath != null) {
+                    builder = builder.appendTailText(" " + path.replace(basePath + "/", ""), true);
+                }
+            }
+        }
+
+        result.addElement(builder);
     }
 
     protected Icon getIcon() {
