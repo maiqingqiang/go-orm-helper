@@ -4,26 +4,54 @@ import (
 	"xorm.io/xorm"
 )
 
-type Order struct {
-	ID    uint   // 主键
-	Name  string `xorm:"varchar(25) notnull unique 'usr_name' comment('姓名')"`
-	Price *string
+type User struct {
+	ID    uint    // 主键
+	Name  string  `xorm:"'user_name'"` // 姓名
+	Email *string // 邮箱
+	Age   int32   // 年龄
 }
 
-func main() {
-	engine, _ := xorm.NewEngine("", "")
+func test1(db *xorm.Engine) (user *User) {
+	db.Table(&user).Where("id = ? = ?", 1).Find(&user)
 
-	var order Order
+	db.Table(&user).Where(map[string]interface{}{"user_name": "jinzhu", "age": 20}).Find(&user)
 
-	engine.Table(&order).Where("id", "")
-	engine.Table("orders").Where("id", "")
+	db.Where("id = ?", 1).Find(&user)
 
-	db := engine.Table("orders")
-	db.Where("id")
+	db.Table(&User{}).Where("id = ?", 1).Find(&user)
 
-	engine.Where("id", "")
-	engine.Where("id", "")
+	db.Table(new(User)).Where("id = ?", 1).Find(&user)
 
-	qq := engine.Table("order").Where("id", "")
-	qq.And("usr_name").Asc().Get(&order)
+	db.Table("users").Where("id", 1).Find(&user)
+
+	return
+}
+
+func test2(db *xorm.Engine) (users []*User) {
+	db.Where("user_name = ?", "").Find(&users)
+	return
+}
+
+func test3(db *xorm.Engine, user *User) (users []*User) {
+	db.Table(&user).Where("user_name = ?", "").Find(&users)
+	return
+}
+
+func test4(db *xorm.Engine) (user *User) {
+	query := db.Table(&User{})
+	query.Where("id = ?", 1)
+	return
+}
+
+func test5(db *xorm.Engine) (user *User) {
+	query := db.Table(&User{})
+	query = query.Where("id = ?", "")
+	query.Find(&user)
+	return
+}
+
+func test6(db *xorm.Engine) (user *User) {
+	query := db.Where("id = ?", "")
+	query.Find(&user)
+	return
 }

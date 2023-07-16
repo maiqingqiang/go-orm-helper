@@ -1,68 +1,61 @@
 package main
 
 import (
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"log"
 )
 
 type User struct {
-	ID    uint    // 主键sss
-	Name  string  // 姓名
+	ID    uint    // 主键
+	Name  string  `gorm:"column:user_name;type:varchar(50);not null" json:"name"` // 姓名
 	Email *string // 邮箱
+	Age   int32   // 年龄
 }
 
 func (u *User) TableName() string {
-	return "test_users"
+	return "users"
 }
 
-type User2 struct {
-	ID    uint    // 主键2
-	Name  string  // 姓名2
-	Email *string // 邮箱2
+func test1(db *gorm.DB) (user *User) {
+	db.Model(&user).Where("id = ? = ?", 1).Find(&user)
+
+	db.Model(&user).Where(map[string]interface{}{"user_name": "jinzhu", "age": 20}).Find(&user)
+
+	db.Where("id = ?", 1).Find(&user)
+
+	db.Model(&User{}).Where("id = ?", 1).Find(&user)
+
+	db.Model(new(User)).Where("id = ?", 1).Find(&user)
+
+	db.Table("users").Where("id", 1).Find(&user)
+
+	return
 }
 
-type Post struct {
-	ID         int32 `gorm:"column:id;type:int(12);primaryKey" json:"id"`      // 主讲
-	Context    int32 `gorm:"column:body;type:tinyint(4);not null" json:"body"` // 内容
-	CreateTime int32 `gorm:"column:created_at;not null" json:"created_at"`     // 创建时间
+func test2(db *gorm.DB) (users []*User) {
+	db.Where("user_name = ?", "").Find(&users)
+	return
 }
 
-func main() {
-	dsn := ""
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
-	}
+func test3(db *gorm.DB, user *User) (users []*User) {
+	db.Model(&user).Where("user_name = ?", "").Find(&users)
+	return
+}
 
-	var user User
+func test4(db *gorm.DB) (user *User) {
+	query := db.Model(&User{})
+	query.Where("id = ?", 1)
+	return
+}
 
-	db1 := db.Where("11111111")
-	db1.Model(&user)
+func test5(db *gorm.DB) (user *User) {
+	query := db.Model(&User{})
+	query = query.Where("id = ?", "")
+	query.Find(&user)
+	return
+}
 
-	db2 := db.Where("name")
-	db2 = db2.Model("test_users")
-	db2 = db2.Where("name")
-
-	db1 = db2
-	db2 = db1.Where("name")
-
-	db3 := db2.Where("")
-	db3.Model("2").Where("11")
-
-	test := "test_users"
-	query1 := db.Table(test).Select("id", "name")
-	query1 = query1.Where("name", "")
-
-	var user2 User2
-	query2 := db.Where("n <> ?", "")
-	query2.Where("id > ?").Find(&user2)
-
-	var post Post
-	query3 := db.Select("body", "created_at")
-	query3 = query3.Where("id IN ?", "")
-	query3.Find(&post)
-
-	db4 := db.Where("id")
-	db4.Where("name")
+func test6(db *gorm.DB) (user *User) {
+	query := db.Where("id = ?", "")
+	query.Find(&user)
+	return
 }
