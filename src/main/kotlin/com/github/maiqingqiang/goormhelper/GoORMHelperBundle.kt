@@ -6,7 +6,8 @@ import org.jetbrains.annotations.PropertyKey
 
 @NonNls
 private const val BUNDLE = "messages.GoORMHelperBundle"
-object GoORMHelperBundle: DynamicBundle(BUNDLE) {
+
+object GoORMHelperBundle : DynamicBundle(BUNDLE) {
     @Suppress("SpreadOperator")
     @JvmStatic
     fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =

@@ -105,11 +105,6 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
 
         if (descriptor == null) return true;
 
-        if (descriptor.equals(GoFrameTypes.G_META) || descriptor.equals(GoFrameTypes.GMETA_META)) {
-            return false;
-        }
-
-
-        return true;
+        return !descriptor.equals(GoFrameTypes.G_META) && !descriptor.equals(GoFrameTypes.GMETA_META);
     }
 }
