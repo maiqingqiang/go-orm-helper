@@ -20,6 +20,8 @@ func test1(db *xorm.Engine) (user *User) {
 
 	db.Table(&User{}).Where("id = ?", 1).Find(&user)
 
+	db.Table(User{}).Where("id = ?", 1).Find(&user)
+
 	db.Table(new(User)).Where("id = ?", 1).Find(&user)
 
 	db.Table("users").Where("id = ?", 1).Find(&user)

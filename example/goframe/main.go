@@ -23,6 +23,8 @@ func test1() (user *User) {
 
 	g.Model(new(User)).Where("id = ?", 1)
 
+	g.Model(User{}).Where("id = ?", 1)
+
 	g.Model("goframe_users").Where("id = ?", 1)
 
 	// @Model(User)

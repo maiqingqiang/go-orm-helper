@@ -114,6 +114,8 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                         handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
                     }
                 }
+            } else if (argument instanceof GoCompositeLit goCompositeLit) {
+                handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
             } else if (argument instanceof GoStringLiteral goStringLiteral) {
                 String schema = manager.getTableStructMapping().get(goStringLiteral.getDecodedText());
                 handleSchema(parameters, result, project, descriptor, schema);

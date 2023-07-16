@@ -24,6 +24,8 @@ func test1(db *gorm.DB) (user *User) {
 
 	db.Model(&User{}).Where("id = ?", 1).Find(&user)
 
+	db.Model(User{}).Where("id = ?", 1).Find(&user)
+
 	db.Model(new(User)).Where("id = ?", 1).Find(&user)
 
 	db.Table("users").Where("id", 1).Find(&user)
