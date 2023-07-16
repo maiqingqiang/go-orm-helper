@@ -1,7 +1,7 @@
 package com.github.maiqingqiang.goormhelper.listeners;
 
 import com.github.maiqingqiang.goormhelper.bean.ScannedPath;
-import com.github.maiqingqiang.goormhelper.services.GoORMHelperManager;
+import com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager;
 import com.goide.GoFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -13,7 +13,6 @@ import java.util.List;
 
 public class SchemaFileListener implements BulkFileListener {
 
-
     private final Project project;
 
     public SchemaFileListener(Project project) {
@@ -24,16 +23,17 @@ public class SchemaFileListener implements BulkFileListener {
     public void after(@NotNull List<? extends @NotNull VFileEvent> events) {
         for (VFileEvent event : events) {
             if (event.isFromSave() && event.getFile() != null && event.getFile().isValid() && event.getPath().endsWith('.' + GoFileType.DEFAULT_EXTENSION)) {
+                GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(this.project);
 
                 VirtualFile file = event.getFile();
 
-                GoORMHelperManager goORMHelperManager = GoORMHelperManager.getInstance(this.project);
+                ScannedPath scanned = manager.getScannedPathMapping().get(file.getUrl());
 
-                ScannedPath scannedPath = goORMHelperManager.getScannedPath(file);
-                if (scannedPath == null) continue;
-                goORMHelperManager.clearScanned(file);
+                if (scanned != null) {
+                    scanned.getSchema().forEach(s -> manager.getTableStructMapping().remove(s));
+                }
 
-                goORMHelperManager.parseGoFile(file);
+                GoORMHelperCacheManager.getInstance(this.project).parseGoFile(event.getFile());
             }
         }
     }

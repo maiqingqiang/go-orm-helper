@@ -5,7 +5,8 @@ English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [
     <h1 align="center">Go ORM Helper</h1>
 </div>
 
-<p align="center">A GoLand plugin that automatically provides database field autocompletion, tags, and generates Structs for writing ORM code. Supports: Gorm、Xorm、Beego、GoFrame, etc.</p>
+<p align="center">A GoLand plugin that automatically provides database field autocompletion, tags, and generates Structs
+for writing ORM code. Supports: Gorm、Xorm、Beego、GoFrame, etc.<br/>⭐️ Star to support our work!</p>
 
 > Inspired by [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) & 
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html). When using ORM packages in Golang,
@@ -18,23 +19,17 @@ English | [简体中文](./README-zh_CN.md) | [日本語](./README-ja_JP.md) | [
   - [x] Assisted code completion with @Model annotation.
   - [x] Assisted code completion with @Table annotation.
   - [ ] Assisted code completion for custom SQL. 🚧[WIP]
-- [x] SQL to Struct conversion.
-  - [x] Gorm
-  - [x] Xorm
-  - [x] Generic Struct
-  - [ ] GoFrame
-  - [ ] Beego
-  - [ ] sqlx
-- [ ] Tag Code Completion. 🚧[WIP]
+- [x] SQL to Struct conversion. [Supported](./SUPPORTED.md#supported-sql-to-struct-conversion)
+- [x] Go ORM Tags Live Template. [Supported](./SUPPORTED.md#supported-orm-tags-live-template)
 - More features waiting to be discovered and improved...
 
-## Supported ORM Packages
+## Supported ORM Code Completion.
 - [x] [Gorm](https://github.com/go-gorm/gorm)
 - [x] [Xorm](https://gitea.com/xorm/xorm)
-- [ ] [GoFrame](https://github.com/gogf/gf) 🚧[WIP]
+- [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
-- More packages waiting to be discovered and improved...
+- [More Supported](./SUPPORTED.md)
 
 ## Usage
 ![guide.gif](assets%2Fguide.gif)

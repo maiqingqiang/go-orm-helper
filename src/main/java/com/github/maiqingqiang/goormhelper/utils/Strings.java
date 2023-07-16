@@ -40,9 +40,9 @@ public class Strings {
             Map.entry("URL", "url"),
             Map.entry("UTF8", "utf8"),
             Map.entry("VM", "vm"),
-            Map.entry("XML", "xml")
+            Map.entry("XML", "xml"),
+            Map.entry("ERP", "erp")
     );
-
 
     public static String replaceCommonInitialisms(String s) {
         for (Map.Entry<String, String> entry : COMMON_INITIALISMS.entrySet()) {

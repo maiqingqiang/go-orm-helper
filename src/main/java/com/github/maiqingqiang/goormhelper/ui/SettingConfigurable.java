@@ -2,7 +2,6 @@ package com.github.maiqingqiang.goormhelper.ui;
 
 import com.github.maiqingqiang.goormhelper.GoORMHelperBundle;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings;
-import com.github.maiqingqiang.goormhelper.ui.GoORMHelperSettingForm;
 import com.intellij.openapi.options.ConfigurableBase;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;

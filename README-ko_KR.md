@@ -5,7 +5,8 @@
     <h1 align="center">Go ORM 도우미</h1>
 </div>
 
-<p align="center">GoLand 에 ORM을 쓸 수 있도록 데이터베이스 필드, Tag, Struct를 자동으로 완성하는 플러그인지원: Gorm, Xorm, Beego, GoFrame...)</p>
+<p align="center">GoLand 에 ORM을 쓸 수 있도록 데이터베이스 필드, Tag, Struct를 자동으로 완성하는 플러그인지원: Gorm, Xorm, Beego, GoFrame...)
+<br>우리의 작업을 지원하기 위해 ⭐️스타를 부탁드립니다!</p>
 
 > [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html) 에서영감을 받았습니다.본인이 Go의 ORM 
@@ -18,24 +19,18 @@
     - [x] @Model 메모 보조 완성
     - [x] @Table 메모 보조 완성
     - [ ] 사용자 정의 SQL 보조 불완전 🚧[WIP]
-- [x] SQL 변환 Struct
-    - [x] Gorm
-    - [x] Xorm
-    - [x] 공통 Struct
-    - [ ] GoFrame 🚧[WIP]
-    - [ ] Beego 🚧[WIP]
-    - [ ] sqlx 🚧[WIP]
-- [ ] Tag 코드 완성 🚧[WIP]
+- [x] SQL 변환 Struct [지원 내역](./SUPPORTED.md#supported-sql-to-struct-conversion)
+- [x] Go ORM Tag 실시간 템플릿 [지원 내역](./SUPPORTED.md#supported-orm-tags-live-template)
 - 더 많은 것을 발견하고 개선하기를 기다린다...
 
 ## 지원되는 ORM
 
 - [x] [Gorm](https://github.com/go-gorm/gorm)
 - [x] [Xorm](https://gitea.com/xorm/xorm)
-- [ ] [GoFrame](https://github.com/gogf/gf) 🚧[WIP]
+- [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
-- 더 많은 것을 발견하고 개선하기를 기다린다...
+- [지원 내역](./SUPPORTED.md)
 
 ## 사용
 

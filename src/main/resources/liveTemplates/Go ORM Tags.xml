@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright 2013-2016 Sergey Ignatov, Alexander Zolotov, Florin Patan
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<templateSet group="Go Struct Tags">
+    <template description='`gorm:""`' name='gorm' toReformat='true' toShortenFQNames='true'
+              value='`gorm:"column:$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`xorm:""`' name='xorm' toReformat='true' toShortenFQNames='true'
+              value='`xorm:"&apos;$FIELD_NAME$&apos;"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`orm:""`' name='orm (GoFrame)' toReformat='true' toShortenFQNames='true'
+              value='`orm:"$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`orm:""`' name='orm (Beego)' toReformat='true' toShortenFQNames='true'
+              value='`orm:"column($FIELD_NAME$)"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`gqlgen:""`' name='gqlgen (ent.)' toReformat='true' toShortenFQNames='true'
+              value='`gqlgen:"$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`boil:""`' name='boil (SQLBoiler)' toReformat='true' toShortenFQNames='true'
+              value='`boil:"$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`pg:""`' name='pg' toReformat='true' toShortenFQNames='true'
+              value='`pg:"$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`bun:""`' name='bun' toReformat='true' toShortenFQNames='true'
+              value='`bun:"$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`reform:""`' name='reform' toReformat='true' toShortenFQNames='true'
+              value='`reform:"$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`aorm:""`' name='aorm' toReformat='true' toShortenFQNames='true'
+              value='`aorm:""$END$`'>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
+    <template description='`db:""`' name='db (sqlx|gorp|upper/db|Buffalo Model|go-sqlbuilder|rel|Bob|lore|GoBatis)'
+              toReformat='true' toShortenFQNames='true' value='`db:"$FIELD_NAME$"$END$`'>
+        <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+</templateSet>
+

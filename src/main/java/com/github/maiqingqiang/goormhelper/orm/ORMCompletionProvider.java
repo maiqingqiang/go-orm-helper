@@ -1,19 +1,21 @@
 package com.github.maiqingqiang.goormhelper.orm;
 
 import com.github.maiqingqiang.goormhelper.Types;
-import com.github.maiqingqiang.goormhelper.services.GoORMHelperManager;
+import com.github.maiqingqiang.goormhelper.inspections.GoTypeSpecDescriptor;
+import com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager;
 import com.github.maiqingqiang.goormhelper.ui.Icons;
+import com.github.maiqingqiang.goormhelper.utils.ORMPsiTreeUtil;
 import com.github.maiqingqiang.goormhelper.utils.Strings;
 import com.goide.documentation.GoDocumentationProvider;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.*;
-import com.goide.psi.impl.GoPsiUtil;
 import com.google.common.base.CaseFormat;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
@@ -23,7 +25,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,20 +32,21 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 public abstract class ORMCompletionProvider extends CompletionProvider<CompletionParameters> {
-
-    private static boolean hasArgumentAtIndex(@NotNull GoCallExpr call, int argumentIndex, @NotNull PsiElement argument) {
-        if (argumentIndex == -1) return true;
-        argument = GoPsiUtil.skipParens(argument);
-        return argument == ContainerUtil.getOrElse(call.getArgumentList().getExpressionList(), argumentIndex, (Object) null);
-    }
+    private static final Logger LOG = Logger.getInstance(ORMCompletionProvider.class);
 
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
-        Project project = parameters.getPosition().getProject();
 
-        GoCallExpr goCallExpr = (GoCallExpr) PsiTreeUtil.findFirstParent(parameters.getPosition(), element -> element instanceof GoCallExpr);
+        PsiElement currentElement = parameters.getPosition();
+
+        LOG.info("currentElement: " + currentElement.getText());
+
+        Project project = currentElement.getProject();
+
+        GoCallExpr goCallExpr = (GoCallExpr) PsiTreeUtil.findFirstParent(currentElement, e -> e instanceof GoCallExpr);
 
         if (goCallExpr == null) return;
 
@@ -53,38 +55,280 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         Integer argumentIndex = callables().get(descriptor);
 
-        if (!hasArgumentAtIndex(goCallExpr, argumentIndex, parameters.getPosition().getParent()) && !(parameters.getPosition().getParent().getParent() instanceof GoKey))
+        if (!ORMPsiTreeUtil.callHasArgumentAtIndex(goCallExpr, argumentIndex, currentElement.getParent()) && !(currentElement.getParent().getParent() instanceof GoKey))
             return;
 
-        String schema = scanSchema(project, parameters.getPosition());
+        GoCompositeElement argument = findTargetGoCompositeElement(currentElement);
 
-        if (schema == null || schema.isEmpty()) return;
+        LOG.info("argument: " + argument);
 
-        List<String> pathList = Objects.requireNonNull(GoORMHelperManager.getInstance(project).getState()).schemaMapping.get(schema);
+        GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
 
-        if (pathList == null) return;
+        if (argument instanceof GoStatement) {
+            String comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(argument), false);
+            Matcher matcher;
+            String schema = null;
 
-        for (String path : pathList) {
+            if ((matcher = Types.MODEL_ANNOTATION_PATTERN.matcher(comment)).find()) {
+                schema = matcher.group(1);
+                LOG.info("@Model: " + schema);
+            }
 
-            VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
-            if (file == null) continue;
+            if ((matcher = Types.TABLE_ANNOTATION_PATTERN.matcher(comment)).find()) {
+                String table = matcher.group(1);
+                schema = manager.getTableStructMapping().get(table);
+                LOG.info("@Table: " + schema);
+            }
 
-            GoFile goFile = (GoFile) PsiManager.getInstance(project).findFile(file);
-            if (goFile == null) continue;
+            handleSchema(parameters, result, project, descriptor, schema);
+        } else if (argument instanceof GoExpression) {
+            if (argument instanceof GoUnaryExpr goUnaryExpr) {
+                if (goUnaryExpr.getExpression() instanceof GoCompositeLit goCompositeLit) {
+                    handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
+                } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
+                    if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
+                        GoType goType = goVarDefinition.getGoType(ResolveState.initial());
 
-            for (GoTypeDeclaration goTypeDeclaration : goFile.findChildrenByClass(GoTypeDeclaration.class)) {
-                GoTypeSpec goTypeSpec = goTypeDeclaration.getTypeSpecList().get(0);
+                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                            goType = goArrayOrSliceType.getType();
+                        }
 
-                if (!Objects.equals(goTypeSpec.getName(), schema)) continue;
+                        if (goType instanceof GoPointerType goPointerType) {
+                            goType = goPointerType.getType();
+                        }
 
-                scanFields(descriptor, result, goTypeSpec);
+                        handleGoType(parameters, result, descriptor, goType);
+                    } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
+
+                        GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
+
+                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                            goType = goArrayOrSliceType.getType();
+                        }
+
+                        if (goType instanceof GoPointerType goPointerType) {
+                            goType = goPointerType.getType();
+                        }
+
+                        handleGoType(parameters, result, descriptor, goType);
+                    }
+                }
+            } else if (argument instanceof GoBuiltinCallExpr goBuiltinCallExpr) {
+                handleGoType(parameters, result, descriptor, PsiTreeUtil.findChildOfType(goBuiltinCallExpr, GoType.class));
+            } else if (argument instanceof GoReferenceExpression goReferenceExpression) {
+                if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
+                    GoType goType = PsiTreeUtil.findChildOfAnyType(goVarDefinition.getParent(), GoType.class);
+
+                    if (goType != null) {
+
+                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                            goType = goArrayOrSliceType.getType();
+                        }
+
+                        if (goType instanceof GoPointerType goPointerType) {
+                            goType = goPointerType.getType();
+                        }
+
+                        handleGoType(parameters, result, descriptor, goType);
+                    } else {
+                        GoCompositeLit goCompositeLit = PsiTreeUtil.findChildOfType(goVarDefinition.getParent(), GoCompositeLit.class);
+                        if (goCompositeLit != null) {
+                            handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
+                        }
+                    }
+                } else if(goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition){
+                    GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
+
+                    if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                        goType = goArrayOrSliceType.getType();
+                    }
+
+                    if (goType instanceof GoPointerType goPointerType) {
+                        goType = goPointerType.getType();
+                    }
+
+                    handleGoType(parameters, result, descriptor, goType);
+                }
+            } else if (argument instanceof GoCompositeLit goCompositeLit) {
+                handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
+            } else if (argument instanceof GoStringLiteral goStringLiteral) {
+                String schema = manager.getTableStructMapping().get(goStringLiteral.getDecodedText());
+                handleSchema(parameters, result, project, descriptor, schema);
             }
         }
     }
 
-    private void scanFields(GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec) {
+    private void handleGoTypeReferenceExpression(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoTypeReferenceExpression expression) {
+        if (expression != null && expression.resolve() instanceof GoTypeSpec goTypeSpec) {
+            scanFields(parameters, descriptor, result, goTypeSpec);
+        }
+    }
+
+    private void handleGoType(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoType goType) {
+        if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
+            scanFields(parameters, descriptor, result, goTypeSpec);
+        }
+    }
+
+    private void handleSchema(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, Project project, GoCallableDescriptor descriptor, String schema) {
+        if (schema != null && !schema.isEmpty()) {
+            Set<String> pathList = GoORMHelperCacheManager.getInstance(project).getSchemaMapping().get(schema);
+
+            LOG.info("handleSchema pathList: " + pathList);
+
+            if (pathList != null) {
+                for (String path : pathList) {
+
+                    VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
+                    if (file == null) continue;
+
+                    GoFile goFile = (GoFile) PsiManager.getInstance(project).findFile(file);
+                    if (goFile == null) continue;
+
+                    for (GoTypeSpec goTypeSpec : PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class)) {
+                        if (!Objects.equals(goTypeSpec.getName(), schema)) continue;
+
+                        LOG.info("handleSchema path: " + path);
+
+                        scanFields(parameters, descriptor, result, goTypeSpec);
+                    }
+                }
+            }
+        }
+    }
+
+    private GoCompositeElement findTargetGoCompositeElement(@NotNull PsiElement currentElement) {
+        GoCompositeElement element = findGoCompositeElement(currentElement, schemaCallablesSet(), schemaCallables());
+
+        if (element == null)
+            element = findGoCompositeElement(currentElement, otherSchemaCallablesSet(), otherSchemaCallables());
+
+        if (element == null) {
+            GoCallExpr goCallExpr = (GoCallExpr) PsiTreeUtil.findFirstParent(currentElement, e -> e instanceof GoCallExpr);
+            if (goCallExpr != null) {
+                GoReferenceExpression goReferenceExpression = ORMPsiTreeUtil.findLastChildOfType(goCallExpr, GoReferenceExpression.class);
+                if (goReferenceExpression != null && goReferenceExpression.resolve() != null) {
+                    GoType goType = goReferenceExpression.getGoType(ResolveState.initial());
+
+                    if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
+
+                        GoTypeSpecDescriptor descriptor = GoTypeSpecDescriptor.of(goTypeSpec, goType, true);
+
+                        if (descriptor != null && allowTypes().contains(descriptor)) {
+                            PsiElement resolved = goReferenceExpression.resolve();
+                            if (resolved != null) {
+                                element = findTargetGoCompositeElement(resolved);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return element;
+    }
+
+    private @Nullable GoCompositeElement findGoCompositeElementByStatement(GoStatement statement, GoCallableDescriptorSet callablesSet, Map<GoCallableDescriptor, Integer> callables) {
+
+        String comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(statement), false);
+
+        if ((Types.MODEL_ANNOTATION_PATTERN.matcher(comment)).find()) {
+            return statement;
+        }
+
+        if ((Types.TABLE_ANNOTATION_PATTERN.matcher(comment)).find()) {
+            return statement;
+        }
+
+        for (GoCallExpr goCallExpr : PsiTreeUtil.findChildrenOfType(statement, GoCallExpr.class)) {
+            GoCallableDescriptor descriptor = callablesSet.find(goCallExpr, false);
+            if (descriptor == null) continue;
+
+            Integer argumentIndex = callables.get(descriptor);
+
+            List<GoExpression> expressionList = goCallExpr.getArgumentList().getExpressionList();
+            if (expressionList.size() >= argumentIndex + 1) return expressionList.get(argumentIndex);
+        }
+
+        return null;
+    }
+
+    private @Nullable GoCompositeElement findGoCompositeElement(@NotNull PsiElement currentElement, GoCallableDescriptorSet callablesSet, Map<GoCallableDescriptor, Integer> callables) {
+        if (callables == null || callablesSet == null) return null;
+
+        GoStatement currentStatement = (GoStatement) PsiTreeUtil.findFirstParent(currentElement, e -> e instanceof GoStatement);
+
+        GoCompositeElement argument = findGoCompositeElementByStatement(currentStatement, callablesSet, callables);
+        if (argument != null) return argument;
+
+        LOG.info("currentStatement: " + currentStatement);
+
+        if (currentStatement instanceof GoAssignmentStatement goAssignmentStatement) {
+            for (GoExpression goExpression : goAssignmentStatement.getLeftHandExprList().getExpressionList()) {
+                if (checkAllowTypeByGoPointerType(goExpression.getGoType(ResolveState.initial())) && goExpression.getReference() != null) {
+                    PsiElement resolved = goExpression.getReference().resolve();
+                    if (resolved != null) {
+                        argument = findGoCompositeElement(resolved, callablesSet, callables);
+                        if (argument != null) return argument;
+                    }
+                }
+            }
+        } else if (currentStatement instanceof GoSimpleStatement goSimpleStatement) {
+            if (goSimpleStatement.getShortVarDeclaration() != null) {
+                GoShortVarDeclaration shortVarDeclaration = goSimpleStatement.getShortVarDeclaration();
+
+                for (GoVarDefinition goVarDefinition : shortVarDeclaration.getDefinitionList()) {
+                    if (checkAllowType(goVarDefinition)) {
+                        for (PsiReference search : GoReferencesSearch.search(shortVarDeclaration.getDefinitionList().get(0))) {
+                            GoStatement statement = (GoStatement) PsiTreeUtil.findFirstParent(search.getElement(), e -> e instanceof GoStatement);
+
+                            argument = findGoCompositeElementByStatement(statement, callablesSet, callables);
+                            if (argument != null) return argument;
+                        }
+                    }
+                }
+            } else {
+                GoReferenceExpression expression = ORMPsiTreeUtil.findLastChildOfType(goSimpleStatement, GoReferenceExpression.class);
+                if (expression != null && expression.resolve() instanceof GoVarDefinition goVarDefinition) {
+                    if (checkAllowType(goVarDefinition)) {
+                        return findGoCompositeElement(goVarDefinition, callablesSet, callables);
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    private boolean checkAllowType(GoVarDefinition goVarDefinition) {
+        GoType goType = goVarDefinition.getGoType(ResolveState.initial());
+        return checkAllowTypeByGoPointerType(goType);
+    }
+
+    public boolean checkAllowTypeByGoPointerType(GoType goType) {
+        if (goType instanceof GoPointerType goPointerType) {
+            goType = goPointerType.getType();
+        }
+
+        if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
+            GoTypeSpecDescriptor descriptor = GoTypeSpecDescriptor.of(goTypeSpec, goType, true);
+            return descriptor != null && allowTypes().contains(descriptor);
+        }
+
+        return false;
+    }
+
+    protected boolean checkGoFieldDeclaration(GoFieldDeclaration field) {
+        return true;
+    }
+
+    private void scanFields(@NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec) {
         if (goTypeSpec.getSpecType().getType() instanceof GoStructType goStructType) {
             for (GoFieldDeclaration field : goStructType.getFieldDeclarationList()) {
+
+                if (!checkGoFieldDeclaration(field)) continue;
+
                 String column = getColumn(field);
                 String comment = getComment(field);
                 String type = "";
@@ -93,7 +337,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                     type = field.getType().getPresentationText();
                 }
 
-                if (column.isEmpty()) {
+                if (column != null && column.isEmpty()) {
                     if (field.getFieldDefinitionList().size() == 0 && field.getAnonymousFieldDefinition() != null) {
                         GoType goType = field.getAnonymousFieldDefinition().getGoType(ResolveState.initial());
                         if (goType == null) continue;
@@ -101,7 +345,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                         GoTypeSpec spec = (GoTypeSpec) goType.resolve(ResolveState.initial());
                         if (spec == null) continue;
 
-                        scanFields(descriptor, result, spec);
+                        scanFields(parameters, descriptor, result, spec);
                         continue;
                     }
 
@@ -114,201 +358,50 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                 }
 
 
-                if (comment.isEmpty()) {
+                if (comment != null && comment.isEmpty()) {
                     comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(field), false);
                 }
 
-                addElement(result, column, comment, type);
+                addElement(result, column, comment, type, goTypeSpec);
 
-                List<String> whereExpr = queryExpr().get(descriptor);
-                if (whereExpr != null) {
-                    for (String s : whereExpr) {
-                        addElement(result, String.format(s, column), comment, type);
+                if (!(parameters.getPosition().getParent().getParent() instanceof GoKey)) {
+                    Map<GoCallableDescriptor, List<String>> queryExpr = queryExpr();
+                    if (queryExpr != null) {
+                        List<String> whereExpr = queryExpr.get(descriptor);
+                        if (whereExpr != null) {
+                            for (String s : whereExpr) {
+                                addElement(result, String.format(s, column), comment, type, goTypeSpec);
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    private @Nullable String scanSchema(Project project, @NotNull PsiElement psiElement) {
+    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
+        LookupElementBuilder builder = LookupElementBuilder
+                .createWithSmartPointer(column, goTypeSpec)
+                .withPresentableText(column)
+                .withTypeText(type)
+                .withIcon(getIcon())
+                .withTailText(" " + comment, true);
 
-        String schema = "";
-
-        GoStatement currentStatement = (GoStatement) PsiTreeUtil.findFirstParent(psiElement, element -> element instanceof GoStatement);
-
-        if (currentStatement == null) return null;
-
-        schema = findSchema(project, currentStatement);
-        if (schema != null && !schema.isEmpty()) return schema;
-
-
-        GoVarDefinition currentGoVarDefinition = PsiTreeUtil.findChildOfType(currentStatement, GoVarDefinition.class);
-        if (currentGoVarDefinition != null) {
-            schema = searchGoVarDefinitionReferences(project, currentGoVarDefinition);
-            if (schema != null && !schema.isEmpty()) return schema;
-        }
-
-        GoReferenceExpression lastGoReferenceExpression = null;
-
-        for (GoReferenceExpression goReferenceExpression : PsiTreeUtil.findChildrenOfType(currentStatement, GoReferenceExpression.class)) {
-            GoType goType = goReferenceExpression.getGoType(ResolveState.initial());
-            if (goType != null && goType.getPresentationText().equals("*DB")) {
-                lastGoReferenceExpression = goReferenceExpression;
-            }
-        }
-
-        if (lastGoReferenceExpression != null) {
-            GoVarDefinition goVarDefinition = (GoVarDefinition) lastGoReferenceExpression.resolve();
-
-            GoStatement resolveStatement = (GoStatement) PsiTreeUtil.findFirstParent(goVarDefinition, element -> element instanceof GoStatement);
-            if (resolveStatement == null) return schema;
-            schema = findSchema(project, resolveStatement);
-            if (schema != null && !schema.isEmpty()) return schema;
-
-            schema = searchGoVarDefinitionReferences(project, goVarDefinition);
-            if (schema != null && !schema.isEmpty()) return schema;
-
-            scanSchema(project, goVarDefinition);
-        }
-        return schema;
-    }
-
-    private String searchGoVarDefinitionReferences(Project project, GoVarDefinition goVarDefinition) {
-        String schema = "";
-        for (PsiReference psiReference : GoReferencesSearch.search(goVarDefinition)) {
-            GoStatement statement = (GoStatement) PsiTreeUtil.findFirstParent(psiReference.getElement(), element -> element instanceof GoStatement);
-            if (statement == null) continue;
-            schema = findSchema(project, statement);
-            if (schema != null && !schema.isEmpty()) return schema;
-
-            for (GoVarDefinition varDefinition : PsiTreeUtil.findChildrenOfType(statement, GoVarDefinition.class)) {
-                GoType goType = varDefinition.getGoType(ResolveState.initial());
-
-                if (goType != null && goType.getPresentationText().equals("*DB")) {
-                    return searchGoVarDefinitionReferences(project, varDefinition);
+        if (goTypeSpec.getContainingFile().getVirtualFile() != null) {
+            String path = goTypeSpec.getContainingFile().getVirtualFile().getCanonicalPath();
+            if (path != null) {
+                String basePath = goTypeSpec.getProject().getBasePath();
+                if (basePath != null) {
+                    builder = builder.appendTailText(" " + path.replace(basePath + "/", ""), true);
                 }
             }
         }
-        return schema;
-    }
 
-    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type) {
-        result.addElement(LookupElementBuilder.create(column)
-                .withTypeText(type)
-                .withIcon(getIcon())
-                .withTailText(" " + comment, true));
+        result.addElement(builder);
     }
 
     protected Icon getIcon() {
         return Icons.Icon12x12;
-    }
-
-    private String findSchema(Project project, @NotNull GoStatement statement) {
-        String comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(statement), false);
-        Matcher matcher;
-
-        if ((matcher = Types.MODEL_ANNOTATION_PATTERN.matcher(comment)).find()) {
-            String schema = matcher.group(1);
-            if (schema != null && !schema.isEmpty()) return schema;
-        }
-
-        if ((matcher = Types.TABLE_ANNOTATION_PATTERN.matcher(comment)).find()) {
-            String table = matcher.group(1);
-            GoORMHelperManager.State state = Objects.requireNonNull(GoORMHelperManager.getInstance(project).getState());
-            String schema = state.tableStructMapping.get(table);
-            if (schema != null && !schema.isEmpty()) return schema;
-        }
-
-        for (GoCallExpr goCallExpr : PsiTreeUtil.findChildrenOfType(statement, GoCallExpr.class)) {
-
-            GoCallableDescriptorSet schemaCallablesSet = schemaCallablesSet();
-            Map<GoCallableDescriptor, Integer> schemaCallables = schemaCallables();
-            if (schemaCallablesSet != null && schemaCallables != null) {
-                GoCallableDescriptor descriptor = schemaCallablesSet.find(goCallExpr, false);
-                if (descriptor != null) {
-                    Integer argumentIndex = schemaCallables.get(descriptor);
-
-                    GoExpression argument = goCallExpr.getArgumentList().getExpressionList().get(argumentIndex);
-
-                    if (argument instanceof GoUnaryExpr goUnaryExpr) {
-                        if (goUnaryExpr.getExpression() instanceof GoCompositeLit goCompositeLit) {
-                            if (goCompositeLit.getTypeReferenceExpression() == null) continue;
-                            String schema = goCompositeLit.getTypeReferenceExpression().getIdentifier().getText();
-                            if (schema != null && !schema.isEmpty()) return schema;
-
-                        } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
-                            if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
-                                GoType goType = goVarDefinition.getGoType(ResolveState.initial());
-                                if (goType == null || goType.getTypeReferenceExpression() == null) continue;
-
-                                String schema = goType.getTypeReferenceExpression().getIdentifier().getText();
-                                if (schema != null && !schema.isEmpty()) return schema;
-
-                            } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
-                                GoPointerType goPointerType = PsiTreeUtil.findChildOfType(goParamDefinition.getParent(), GoPointerType.class);
-                                GoType goType = PsiTreeUtil.findChildOfType(goPointerType, GoType.class);
-                                if (goType != null) {
-                                    if (goType.getTypeReferenceExpression() == null) continue;
-                                    String schema = goType.getTypeReferenceExpression().getIdentifier().getText();
-                                    if (schema != null && !schema.isEmpty()) return schema;
-                                }
-                            }
-                        }
-                    } else if (argument instanceof GoBuiltinCallExpr goBuiltinCallExpr) {
-                        GoType goType = PsiTreeUtil.findChildOfType(goBuiltinCallExpr, GoType.class);
-                        if (goType == null || goType.getTypeReferenceExpression() == null) continue;
-
-                        String schema = goType.getTypeReferenceExpression().getIdentifier().getText();
-                        if (schema != null && !schema.isEmpty()) return schema;
-
-                    } else if (argument instanceof GoReferenceExpression goReferenceExpression && goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
-                        GoType goType = PsiTreeUtil.findChildOfType(goVarDefinition.getParent(), GoType.class);
-                        if (goType != null) {
-                            if (goType.getTypeReferenceExpression() == null) continue;
-
-                            String schema = goType.getTypeReferenceExpression().getIdentifier().getText();
-                            if (schema != null && !schema.isEmpty()) return schema;
-
-                        } else {
-                            GoCompositeLit goCompositeLit = PsiTreeUtil.findChildOfType(goVarDefinition.getParent(), GoCompositeLit.class);
-                            if (goCompositeLit == null || goCompositeLit.getTypeReferenceExpression() == null) continue;
-
-                            String schema = goCompositeLit.getTypeReferenceExpression().getIdentifier().getText();
-                            if (schema != null && !schema.isEmpty()) return schema;
-
-                        }
-                    }
-                }
-            }
-
-
-            GoCallableDescriptorSet tableCallablesSet = tableCallablesSet();
-            Map<GoCallableDescriptor, Integer> tableCallables = tableCallables();
-
-            if (tableCallablesSet != null && tableCallables != null) {
-                GoCallableDescriptor tableDescriptor = tableCallablesSet.find(goCallExpr, false);
-
-                if (tableDescriptor != null) {
-                    Integer argumentIndex = tableCallables.get(tableDescriptor);
-
-                    GoExpression argument = goCallExpr.getArgumentList().getExpressionList().get(argumentIndex);
-
-                    if (argument instanceof GoStringLiteral goStringLiteral) {
-                        GoORMHelperManager.State state = Objects.requireNonNull(GoORMHelperManager.getInstance(project).getState());
-                        String schema = state.tableStructMapping.get(goStringLiteral.getDecodedText());
-                        if (schema != null && !schema.isEmpty()) return schema;
-                    } else if (argument instanceof GoReferenceExpression goReferenceExpression &&
-                            goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition &&
-                            goVarDefinition.getValue() != null) {
-                        GoORMHelperManager.State state = Objects.requireNonNull(GoORMHelperManager.getInstance(project).getState());
-                        String schema = state.tableStructMapping.get(goVarDefinition.getValue().getString());
-                        if (schema != null && !schema.isEmpty()) return schema;
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     public abstract Map<GoCallableDescriptor, Integer> callables();
@@ -319,9 +412,9 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
     public abstract @Nullable GoCallableDescriptorSet schemaCallablesSet();
 
-    public abstract @Nullable Map<GoCallableDescriptor, Integer> tableCallables();
+    public abstract @Nullable Map<GoCallableDescriptor, Integer> otherSchemaCallables();
 
-    public abstract @Nullable GoCallableDescriptorSet tableCallablesSet();
+    public abstract @Nullable GoCallableDescriptorSet otherSchemaCallablesSet();
 
     public abstract @Nullable Map<GoCallableDescriptor, List<String>> queryExpr();
 
@@ -329,4 +422,5 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
     public abstract @Nullable String getComment(@NotNull GoFieldDeclaration field);
 
+    public abstract @NotNull Set<GoCallableDescriptor> allowTypes();
 }

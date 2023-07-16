@@ -5,7 +5,8 @@
     <h1 align="center">Go ORM 助手</h1>
 </div>
 
-<p align="center">一个为了让你在 GoLand 上写 ORM 能自动补全数据库字段、Tag、生成Struct 的插件。支持：Gorm、Xorm、Beego、GoFrame...）</p>
+<p align="center">一个为了让你在 GoLand 上写 ORM 能自动补全数据库字段、Tag、生成Struct 的插件。支持：Gorm、Xorm、Beego、GoFrame...）
+<br>给个 ⭐️Star 支持我们的工作吧！</p>
 
 > 灵感来源 [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html)。 本人使用 Go 的 ORM 包时，
@@ -18,24 +19,18 @@
     - [x] @Model 注解辅助补全
     - [x] @Table 注解辅助补全
     - [ ] 自定义 SQL 辅助不全 🚧[WIP]
-- [x] SQL 转 Struct
-    - [x] Gorm
-    - [x] Xorm
-    - [x] 通用 Struct
-    - [ ] GoFrame 🚧[WIP]
-    - [ ] Beego 🚧[WIP]
-    - [ ] sqlx 🚧[WIP]
-- [ ] Tag 代码补全 🚧[WIP]
+- [x] SQL 转 Struct [支持明细](./SUPPORTED.md#supported-sql-to-struct-conversion)
+- [x] Go ORM Tag 实时模版 [支持明细](./SUPPORTED.md#supported-orm-tags-live-template)
 - 更多等你去发现与改进...
 
 ## 支持的 ORM
 
 - [x] [Gorm](https://github.com/go-gorm/gorm)
 - [x] [Xorm](https://gitea.com/xorm/xorm)
-- [ ] [GoFrame](https://github.com/gogf/gf) 🚧[WIP]
+- [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
-- 更多等你去发现与改进...
+- [支持明细](./SUPPORTED.md)
 
 ## 使用
 

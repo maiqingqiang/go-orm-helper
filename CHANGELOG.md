@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2023-07-15
+
+### Added
+- Support GoFrame ORM.
+- Support Go ORM Tags Live Template.
+- Refactor Code Completion. Better Performance!
+- Refactor GoORMHelper Cache Manager.
+
 ## [1.1.0] - 2023-07-04
 
 ### Added
@@ -34,7 +42,8 @@
 - ORM Code Completion
 - SQL to Struct
 
-[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.0.0...v1.0.1

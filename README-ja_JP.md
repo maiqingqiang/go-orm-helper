@@ -5,7 +5,7 @@
     <h1 align="center">Go ORM アシスタント</h1>
 </div>
 
-<p align="center">GoLand にORMを書くためにデータベースフィールド、Tag、Struct を自動的に補完する Jetbrains プラグイン。サポート：Gorm、Xorm、Beego、GoFrame...）</p>
+<p align="center">GoLand にORMを書くためにデータベースフィールド、Tag、Struct を自動的に補完する Jetbrains プラグイン。サポート：Gorm、Xorm、Beego、GoFrame...）<br>私たちの仕事をサポートするために ⭐️スター をください！</p>
 
 > インスピレーション源の  [Laravel Idea](https://plugins.jetbrains.com/plugin/13441-laravel-idea) &
 > [PhpStorm metadata](https://www.jetbrains.com/help/phpstorm/ide-advanced-metadata.html).
@@ -19,24 +19,18 @@
     - [x] @Model 注記補助補完
     - [x] @Table 注記補助補完
     - [ ] カスタムSQLアクセシビリティ不全 🚧[WIP]
-- [x] SQL 変換 Struct
-    - [x] Gorm
-    - [x] Xorm
-    - [x] 共通 Struct
-    - [ ] GoFrame 🚧[WIP]
-    - [ ] Beego 🚧[WIP]
-    - [ ] sqlx 🚧[WIP]
-- [ ] Tag コード補完 🚧[WIP]
+- [x] SQL 変換 Struct [サポート詳細](./SUPPORTED.md#supported-sql-to-struct-conversion)
+- [x] Go ORM Tag リアルタイムテンプレート [サポート詳細](./SUPPORTED.md#supported-orm-tags-live-template)
 - 発見と改善を待っています...
 
 ## サポートされているORM
 
 - [x] [Gorm](https://github.com/go-gorm/gorm)
 - [x] [Xorm](https://gitea.com/xorm/xorm)
-- [ ] [GoFrame](https://github.com/gogf/gf) 🚧[WIP]
+- [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
-- 発見と改善を待っています...
+- [サポート詳細](./SUPPORTED.md)
 
 ## 使用
 
