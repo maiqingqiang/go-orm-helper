@@ -136,6 +136,18 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                             handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
                         }
                     }
+                } else if(goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition){
+                    GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
+
+                    if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                        goType = goArrayOrSliceType.getType();
+                    }
+
+                    if (goType instanceof GoPointerType goPointerType) {
+                        goType = goPointerType.getType();
+                    }
+
+                    handleGoType(parameters, result, descriptor, goType);
                 }
             } else if (argument instanceof GoCompositeLit goCompositeLit) {
                 handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());

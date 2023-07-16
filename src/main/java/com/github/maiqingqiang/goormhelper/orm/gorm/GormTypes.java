@@ -66,6 +66,7 @@ public interface GormTypes {
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Take"), 0),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Last"), 0),
             Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Create"), 0),
+            Map.entry(GoMethodDescriptor.of("(*gorm.io/gorm.DB).Save"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).First"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Find"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Delete"), 0),
@@ -73,7 +74,8 @@ public interface GormTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).FirstOrCreate"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Take"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Last"), 0),
-            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Create"), 0)
+            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Create"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/jinzhu/gorm.DB).Save"), 0)
     );
     GoCallableDescriptorSet OTHER_SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(OTHER_SCHEMA_CALLABLES.keySet());
 
