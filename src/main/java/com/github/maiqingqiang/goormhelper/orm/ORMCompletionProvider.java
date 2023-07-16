@@ -282,9 +282,16 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         return false;
     }
 
+    protected boolean checkGoFieldDeclaration(GoFieldDeclaration field) {
+        return true;
+    }
+
     private void scanFields(@NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec) {
         if (goTypeSpec.getSpecType().getType() instanceof GoStructType goStructType) {
             for (GoFieldDeclaration field : goStructType.getFieldDeclarationList()) {
+
+                if (!checkGoFieldDeclaration(field)) continue;
+
                 String column = getColumn(field);
                 String comment = getComment(field);
                 String type = "";

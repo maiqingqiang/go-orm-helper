@@ -1,5 +1,6 @@
 package com.github.maiqingqiang.goormhelper.orm.goframe.codeInsights.completion;
 
+import com.github.maiqingqiang.goormhelper.inspections.GoTypeSpecDescriptor;
 import com.github.maiqingqiang.goormhelper.orm.ORMCompletionProvider;
 import com.github.maiqingqiang.goormhelper.orm.goframe.GoFrameTypes;
 import com.github.maiqingqiang.goormhelper.ui.Icons;
@@ -7,6 +8,9 @@ import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.GoFieldDeclaration;
 import com.goide.psi.GoTag;
+import com.goide.psi.GoType;
+import com.goide.psi.GoTypeSpec;
+import com.intellij.psi.ResolveState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,5 +89,27 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
     @Override
     protected Icon getIcon() {
         return Icons.GoFrame18x12;
+    }
+
+    @Override
+    protected boolean checkGoFieldDeclaration(GoFieldDeclaration field) {
+        if (field.getAnonymousFieldDefinition() == null) return true;
+
+        GoType goType = field.getAnonymousFieldDefinition().getType();
+
+        GoTypeSpec goTypeSpec = (GoTypeSpec) goType.resolve(ResolveState.initial());
+
+        if (goTypeSpec == null) return true;
+
+        GoTypeSpecDescriptor descriptor = GoTypeSpecDescriptor.of(goTypeSpec, goType, true);
+
+        if (descriptor == null) return true;
+
+        if (descriptor.equals(GoFrameTypes.G_META) || descriptor.equals(GoFrameTypes.GMETA_META)) {
+            return false;
+        }
+
+
+        return true;
     }
 }
