@@ -224,35 +224,59 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         LOG.info("currentStatement: " + currentStatement);
 
         if (currentStatement instanceof GoAssignmentStatement goAssignmentStatement) {
-
             for (GoExpression goExpression : goAssignmentStatement.getLeftHandExprList().getExpressionList()) {
-                if (goExpression.getGoType(ResolveState.initial()) instanceof GoPointerType goPointerType) {
-                    GoType goType = goPointerType.getType();
-                    if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
-                        GoTypeSpecDescriptor descriptor = GoTypeSpecDescriptor.of(goTypeSpec, goType, true);
-                        if (descriptor != null && allowTypes().contains(descriptor) && goExpression.getReference() != null) {
-                            PsiElement resolved = goExpression.getReference().resolve();
-                            if (resolved != null) {
-                                argument = findGoCompositeElement(resolved, callablesSet, callables);
-                                if (argument != null) return argument;
-                            }
-                        }
+                if (checkAllowTypeByGoPointerType(goExpression.getGoType(ResolveState.initial())) && goExpression.getReference() != null) {
+                    PsiElement resolved = goExpression.getReference().resolve();
+                    if (resolved != null) {
+                        argument = findGoCompositeElement(resolved, callablesSet, callables);
+                        if (argument != null) return argument;
                     }
                 }
             }
         } else if (currentStatement instanceof GoSimpleStatement goSimpleStatement) {
             if (goSimpleStatement.getShortVarDeclaration() != null) {
                 GoShortVarDeclaration shortVarDeclaration = goSimpleStatement.getShortVarDeclaration();
-                for (PsiReference search : GoReferencesSearch.search(shortVarDeclaration.getDefinitionList().get(0))) {
-                    GoStatement statement = (GoStatement) PsiTreeUtil.findFirstParent(search.getElement(), e -> e instanceof GoStatement);
 
-                    argument = findGoCompositeElementByStatement(statement, callablesSet, callables);
-                    if (argument != null) return argument;
+                for (GoVarDefinition goVarDefinition : shortVarDeclaration.getDefinitionList()) {
+                    if (checkAllowType(goVarDefinition)) {
+                        for (PsiReference search : GoReferencesSearch.search(shortVarDeclaration.getDefinitionList().get(0))) {
+                            GoStatement statement = (GoStatement) PsiTreeUtil.findFirstParent(search.getElement(), e -> e instanceof GoStatement);
+
+                            argument = findGoCompositeElementByStatement(statement, callablesSet, callables);
+                            if (argument != null) return argument;
+                        }
+                    }
+                }
+            } else {
+                GoReferenceExpression expression = ORMPsiTreeUtil.findLastChildOfType(goSimpleStatement, GoReferenceExpression.class);
+                if (expression != null && expression.resolve() instanceof GoVarDefinition goVarDefinition) {
+                    if (checkAllowType(goVarDefinition)) {
+                        return findGoCompositeElement(goVarDefinition, callablesSet, callables);
+                    }
                 }
             }
         }
 
         return null;
+    }
+
+
+    private boolean checkAllowType(GoVarDefinition goVarDefinition) {
+        GoType goType = goVarDefinition.getGoType(ResolveState.initial());
+        return checkAllowTypeByGoPointerType(goType);
+    }
+
+    public boolean checkAllowTypeByGoPointerType(GoType goType) {
+        if (goType instanceof GoPointerType goPointerType) {
+            goType = goPointerType.getType();
+        }
+
+        if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
+            GoTypeSpecDescriptor descriptor = GoTypeSpecDescriptor.of(goTypeSpec, goType, true);
+            return descriptor != null && allowTypes().contains(descriptor);
+        }
+
+        return false;
     }
 
     private void scanFields(GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec) {
