@@ -22,7 +22,13 @@ func test1(db *xorm.Engine) (user *User) {
 
 	db.Table(new(User)).Where("id = ?", 1).Find(&user)
 
-	db.Table("users").Where("id", 1).Find(&user)
+	db.Table("users").Where("id = ?", 1).Find(&user)
+
+	// @Model(User)
+	db.Where("user_name != ?", "")
+
+	// @Table(users)
+	db.Where("id IN ?", "")
 
 	return
 }

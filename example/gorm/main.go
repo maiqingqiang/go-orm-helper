@@ -28,6 +28,12 @@ func test1(db *gorm.DB) (user *User) {
 
 	db.Table("users").Where("id", 1).Find(&user)
 
+	// @Model(User)
+	db.Where("user_name != ?", "")
+
+	// @Table(users)
+	db.Where("id = ?", "")
+
 	return
 }
 

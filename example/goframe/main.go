@@ -19,11 +19,17 @@ func main() {
 func test1() (user *User) {
 	g.Model(&user).Where("id = ? = ?", 1)
 
-	g.Model(&User{}).Where(g.Map{"id": 1, "name": "john"})
+	g.Model(&User{}).Where(g.Map{"user_name": 1, "name": "john"})
 
 	g.Model(new(User)).Where("id = ?", 1)
 
 	g.Model("goframe_users").Where("id = ?", 1)
+
+	// @Model(User)
+	g.Model("").Where("user_name != ?", "")
+
+	// @Table(users)
+	g.Model("").Where("user_name", "")
 
 	return
 }
