@@ -87,7 +87,17 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                     handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
                 } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
                     if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
-                        handleGoType(parameters, result, descriptor, goVarDefinition.getGoType(ResolveState.initial()));
+                        GoType goType = goVarDefinition.getGoType(ResolveState.initial());
+
+                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                            goType = goArrayOrSliceType.getType();
+                        }
+
+                        if (goType instanceof GoPointerType goPointerType) {
+                            goType = goPointerType.getType();
+                        }
+
+                        handleGoType(parameters, result, descriptor, goType);
                     } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
 
                         GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
@@ -97,21 +107,34 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                         }
 
                         if (goType instanceof GoPointerType goPointerType) {
-                            handleGoType(parameters, result, descriptor, goPointerType.getType());
+                            goType = goPointerType.getType();
                         }
+
+                        handleGoType(parameters, result, descriptor, goType);
                     }
                 }
             } else if (argument instanceof GoBuiltinCallExpr goBuiltinCallExpr) {
                 handleGoType(parameters, result, descriptor, PsiTreeUtil.findChildOfType(goBuiltinCallExpr, GoType.class));
-            } else if (argument instanceof GoReferenceExpression goReferenceExpression && goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
-                GoType goType = PsiTreeUtil.findChildOfAnyType(goVarDefinition.getParent(), GoType.class);
+            } else if (argument instanceof GoReferenceExpression goReferenceExpression) {
+                if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
+                    GoType goType = PsiTreeUtil.findChildOfAnyType(goVarDefinition.getParent(), GoType.class);
 
-                if (goType != null) {
-                    handleGoTypeReferenceExpression(parameters, result, descriptor, goType.getTypeReferenceExpression());
-                } else {
-                    GoCompositeLit goCompositeLit = PsiTreeUtil.findChildOfType(goVarDefinition.getParent(), GoCompositeLit.class);
-                    if (goCompositeLit != null) {
-                        handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
+                    if (goType != null) {
+
+                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+                            goType = goArrayOrSliceType.getType();
+                        }
+
+                        if (goType instanceof GoPointerType goPointerType) {
+                            goType = goPointerType.getType();
+                        }
+
+                        handleGoType(parameters, result, descriptor, goType);
+                    } else {
+                        GoCompositeLit goCompositeLit = PsiTreeUtil.findChildOfType(goVarDefinition.getParent(), GoCompositeLit.class);
+                        if (goCompositeLit != null) {
+                            handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
+                        }
                     }
                 }
             } else if (argument instanceof GoCompositeLit goCompositeLit) {

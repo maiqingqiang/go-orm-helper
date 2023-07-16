@@ -12,7 +12,7 @@ type User struct {
 }
 
 func test1(db *xorm.Engine) (user *User) {
-	db.Table(&user).Where("id = ? = ?", 1).Find(&user)
+	db.Table(&user).Where("id = ?", 1).Find(&user)
 
 	db.Table(&user).Where(map[string]interface{}{"user_name": "jinzhu", "age": 20}).Find(&user)
 

@@ -6,7 +6,7 @@ import (
 
 type User struct {
 	g.Meta `orm:"table:goframe_users, do:true"`
-	ID     uint    // 主键
+	ID     uint // 主键
 	Name   string  `orm:"user_name"` // 姓名
 	Email  *string // 邮箱
 	Age    int32   // 年龄
@@ -17,7 +17,7 @@ func main() {
 }
 
 func test1() (user *User) {
-	g.Model(&user).Where("id = ? = ?", 1)
+	g.Model(&user).Where("id = ?", 1)
 
 	g.Model(&User{}).Where(g.Map{"user_name": 1, "name": "john"})
 

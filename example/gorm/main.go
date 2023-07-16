@@ -16,7 +16,7 @@ func (u *User) TableName() string {
 }
 
 func test1(db *gorm.DB) (user *User) {
-	db.Model(&user).Where("id = ? = ?", 1).Find(&user)
+	db.Model(&user).Where("id = ?", 1).Find(&user)
 
 	db.Model(&user).Where(map[string]interface{}{"user_name": "jinzhu", "age": 20}).Find(&user)
 
@@ -25,6 +25,18 @@ func test1(db *gorm.DB) (user *User) {
 	db.Model(&User{}).Where("id = ?", 1).Find(&user)
 
 	db.Model(User{}).Where("id = ?", 1).Find(&user)
+
+	var user1 User
+	db.Model(user1).Where("id = ?", 1).Find(&user)
+	db.Model(&user1).Where("id = ?", 1).Find(&user)
+
+	var users []User
+	db.Model(users).Where("id = ?", 1).Find(&user)
+	db.Model(&users).Where("i = ?", 1).Find(&user)
+
+	var users2 []*User
+	db.Model(users2).Where("id = ?", 1).Find(&user)
+	db.Model(&users2).Where("id = ?", 1).Find(&user)
 
 	db.Model(new(User)).Where("id = ?", 1).Find(&user)
 
