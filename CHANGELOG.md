@@ -8,6 +8,7 @@
 
 ### Added
 - Support GoFrame ORM.
+- Support Go ORM Tags Live Template.
 - Refactor Code Completion. Better Performance!
 - Refactor GoORMHelperCacheManager.
 
