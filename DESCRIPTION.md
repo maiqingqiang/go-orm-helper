@@ -1,4 +1,6 @@
-<p><b>Go ORM Helper plugin for GoLand.</b></p>
+<p> English | <a href="#zh_CN">简体中文</a> | <a href="#ja_JP">日本語</a> | <a href="#ko_KR">한국어</a> </p>
+
+<p><b><a id="en_US">Go ORM Helper plugin for GoLand.</a></b></p>
 <br/>
 <p>
     <b>
@@ -26,20 +28,25 @@
         </ul>
     </li>
     <li>SQL to Struct conversion.</li>
+    <li>Go ORM Tags Live Template.</li>
+    <li>More packages waiting to be discovered and improved...</li>
 </ul>
 
-<h2>Supported Go ORM Packages</h2>
+<h2>Supported ORM Code Completion.</h2>
 <ul>
     <li><a href="https://github.com/go-gorm/gorm">Gorm</a></li>
     <li><a href="https://gitea.com/xorm/xorm">Xorm</a></li>
-    <li>More packages waiting to be discovered and improved...</li>
+    <li><a href="https://github.com/gogf/gf">GoFrame</a></li>
+    <li><a href="https://github.com/maiqingqiang/go-orm-helper/blob/main/SUPPORTED.md">More Supported</a></li>
 </ul>
 
 <br/>
 <hr/>
 <br/>
 
-<p><b>基于 GoLand 的 Go ORM 助手插件。</b></p>
+<p><a href="#en_US"> English </a>| 简体中文 | <a href="#ja_JP">日本語</a> | <a href="#ko_KR">한국어</a> </p>
+
+<p><b><a id="zh_CN">基于 GoLand 的 Go ORM 助手插件。</a></b></p>
 <br/>
 <p>
     <b>
@@ -66,20 +73,25 @@
         </ul>
     </li>
     <li>SQL 转 Struct</li>
+    <li>Go ORM Tags Live Template</li>
+    <li>更多等你去发现与改进...</li>
 </ul>
 
 <h2>支持的 Go ORM</h2>
 <ul>
     <li><a href="https://github.com/go-gorm/gorm">Gorm</a></li>
     <li><a href="https://gitea.com/xorm/xorm">Xorm</a></li>
-    <li>更多等你去发现与改进...</li>
+    <li><a href="https://github.com/gogf/gf">GoFrame</a></li>
+    <li><a href="https://github.com/maiqingqiang/go-orm-helper/blob/main/SUPPORTED.md">支持明细</a></li>
 </ul>
 
 <br/>
 <hr/>
 <br/>
 
-<p><b>GoLand IDEベースのGo ORMアシスタントプラグイン。</b></p>
+<p><a href="#en_US"> English </a>| <a href="#zh_CN">简体中文</a> | 日本語 | <a href="#ko_KR">한국어</a> </p>
+
+<p><b><a id="ja_JP">GoLand IDEベースのGo ORMアシスタントプラグイン。</a></b></p>
 <br/>
 <p>
     <b>
@@ -107,20 +119,25 @@
         </ul>
     </li>
     <li>SQL 変換 Struct</li>
+    <li>Go ORM Tag リアルタイムテンプレート</li>
+    <li>発見と改善を待っています...</li>
 </ul>
 
 <h2>サポートされるGo ORM</h2>
 <ul>
     <li><a href="https://github.com/go-gorm/gorm">Gorm</a></li>
     <li><a href="https://gitea.com/xorm/xorm">Xorm</a></li>
-    <li>発見と改善を待っています...</li>
+    <li><a href="https://github.com/gogf/gf">GoFrame</a></li>
+    <li><a href="https://github.com/maiqingqiang/go-orm-helper/blob/main/SUPPORTED.md">サポート詳細</a></li>
 </ul>
 
 <br/>
 <hr/>
 <br/>
 
-<p><b>GoLand 기반 Go ORM 지원 플러그인.</b></p>
+<p><a href="#en_US"> English </a>| <a href="#zh_CN">简体中文</a> | <a href="#ja_JP">日本語</a> | 한국어 </p>
+
+<p><b><a id="ko_KR">GoLand 기반 Go ORM 지원 플러그인.</a></b></p>
 <br/>
 <p>
     <b>
@@ -146,11 +163,14 @@
         </ul>
     </li>
     <li>SQL 변환 Struct</li>
+    <li>Go ORM Tag 실시간 템플릿</li>
+    <li>더 많은 것을 발견하고 개선하기를 기다린다...</li>
 </ul>
 
 <h2>지원되는 Go ORM</h2>
 <ul>
     <li><a href="https://github.com/go-gorm/gorm">Gorm</a></li>
     <li><a href="https://gitea.com/xorm/xorm">Xorm</a></li>
-    <li>더 많은 것을 발견하고 개선하기를 기다린다...</li>
+    <li><a href="https://github.com/gogf/gf">GoFrame</a></li>
+    <li><a href="https://github.com/maiqingqiang/go-orm-helper/blob/main/SUPPORTED.md">지원 내역</a></li>
 </ul>
