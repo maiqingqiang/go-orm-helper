@@ -80,14 +80,14 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                 LOG.info("@Table: " + schema);
             }
 
-            handleSchema(result, project, descriptor, schema);
+            handleSchema(parameters, result, project, descriptor, schema);
         } else if (argument instanceof GoExpression) {
             if (argument instanceof GoUnaryExpr goUnaryExpr) {
                 if (goUnaryExpr.getExpression() instanceof GoCompositeLit goCompositeLit) {
-                    handleGoTypeReferenceExpression(result, descriptor, goCompositeLit.getTypeReferenceExpression());
+                    handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
                 } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
                     if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
-                        handleGoType(result, descriptor, goVarDefinition.getGoType(ResolveState.initial()));
+                        handleGoType(parameters, result, descriptor, goVarDefinition.getGoType(ResolveState.initial()));
                     } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
 
                         GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
@@ -97,43 +97,43 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                         }
 
                         if (goType instanceof GoPointerType goPointerType) {
-                            handleGoType(result, descriptor, goPointerType.getType());
+                            handleGoType(parameters, result, descriptor, goPointerType.getType());
                         }
                     }
                 }
             } else if (argument instanceof GoBuiltinCallExpr goBuiltinCallExpr) {
-                handleGoType(result, descriptor, PsiTreeUtil.findChildOfType(goBuiltinCallExpr, GoType.class));
+                handleGoType(parameters, result, descriptor, PsiTreeUtil.findChildOfType(goBuiltinCallExpr, GoType.class));
             } else if (argument instanceof GoReferenceExpression goReferenceExpression && goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
                 GoType goType = PsiTreeUtil.findChildOfAnyType(goVarDefinition.getParent(), GoType.class);
 
                 if (goType != null) {
-                    handleGoTypeReferenceExpression(result, descriptor, goType.getTypeReferenceExpression());
+                    handleGoTypeReferenceExpression(parameters, result, descriptor, goType.getTypeReferenceExpression());
                 } else {
                     GoCompositeLit goCompositeLit = PsiTreeUtil.findChildOfType(goVarDefinition.getParent(), GoCompositeLit.class);
                     if (goCompositeLit != null) {
-                        handleGoTypeReferenceExpression(result, descriptor, goCompositeLit.getTypeReferenceExpression());
+                        handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
                     }
                 }
             } else if (argument instanceof GoStringLiteral goStringLiteral) {
                 String schema = manager.getTableStructMapping().get(goStringLiteral.getDecodedText());
-                handleSchema(result, project, descriptor, schema);
+                handleSchema(parameters, result, project, descriptor, schema);
             }
         }
     }
 
-    private void handleGoTypeReferenceExpression(@NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoTypeReferenceExpression expression) {
+    private void handleGoTypeReferenceExpression(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoTypeReferenceExpression expression) {
         if (expression != null && expression.resolve() instanceof GoTypeSpec goTypeSpec) {
-            scanFields(descriptor, result, goTypeSpec);
+            scanFields(parameters, descriptor, result, goTypeSpec);
         }
     }
 
-    private void handleGoType(@NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoType goType) {
+    private void handleGoType(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoType goType) {
         if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
-            scanFields(descriptor, result, goTypeSpec);
+            scanFields(parameters, descriptor, result, goTypeSpec);
         }
     }
 
-    private void handleSchema(@NotNull CompletionResultSet result, Project project, GoCallableDescriptor descriptor, String schema) {
+    private void handleSchema(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, Project project, GoCallableDescriptor descriptor, String schema) {
         if (schema != null && !schema.isEmpty()) {
             Set<String> pathList = GoORMHelperCacheManager.getInstance(project).getSchemaMapping().get(schema);
 
@@ -153,7 +153,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
                         LOG.info("handleSchema path: " + path);
 
-                        scanFields(descriptor, result, goTypeSpec);
+                        scanFields(parameters, descriptor, result, goTypeSpec);
                     }
                 }
             }
@@ -282,7 +282,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         return false;
     }
 
-    private void scanFields(GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec) {
+    private void scanFields(@NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec) {
         if (goTypeSpec.getSpecType().getType() instanceof GoStructType goStructType) {
             for (GoFieldDeclaration field : goStructType.getFieldDeclarationList()) {
                 String column = getColumn(field);
@@ -301,7 +301,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                         GoTypeSpec spec = (GoTypeSpec) goType.resolve(ResolveState.initial());
                         if (spec == null) continue;
 
-                        scanFields(descriptor, result, spec);
+                        scanFields(parameters, descriptor, result, spec);
                         continue;
                     }
 
@@ -320,12 +320,14 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
                 addElement(result, column, comment, type, goTypeSpec);
 
-                Map<GoCallableDescriptor, List<String>> queryExpr = queryExpr();
-                if (queryExpr != null) {
-                    List<String> whereExpr = queryExpr.get(descriptor);
-                    if (whereExpr != null) {
-                        for (String s : whereExpr) {
-                            addElement(result, String.format(s, column), comment, type, goTypeSpec);
+                if (!(parameters.getPosition().getParent().getParent() instanceof GoKey)) {
+                    Map<GoCallableDescriptor, List<String>> queryExpr = queryExpr();
+                    if (queryExpr != null) {
+                        List<String> whereExpr = queryExpr.get(descriptor);
+                        if (whereExpr != null) {
+                            for (String s : whereExpr) {
+                                addElement(result, String.format(s, column), comment, type, goTypeSpec);
+                            }
                         }
                     }
                 }
