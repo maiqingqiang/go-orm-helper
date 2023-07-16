@@ -19,14 +19,8 @@
     - [x] @Model 注解辅助补全
     - [x] @Table 注解辅助补全
     - [ ] 自定义 SQL 辅助不全 🚧[WIP]
-- [x] SQL 转 Struct
-    - [x] Gorm
-    - [x] Xorm
-    - [x] 通用 Struct
-    - [x] GoFrame
-    - [ ] Beego 🚧[WIP]
-    - [ ] sqlx 🚧[WIP]
-- [ ] Tag 代码补全 🚧[WIP]
+- [x] SQL 转 Struct [支持明细](./SUPPORTED.md#supported-sql-to-struct-conversion)
+- [x] Go ORM Tag 实时模版 [支持明细](./SUPPORTED.md#supported-orm-tags-live-template)
 - 更多等你去发现与改进...
 
 ## 支持的 ORM
@@ -36,7 +30,7 @@
 - [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
-- 更多等你去发现与改进...
+- [支持明细](./SUPPORTED.md)
 
 ## 使用
 

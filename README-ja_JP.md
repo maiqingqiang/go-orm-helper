@@ -19,14 +19,8 @@
     - [x] @Model 注記補助補完
     - [x] @Table 注記補助補完
     - [ ] カスタムSQLアクセシビリティ不全 🚧[WIP]
-- [x] SQL 変換 Struct
-    - [x] Gorm
-    - [x] Xorm
-    - [x] 共通 Struct
-    - [x] GoFrame
-    - [ ] Beego 🚧[WIP]
-    - [ ] sqlx 🚧[WIP]
-- [ ] Tag コード補完 🚧[WIP]
+- [x] SQL 変換 Struct [サポート詳細](./SUPPORTED.md#supported-sql-to-struct-conversion)
+- [x] Go ORM Tag リアルタイムテンプレート [サポート詳細](./SUPPORTED.md#supported-orm-tags-live-template)
 - 発見と改善を待っています...
 
 ## サポートされているORM
@@ -36,7 +30,7 @@
 - [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
-- 発見と改善を待っています...
+- [サポート詳細](./SUPPORTED.md)
 
 ## 使用
 

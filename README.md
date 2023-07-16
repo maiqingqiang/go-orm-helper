@@ -19,23 +19,17 @@ for writing ORM code. Supports: Gorm、Xorm、Beego、GoFrame, etc.<br/>⭐️ S
   - [x] Assisted code completion with @Model annotation.
   - [x] Assisted code completion with @Table annotation.
   - [ ] Assisted code completion for custom SQL. 🚧[WIP]
-- [x] SQL to Struct conversion.
-  - [x] Gorm
-  - [x] Xorm
-  - [x] Generic Struct
-  - [x] GoFrame
-  - [ ] Beego  🚧[WIP]
-  - [ ] sqlx  🚧[WIP]
-- [ ] Tag Code Completion. 🚧[WIP]
+- [x] SQL to Struct conversion. [Supported](./SUPPORTED.md#supported-sql-to-struct-conversion)
+- [x] Go ORM Tags Live Template. [Supported](./SUPPORTED.md#supported-orm-tags-live-template)
 - More features waiting to be discovered and improved...
 
-## Supported ORM Packages
+## Supported ORM Code Completion.
 - [x] [Gorm](https://github.com/go-gorm/gorm)
 - [x] [Xorm](https://gitea.com/xorm/xorm)
 - [x] [GoFrame](https://github.com/gogf/gf)
 - [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
 - [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
-- More packages waiting to be discovered and improved...
+- [More Supported](./SUPPORTED.md)
 
 ## Usage
 ![guide.gif](assets%2Fguide.gif)

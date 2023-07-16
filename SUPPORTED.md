@@ -1,6 +1,17 @@
 # Supported
 
-## Supported ORM Tags
+## Supported SQL to Struct conversion
+
+- [x] Generic Struct
+- [x] [Gorm](https://github.com/go-gorm/gorm)
+- [x] [Xorm](https://gitea.com/xorm/xorm)
+- [x] [GoFrame](https://github.com/gogf/gf)
+- [ ] [Beego](https://github.com/beego/beego) 🚧[WIP]
+- [ ] [sqlx](https://github.com/jmoiron/sqlx) 🚧[WIP]
+
+## Supported ORM Tags Live Template
+
+[Go ORM Tags.xml](./src/main/resources/liveTemplates/Go%20ORM%20Tags.xml)
 
 | Tag          | ORM                                                                     |
 |--------------|-------------------------------------------------------------------------|
@@ -13,6 +24,7 @@
 | `pg:"-"`     | [pg](https://github.com/go-pg/pg)                                       |
 | `bun:"-"`    | [Bun](https://github.com/uptrace/bun)                                   |
 | `reform:"-"` | [reform](https://github.com/go-reform/reform)                           |
+| `aorm:"-"`   | [aorm](https://github.com/tangpanqing/aorm)                             |
 | `db:"-"`     | [sqlx](https://github.com/jmoiron/sqlx)                                 |
 | `db:"-"`     | [gorp](https://github.com/go-gorp/gorp)                                 |
 | `db:"-"`     | [upper/db](https://github.com/upper/db)                                 |

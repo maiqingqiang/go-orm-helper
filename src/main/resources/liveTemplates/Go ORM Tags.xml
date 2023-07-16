@@ -88,6 +88,13 @@
         </context>
     </template>
 
+    <template description='`aorm:""`' name='aorm' toReformat='true' toShortenFQNames='true'
+              value='`aorm:""$END$`'>
+        <context>
+            <option name='GO_TAG' value='true'/>
+        </context>
+    </template>
+
     <template description='`db:""`' name='db (sqlx|gorp|upper/db|Buffalo Model|go-sqlbuilder|rel|Bob|lore|GoBatis)'
               toReformat='true' toShortenFQNames='true' value='`db:"$FIELD_NAME$"$END$`'>
         <variable alwaysStopAt='true' defaultValue='' expression='snakeCase(fieldName())' name='FIELD_NAME'/>
