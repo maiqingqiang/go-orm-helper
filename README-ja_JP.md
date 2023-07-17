@@ -38,7 +38,11 @@
 
 ## インストール
 
-> 互換性範囲: GoLand — 2022.2 — 2023.2 (eap)
+### Jetbrains Marketplace からプラグインをインストールする
+
+> 互換性範囲:
+> - GoLand — 2022.2+
+> - IntelliJ IDEA Ultimate — 2022.2+
 
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">

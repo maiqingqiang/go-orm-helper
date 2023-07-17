@@ -38,7 +38,11 @@ for writing ORM code. Supports: Gorm、Xorm、Beego、GoFrame, etc.<br/>⭐️ S
 
 ## Installation
 
-> Compatibility Range: GoLand — 2022.2 — 2023.2 (eap)
+### Install Plugin from Jetbrains Marketplace
+
+> Compatibility Range: 
+> - GoLand — 2022.2+
+> - IntelliJ IDEA Ultimate — 2022.2+
 
 <a href="https://plugins.jetbrains.com/plugin/22173-go-orm-helper" target="_blank">
     <img src="https://blog.johnmai.top/go-orm-helper/assets/installation_button.svg" height="52" alt="Get from Marketplace" title="Get from Marketplace">
