@@ -149,9 +149,10 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
     @Override
     protected GoCompositeElement findAgainArgument(GoCompositeElement argument) {
         if (argument instanceof GoCallExpr goCallExpr) {
-            return findGoTypeByReceiver(goCallExpr, Set.of(GoTypeSpecDescriptor.of("builtin.string")));
+            GoType newArgument = findGoTypeByReceiver(goCallExpr, Set.of(GoTypeSpecDescriptor.of("builtin.string")));
+            if (newArgument != null) return newArgument;
         }
-        return null;
+        return argument;
     }
 
 }
