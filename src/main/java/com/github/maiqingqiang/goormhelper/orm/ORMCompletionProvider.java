@@ -62,6 +62,8 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         LOG.info("argument: " + argument);
 
+        argument = findAgainArgument(argument);
+
         GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
 
         if (argument instanceof GoStatement) {
@@ -88,28 +90,9 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                 } else if (goUnaryExpr.getExpression() instanceof GoReferenceExpression goReferenceExpression) {
                     if (goReferenceExpression.resolve() instanceof GoVarDefinition goVarDefinition) {
                         GoType goType = goVarDefinition.getGoType(ResolveState.initial());
-
-                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
-                            goType = goArrayOrSliceType.getType();
-                        }
-
-                        if (goType instanceof GoPointerType goPointerType) {
-                            goType = goPointerType.getType();
-                        }
-
                         handleGoType(parameters, result, descriptor, goType);
                     } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
-
                         GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
-
-                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
-                            goType = goArrayOrSliceType.getType();
-                        }
-
-                        if (goType instanceof GoPointerType goPointerType) {
-                            goType = goPointerType.getType();
-                        }
-
                         handleGoType(parameters, result, descriptor, goType);
                     }
                 }
@@ -120,15 +103,6 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                     GoType goType = PsiTreeUtil.findChildOfAnyType(goVarDefinition.getParent(), GoType.class);
 
                     if (goType != null) {
-
-                        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
-                            goType = goArrayOrSliceType.getType();
-                        }
-
-                        if (goType instanceof GoPointerType goPointerType) {
-                            goType = goPointerType.getType();
-                        }
-
                         handleGoType(parameters, result, descriptor, goType);
                     } else {
                         GoCompositeLit goCompositeLit = PsiTreeUtil.findChildOfType(goVarDefinition.getParent(), GoCompositeLit.class);
@@ -136,17 +110,8 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                             handleGoTypeReferenceExpression(parameters, result, descriptor, goCompositeLit.getTypeReferenceExpression());
                         }
                     }
-                } else if(goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition){
+                } else if (goReferenceExpression.resolve() instanceof GoParamDefinition goParamDefinition) {
                     GoType goType = goParamDefinition.getGoTypeInner(ResolveState.initial());
-
-                    if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
-                        goType = goArrayOrSliceType.getType();
-                    }
-
-                    if (goType instanceof GoPointerType goPointerType) {
-                        goType = goPointerType.getType();
-                    }
-
                     handleGoType(parameters, result, descriptor, goType);
                 }
             } else if (argument instanceof GoCompositeLit goCompositeLit) {
@@ -155,7 +120,13 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                 String schema = manager.getTableStructMapping().get(goStringLiteral.getDecodedText());
                 handleSchema(parameters, result, project, descriptor, schema);
             }
+        } else if (argument instanceof GoType goType) {
+            handleGoType(parameters, result, descriptor, goType);
         }
+    }
+
+    protected GoCompositeElement findAgainArgument(GoCompositeElement argument) {
+        return argument;
     }
 
     private void handleGoTypeReferenceExpression(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoTypeReferenceExpression expression) {
@@ -165,8 +136,13 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
     }
 
     private void handleGoType(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, GoCallableDescriptor descriptor, GoType goType) {
-        if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
-            scanFields(parameters, descriptor, result, goTypeSpec);
+        if (goType != null) {
+            goType = ORMPsiTreeUtil.getReallyGoType(goType);
+
+            if (goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
+                scanFields(parameters, descriptor, result, goTypeSpec);
+
+            }
         }
     }
 
@@ -241,6 +217,12 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         }
 
         for (GoCallExpr goCallExpr : PsiTreeUtil.findChildrenOfType(statement, GoCallExpr.class)) {
+
+            GoCompositeElement element = customFindGoCompositeElementByGoCallExpr(goCallExpr);
+            if (element != null) return element;
+
+            LOG.info("goCallExpr: " + goCallExpr + " text: " + goCallExpr.getText());
+
             GoCallableDescriptor descriptor = callablesSet.find(goCallExpr, false);
             if (descriptor == null) continue;
 
@@ -250,6 +232,10 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
             if (expressionList.size() >= argumentIndex + 1) return expressionList.get(argumentIndex);
         }
 
+        return null;
+    }
+
+    protected GoCompositeElement customFindGoCompositeElementByGoCallExpr(GoCallExpr goCallExpr) {
         return null;
     }
 
@@ -265,6 +251,9 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         if (currentStatement instanceof GoAssignmentStatement goAssignmentStatement) {
             for (GoExpression goExpression : goAssignmentStatement.getLeftHandExprList().getExpressionList()) {
+
+                LOG.info("goExpression: " + goExpression + " text: " + goExpression.getText());
+
                 if (checkAllowTypeByGoPointerType(goExpression.getGoType(ResolveState.initial())) && goExpression.getReference() != null) {
                     PsiElement resolved = goExpression.getReference().resolve();
                     if (resolved != null) {

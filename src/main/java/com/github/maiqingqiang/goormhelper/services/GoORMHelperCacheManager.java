@@ -97,7 +97,8 @@ public class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHe
 
     public void scanProject(@NotNull VirtualFile virtualFile, List<String> excluded) {
         for (VirtualFile file : virtualFile.getChildren()) {
-            if (!file.isValid() || (excluded != null && excluded.contains(file.getName()))) continue;
+            if (!file.isValid() || (excluded != null && excluded.contains(file.getName())) || file.getName().startsWith("."))
+                continue;
 
             if (file.isDirectory()) {
                 scanProject(file, excluded);

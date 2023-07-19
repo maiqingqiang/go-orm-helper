@@ -1,6 +1,9 @@
 package com.github.maiqingqiang.goormhelper.utils;
 
+import com.goide.psi.GoArrayOrSliceType;
 import com.goide.psi.GoCallExpr;
+import com.goide.psi.GoPointerType;
+import com.goide.psi.GoType;
 import com.goide.psi.impl.GoPsiUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -22,5 +25,17 @@ public class ORMPsiTreeUtil {
         if (argumentIndex == -1) return true;
         argument = GoPsiUtil.skipParens(argument);
         return argument == ContainerUtil.getOrElse(call.getArgumentList().getExpressionList(), argumentIndex, (Object) null);
+    }
+
+    public static GoType getReallyGoType(GoType goType) {
+        if (goType instanceof GoArrayOrSliceType goArrayOrSliceType) {
+            goType = goArrayOrSliceType.getType();
+        }
+
+        if (goType instanceof GoPointerType goPointerType) {
+            goType = goPointerType.getType();
+        }
+
+        return goType;
     }
 }
