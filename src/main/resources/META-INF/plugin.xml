@@ -22,13 +22,7 @@
                 serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings"/>
 
         <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.gorm.codeInsights.completion.GormCompletionContributor"/>
-
-        <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.xorm.codeInsights.completion.XormCompletionContributor"/>
-
-        <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.goframe.codeInsights.completion.GoFrameCompletionContributor"/>
+                                implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.GoORMHelperCompletionContributor"/>
 
         <highlightVisitor
                 implementation="com.github.maiqingqiang.goormhelper.codeInsights.daemon.GoORMHelperHighlightVisitor"/>
