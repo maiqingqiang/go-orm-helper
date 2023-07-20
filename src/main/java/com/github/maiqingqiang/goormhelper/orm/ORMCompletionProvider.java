@@ -14,6 +14,7 @@ import com.google.common.base.CaseFormat;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -42,7 +43,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         PsiElement currentElement = parameters.getPosition();
 
-        LOG.info("currentElement: " + currentElement.getText());
+        LOG.info("currentElement: " + currentElement + " text: " + currentElement.getText());
 
         Project project = currentElement.getProject();
 
@@ -351,7 +352,12 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                     comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(field), false);
                 }
 
-                addElement(result, column, comment, type, goTypeSpec);
+                GoStringLiteral goStringLiteral = (GoStringLiteral) parameters.getPosition().getParent();
+                String currentString = goStringLiteral.getDecodedText().replace(CompletionUtil.DUMMY_IDENTIFIER, "");
+
+                if (column != null && !column.contains(currentString.trim())) continue;
+
+                addElement(parameters, result, column, comment, type, goTypeSpec);
 
                 if (!(parameters.getPosition().getParent().getParent() instanceof GoKey)) {
                     Map<GoCallableDescriptor, List<String>> queryExpr = queryExpr();
@@ -359,7 +365,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                         List<String> whereExpr = queryExpr.get(descriptor);
                         if (whereExpr != null) {
                             for (String s : whereExpr) {
-                                addElement(result, String.format(s, column), comment, type, goTypeSpec);
+                                addElement(parameters, result, String.format(s, column), comment, type, goTypeSpec);
                             }
                         }
                     }
@@ -368,7 +374,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         }
     }
 
-    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
+    private void addElement(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
         LookupElementBuilder builder = LookupElementBuilder
                 .createWithSmartPointer(column, goTypeSpec)
                 .withPresentableText(column)
