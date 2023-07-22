@@ -12,11 +12,13 @@ type User struct {
 	Age    int32   // 年龄
 }
 
-func main() {
-	g.Model(&User{}).Where("id = ?")
-}
-
 func test1() (user *User) {
+	g.Model(&User{}).Where("id = ?")
+
+	g.Model(&User{}).Where("id = ? and user_name = ? OR email != ?")
+
+	g.DB().Model(&User{}).Where("id = ? and")
+
 	g.Model(&user).Where("id = ?", 1)
 
 	g.Model(&User{}).Where(g.Map{"user_name": 1, "name": "john"})

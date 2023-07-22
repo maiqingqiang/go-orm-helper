@@ -14,7 +14,6 @@ import com.google.common.base.CaseFormat;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -26,6 +25,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,6 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
     private static final Logger LOG = Logger.getInstance(ORMCompletionProvider.class);
 
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
-
         PsiElement currentElement = parameters.getPosition();
 
         LOG.info("currentElement: " + currentElement + " text: " + currentElement.getText());
@@ -58,6 +57,37 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         if (!ORMPsiTreeUtil.callHasArgumentAtIndex(goCallExpr, argumentIndex, currentElement.getParent()) && !(currentElement.getParent().getParent() instanceof GoKey))
             return;
+
+        String prefix = result.getPrefixMatcher().getPrefix();
+        int lastSpace = prefix.lastIndexOf(' ');
+        if (lastSpace >= 0 && lastSpace < prefix.length() - 1) {
+            String previous = prefix.substring(0, lastSpace);
+            LOG.info("previous: " + previous + "origin prefix: " + prefix);
+
+            prefix = prefix.substring(lastSpace + 1);
+            LOG.info("new prefix: " + prefix);
+
+            result = result.withPrefixMatcher(prefix);
+
+            if (StringUtils.containsAnyIgnoreCase(previous, Types.USE_LOGICAL_OPERATOR_SCENE.toArray(new CharSequence[]{}))) {
+                for (String s : Types.LOGICAL_OPERATOR_EXPR) {
+                    if (StringUtils.containsIgnoreCase(s, prefix)) {
+                        result.addElement(LookupElementBuilder
+                                .create(s)
+                                .withPresentableText(s)
+                                .withIcon(getIcon()));
+
+                        String lowerCase = s.toLowerCase();
+
+                        result.addElement(LookupElementBuilder
+                                .create(lowerCase)
+                                .withPresentableText(lowerCase)
+                                .withIcon(getIcon()));
+                    }
+                }
+                return;
+            }
+        }
 
         GoCompositeElement argument = findTargetGoCompositeElement(currentElement);
 
@@ -352,12 +382,9 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                     comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(field), false);
                 }
 
-                GoStringLiteral goStringLiteral = (GoStringLiteral) parameters.getPosition().getParent();
-                String currentString = goStringLiteral.getDecodedText().replace(CompletionUtil.DUMMY_IDENTIFIER, "");
+                if (column != null && !column.contains(result.getPrefixMatcher().getPrefix())) continue;
 
-                if (column != null && !column.contains(currentString.trim())) continue;
-
-                addElement(parameters, result, column, comment, type, goTypeSpec);
+                addElement(result, column, comment, type, goTypeSpec);
 
                 if (!(parameters.getPosition().getParent().getParent() instanceof GoKey)) {
                     Map<GoCallableDescriptor, List<String>> queryExpr = queryExpr();
@@ -365,7 +392,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                         List<String> whereExpr = queryExpr.get(descriptor);
                         if (whereExpr != null) {
                             for (String s : whereExpr) {
-                                addElement(parameters, result, String.format(s, column), comment, type, goTypeSpec);
+                                addElement(result, String.format(s, column), comment, type, goTypeSpec);
                             }
                         }
                     }
@@ -374,7 +401,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         }
     }
 
-    private void addElement(@NotNull CompletionParameters parameters, @NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
+    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
         LookupElementBuilder builder = LookupElementBuilder
                 .createWithSmartPointer(column, goTypeSpec)
                 .withPresentableText(column)

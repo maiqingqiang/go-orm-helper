@@ -79,3 +79,9 @@ func test6(db *gorm.DB) (user *User) {
 	query.Find(&user)
 	return
 }
+
+func test7(db *gorm.DB) (user *User) {
+	query := db.Where("id = ? and email != ? OR user_name = ?", "")
+	query.Find(&user)
+	return
+}

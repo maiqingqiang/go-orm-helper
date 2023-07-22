@@ -6,6 +6,10 @@
 
 ## [1.2.1] - 2023-07-19
 
+### Added
+
+- Support Inline Conditions.
+
 ### Fixed
 
 - Fix GoFrame ORM unsupported syntax.

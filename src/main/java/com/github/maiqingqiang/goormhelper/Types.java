@@ -29,6 +29,10 @@ public interface Types {
             "%s BETWEEN ? AND ?",
             "%s NOT BETWEEN ? AND ?"
     );
+
+    List<String> LOGICAL_OPERATOR_EXPR = List.of("AND", "OR", "XOR", "NOT");
+    List<String> USE_LOGICAL_OPERATOR_SCENE = List.of(" ?", " IS NULL", " IS NOT NULL");
+
     String MODEL_ANNOTATION = "@Model";
     Pattern MODEL_ANNOTATION_PATTERN = Pattern.compile(MODEL_ANNOTATION + "\\((.*?)\\)");
     String TABLE_ANNOTATION = "@Table";
