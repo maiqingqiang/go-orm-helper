@@ -69,7 +69,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
             result = result.withPrefixMatcher(prefix);
 
-            if (StringUtils.containsAnyIgnoreCase(previous, Types.USE_LOGICAL_OPERATOR_SCENE.toArray(new CharSequence[]{}))) {
+            if (Strings.endsWithIgnoreCaseAny(previous, Types.USE_LOGICAL_OPERATOR_SCENE.toArray(new CharSequence[]{}))) {
                 for (String s : Types.LOGICAL_OPERATOR_EXPR) {
                     if (StringUtils.containsIgnoreCase(s, prefix)) {
                         result.addElement(LookupElementBuilder
