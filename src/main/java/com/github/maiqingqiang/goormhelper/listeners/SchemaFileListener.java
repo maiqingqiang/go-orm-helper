@@ -3,6 +3,7 @@ package com.github.maiqingqiang.goormhelper.listeners;
 import com.github.maiqingqiang.goormhelper.bean.ScannedPath;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager;
 import com.goide.GoFileType;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class SchemaFileListener implements BulkFileListener {
+    private static final Logger LOG = Logger.getInstance(SchemaFileListener.class);
 
     private final Project project;
 

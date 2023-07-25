@@ -33,10 +33,13 @@ public interface Types {
     List<String> LOGICAL_OPERATOR_EXPR = List.of("AND", "OR", "XOR", "NOT");
     List<String> USE_LOGICAL_OPERATOR_SCENE = List.of(" ?", " IS NULL", " IS NOT NULL");
 
+
     String MODEL_ANNOTATION = "@Model";
     Pattern MODEL_ANNOTATION_PATTERN = Pattern.compile(MODEL_ANNOTATION + "\\((.*?)\\)");
     String TABLE_ANNOTATION = "@Table";
     Pattern TABLE_ANNOTATION_PATTERN = Pattern.compile(TABLE_ANNOTATION + "\\((.*?)\\)");
+
+    List<String> ANNOTATION_LIST = List.of("Model()", "Table()");
 
     String TABLE_NAME_FUNC = "TableName";
     List<String> EXCLUDED_SCAN_LIST = List.of(

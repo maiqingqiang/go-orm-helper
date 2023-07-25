@@ -5,15 +5,11 @@
     <vendor>John Mai</vendor>
 
     <depends>com.intellij.modules.platform</depends>
-    <!--    <depends>com.intellij.modules.go</depends>-->
     <depends>org.jetbrains.plugins.go</depends>
 
     <resource-bundle>messages.GoORMHelperBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-
-        <!--        <liveTemplateContext implementation="com.github.maiqingqiang.goormhelper.codeInsights.template.GoORMTemplateContextType"/>-->
-        <!--        <liveTemplateContext implementation="com.goide.editor.template.GoLiveTemplateContextType$Tag"/>-->
         <defaultLiveTemplates file="liveTemplates/Go ORM Tags.xml"/>
 
 
@@ -22,7 +18,13 @@
                 serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings"/>
 
         <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.GoORMHelperCompletionContributor"/>
+                                implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.ColumnCompletionContributor"/>
+        <completion.contributor language="go"
+                                implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.AnnotationCompletionContributor"/>
+        <completion.contributor language="go"
+                                implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.ModelAnnotationCompletionContributor"/>
+
+        <typedHandler implementation="com.github.maiqingqiang.goormhelper.codeInsights.completion.AnnotationTypedHandler"/>
 
         <highlightVisitor
                 implementation="com.github.maiqingqiang.goormhelper.codeInsights.daemon.GoORMHelperHighlightVisitor"/>

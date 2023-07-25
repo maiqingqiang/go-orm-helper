@@ -11,9 +11,9 @@ import com.intellij.patterns.PlatformPatterns;
 
 import java.util.List;
 
-public class GoORMHelperCompletionContributor extends CompletionContributor {
+public class ColumnCompletionContributor extends CompletionContributor {
 
-    public GoORMHelperCompletionContributor() {
+    public ColumnCompletionContributor() {
         List<ORMCompletionProvider> providers = List.of(
                 new GormColumnCompletionProvider(),
                 new XormColumnCompletionProvider(),
