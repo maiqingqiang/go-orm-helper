@@ -13,8 +13,26 @@ import java.util.regex.Pattern;
 public interface Types {
 
     List<String> OPERATOR_EXPR = List.of(
-            "%s = ?", "%s <> ?", "%s != ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s >= ?", "%s < ?", "%s <= ?", "%s BETWEEN ? AND ?"
+            "%s = ?",
+            "%s <> ?",
+            "%s != ?",
+            "%s IN ?",
+            "%s NOT IN ?",
+            "%s LIKE ?",
+            "%s > ?",
+            "%s >= ?",
+            "%s < ?",
+            "%s <= ?",
+            "%s <=> ?",
+            "%s IS NULL",
+            "%s IS NOT NULL",
+            "%s BETWEEN ? AND ?",
+            "%s NOT BETWEEN ? AND ?"
     );
+
+    List<String> LOGICAL_OPERATOR_EXPR = List.of("AND", "OR", "XOR", "NOT");
+    List<String> USE_LOGICAL_OPERATOR_SCENE = List.of(" ?", " IS NULL", " IS NOT NULL");
+
     String MODEL_ANNOTATION = "@Model";
     Pattern MODEL_ANNOTATION_PATTERN = Pattern.compile(MODEL_ANNOTATION + "\\((.*?)\\)");
     String TABLE_ANNOTATION = "@Table";

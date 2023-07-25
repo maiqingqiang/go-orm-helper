@@ -1,5 +1,6 @@
 package com.github.maiqingqiang.goormhelper.orm.goframe;
 
+import com.github.maiqingqiang.goormhelper.Types;
 import com.github.maiqingqiang.goormhelper.inspections.GoTypeSpecDescriptor;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
@@ -90,35 +91,37 @@ public interface GoFrameTypes {
 
 
     Map<GoCallableDescriptor, Integer> SCHEMA_CALLABLES = Map.ofEntries(
-            Map.entry(GoFunctionDescriptor.of("github.com/gogf/gf/frame/g.Model"), 0)
+            Map.entry(GoFunctionDescriptor.of("github.com/gogf/gf/frame/g.Model"), 0),
+            Map.entry(GoMethodDescriptor.of("(github.com/gogf/gf/database/gdb.DB).Model"), 0)
+    );
+
+    List<String> OTHER_SCHEMA_CALLABLES = List.of(
+            "Ctx",
+            "Table"
+    );
+
+    List<String> ALLOW_FIELDS = List.of(
+            "columns"
     );
 
     GoCallableDescriptorSet SCHEMA_CALLABLES_SET = new GoCallableDescriptorSet(SCHEMA_CALLABLES.keySet());
 
-
-    Map<GoCallableDescriptor, Integer> OTHER_SCHEMA_CALLABLES = Map.ofEntries();
-
-    GoCallableDescriptorSet OTHER_CALLABLES_SET = new GoCallableDescriptorSet(OTHER_SCHEMA_CALLABLES.keySet());
-
-    List<String> OPERATOR_EXPR = List.of(
-            "%s = ?", "%s <> ?", "%s IN ?", "%s LIKE ?", "%s > ?", "%s BETWEEN ? AND ?");
-
     Map<GoCallableDescriptor, List<String>> QUERY_EXPR = Map.ofEntries(
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Where"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Wheref"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).WhereOr"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).All"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).One"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Array"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Value"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Count"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindAll"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindOne"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindArray"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindValue"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindCount"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindScan"), OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Having"), OPERATOR_EXPR)
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Where"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Wheref"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).WhereOr"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).All"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).One"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Array"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Value"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Count"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindAll"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindOne"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindArray"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindValue"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindCount"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindScan"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Having"), Types.OPERATOR_EXPR)
     );
 
     Set<GoCallableDescriptor> ALLOW_TYPES = Set.of(

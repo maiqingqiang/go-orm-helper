@@ -5,30 +5,19 @@
     <vendor>John Mai</vendor>
 
     <depends>com.intellij.modules.platform</depends>
-    <!--    <depends>com.intellij.modules.go</depends>-->
     <depends>org.jetbrains.plugins.go</depends>
 
     <resource-bundle>messages.GoORMHelperBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-
-        <!--        <liveTemplateContext implementation="com.github.maiqingqiang.goormhelper.codeInsights.template.GoORMTemplateContextType"/>-->
-        <!--        <liveTemplateContext implementation="com.goide.editor.template.GoLiveTemplateContextType$Tag"/>-->
         <defaultLiveTemplates file="liveTemplates/Go ORM Tags.xml"/>
-
 
         <projectService serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager"/>
         <projectService
                 serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings"/>
 
         <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.gorm.codeInsights.completion.GormCompletionContributor"/>
-
-        <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.xorm.codeInsights.completion.XormCompletionContributor"/>
-
-        <completion.contributor language="go"
-                                implementationClass="com.github.maiqingqiang.goormhelper.orm.goframe.codeInsights.completion.GoFrameCompletionContributor"/>
+                                implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.GoORMHelperCompletionContributor"/>
 
         <highlightVisitor
                 implementation="com.github.maiqingqiang.goormhelper.codeInsights.daemon.GoORMHelperHighlightVisitor"/>
@@ -39,12 +28,8 @@
 
         <projectConfigurable
                 parentId="tools"
-                instance="com.github.maiqingqiang.goormhelper.ui.SettingConfigurable"
-                displayName="Go ORM Helper"/>
-    </extensions>
-
-    <extensions defaultExtensionNs="com.goide">
-
+                key="name"
+                instance="com.github.maiqingqiang.goormhelper.ui.SettingConfigurable"/>
     </extensions>
 
     <projectListeners>
