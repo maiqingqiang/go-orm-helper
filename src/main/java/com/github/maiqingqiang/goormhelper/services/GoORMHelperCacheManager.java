@@ -114,14 +114,16 @@ public class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHe
     public void parseGoFile(@NotNull VirtualFile file) {
         if (!(file.isValid() && file.getName().endsWith('.' + GoFileType.DEFAULT_EXTENSION))) return;
 
-        DumbService.getInstance(project).runWhenSmart(() -> {
+        DumbService.getInstance(project).runReadActionInSmartMode(() -> {
             Document document = FileDocumentManager.getInstance().getDocument(file);
 
             if (document != null && PsiManager.getInstance(project).findFile(file) instanceof GoFile goFile) {
 
                 List<String> structList = new ArrayList<>();
 
-                for (GoTypeSpec typeSpec : goFile.getTypes()) {
+                Collection<GoTypeSpec> goTypeSpecCollection = PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class);
+
+                for (GoTypeSpec typeSpec : goTypeSpecCollection) {
                     String structName = typeSpec.getName();
                     if (!(typeSpec.getSpecType().getType() instanceof GoStructType && structName != null))
                         continue;
