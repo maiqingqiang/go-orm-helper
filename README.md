@@ -40,15 +40,12 @@ https://www.jetbrains.com/help/go/auto-completing-code.html#code-completion-for-
 
 ### Annotation
 If the plugin is not compatible with your syntax, you can use the @Model or @Table helper.
-
 ![annotation.gif](assets%2Fannotation.gif)
 
 The plugin will scan the Structs in your project. It is recommended to set the scanning scope.
-
 ![setting.png](assets%2Fsetting.png)
 
 ### Live Template
-
 ![live-template.gif](assets%2Flive-template.gif)
 
 ### SQL to Struct
@@ -57,7 +54,6 @@ The plugin will scan the Structs in your project. It is recommended to set the s
 
 #### Menu Action
 Selected SQL -> Editor Popup Menu -> Go ORM Helper Tool -> SQL Convert Struct
-
 ![manual-sql-to-struct.png](assets%2Fmanual-sql-to-struct.png)
 
 <!-- Plugin description end -->

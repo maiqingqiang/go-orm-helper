@@ -44,11 +44,9 @@ https://www.jetbrains.com/help/go/auto-completing-code.html#code-completion-for-
 ![annotation.gif](assets%2Fannotation.gif)
 
 插件会扫描项目中所有Struct，建议设置扫描范围。
-
 ![setting.png](assets%2Fsetting.png)
 
 ### 实时模版
-
 ![live-template.gif](assets%2Flive-template.gif)
 
 ### SQL 转 Struct
