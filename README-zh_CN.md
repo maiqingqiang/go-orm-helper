@@ -34,7 +34,31 @@
 
 ## 使用
 
+### 代码补全
+https://www.jetbrains.com/help/go/auto-completing-code.html#code-completion-for-functions
+
 ![guide.gif](assets%2Fguide.gif)
+
+### 注解辅助
+有些写法此插件可能无法兼容，导致无法补全。你可以使用 @Model 或者 @Table 解决此问题。
+![annotation.gif](assets%2Fannotation.gif)
+
+插件会扫描项目中所有Struct，建议设置扫描范围。
+
+![setting.png](assets%2Fsetting.png)
+
+### 实时模版
+
+![live-template.gif](assets%2Flive-template.gif)
+
+### SQL 转 Struct
+#### 粘贴方式
+![paste.gif](assets%2Fpaste.gif)
+
+#### 菜单操作
+选中 SQL -> 点击编辑器右键菜单 -> Go ORM 助手工具箱 -> SQL 转 Struct
+
+![manual-sql-to-struct.png](assets%2Fmanual-sql-to-struct.png)
 
 ## 安装
 

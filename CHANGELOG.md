@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-## [1.2.1] - 2023-07-22
+## [1.2.1] - 2023-07-25
 
 ### Added
 
@@ -13,6 +13,7 @@
 ### Fixed
 
 - Fix GoFrame ORM unsupported syntax.
+- Fix Outdated stub in index Exception.
 
 ## [1.2.0] - 2023-07-15
 
