@@ -142,7 +142,7 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
             @NotNull List<Tag> tags = parseTag(tag.getValue("xorm"));
 
             for (Tag t : tags) {
-                if (t.getName().equals("comment") && t.getParams().size() > 0) {
+                if (t.getName().equals("comment") && !t.getParams().isEmpty()) {
                     comment = t.getParams().get(0).replaceAll("'", "");
                 }
             }

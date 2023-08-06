@@ -93,7 +93,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         LOG.info("argument: " + argument);
 
-        argument = findAgainArgument(argument,parameters,descriptor,result);
+        argument = findAgainArgument(argument, parameters, descriptor, result);
 
         GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
 

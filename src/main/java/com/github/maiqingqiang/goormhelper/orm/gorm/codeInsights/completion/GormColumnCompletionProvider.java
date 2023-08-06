@@ -21,7 +21,7 @@ public class GormColumnCompletionProvider extends ORMCompletionProvider {
 
         for (int i = 0; i < names.length; i++) {
             int j = i;
-            if (names[j].length() > 0) {
+            if (!names[j].isEmpty()) {
                 while (names[j].charAt(names[j].length() - 1) == '\\') {
                     i++;
                     names[j] = names[j].substring(0, names[j].length() - 1) + ";" + names[i];
@@ -34,7 +34,7 @@ public class GormColumnCompletionProvider extends ORMCompletionProvider {
 
             if (values.length >= 2) {
                 settings.put(k, String.join(":", Arrays.copyOfRange(values, 1, values.length)));
-            } else if (!k.equals("")) {
+            } else if (!k.isEmpty()) {
                 settings.put(k, k);
             }
         }
