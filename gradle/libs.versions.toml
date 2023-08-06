@@ -2,7 +2,7 @@
 # libraries
 annotations = "24.0.1"
 lombok = "1.18.28"
-guava = "32.1.1-jre"
+guava = "32.1.2-jre"
 druid = "1.2.18"
 jsqlparser = "4.6"
 evoInflector = "1.3"
