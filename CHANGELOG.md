@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [1.2.2] - 2023-08-06
+
+### Fixed
+
+- When using the DAO tool to generate a model, the field names are directly used as saved in the DAO. #9
+
 ## [1.2.1] - 2023-07-25
 
 ### Added
@@ -62,6 +68,8 @@
 - SQL to Struct
 
 [Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.1...HEAD
+
+[1.2.2]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.1...v1.2.2
 
 [1.2.1]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.0...v1.2.1
 

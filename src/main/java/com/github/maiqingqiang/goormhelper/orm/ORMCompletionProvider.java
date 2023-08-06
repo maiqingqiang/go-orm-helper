@@ -93,7 +93,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         LOG.info("argument: " + argument);
 
-        argument = findAgainArgument(argument);
+        argument = findAgainArgument(argument, parameters, descriptor, result);
 
         GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
 
@@ -156,7 +156,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         }
     }
 
-    protected GoCompositeElement findAgainArgument(GoCompositeElement argument) {
+    protected GoCompositeElement findAgainArgument(GoCompositeElement argument, @NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result) {
         return argument;
     }
 
@@ -358,7 +358,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                 }
 
                 if (column != null && column.isEmpty()) {
-                    if (field.getFieldDefinitionList().size() == 0 && field.getAnonymousFieldDefinition() != null) {
+                    if (field.getFieldDefinitionList().isEmpty() && field.getAnonymousFieldDefinition() != null) {
                         GoType goType = field.getAnonymousFieldDefinition().getGoType(ResolveState.initial());
                         if (goType == null) continue;
 
@@ -401,7 +401,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         }
     }
 
-    private void addElement(@NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
+    protected void addElement(@NotNull CompletionResultSet result, String column, String comment, String type, @NotNull GoTypeSpec goTypeSpec) {
         LookupElementBuilder builder = LookupElementBuilder
                 .createWithSmartPointer(column, goTypeSpec)
                 .withPresentableText(column)
