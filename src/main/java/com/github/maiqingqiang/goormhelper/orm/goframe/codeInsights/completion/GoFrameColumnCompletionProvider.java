@@ -4,10 +4,16 @@ import com.github.maiqingqiang.goormhelper.inspections.GoTypeSpecDescriptor;
 import com.github.maiqingqiang.goormhelper.orm.ORMCompletionProvider;
 import com.github.maiqingqiang.goormhelper.orm.goframe.GoFrameTypes;
 import com.github.maiqingqiang.goormhelper.ui.Icons;
+import com.github.maiqingqiang.goormhelper.utils.Strings;
+import com.goide.documentation.GoDocumentationProvider;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.*;
 import com.goide.psi.impl.GoPsiUtil;
+import com.google.common.base.CaseFormat;
+import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionResultSet;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.util.ObjectUtils;
 import org.jetbrains.annotations.Contract;
@@ -15,10 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
 
@@ -147,12 +150,97 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
     }
 
     @Override
-    protected GoCompositeElement findAgainArgument(GoCompositeElement argument) {
+    protected GoCompositeElement findAgainArgument(GoCompositeElement argument, @NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result) {
         if (argument instanceof GoCallExpr goCallExpr) {
             GoType newArgument = findGoTypeByReceiver(goCallExpr, Set.of(GoTypeSpecDescriptor.of("builtin.string")));
-            if (newArgument != null) return newArgument;
+            if (newArgument != null && newArgument.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
+
+                HashMap<String, String> columnMap = new HashMap<>();
+
+                for (PsiReference search : GoReferencesSearch.search(goTypeSpec)) {
+                    if (search.getElement().getParent() instanceof GoCompositeLit goCompositeLit) {
+                        GoLiteralValue goLiteralValue = goCompositeLit.getLiteralValue();
+                        if (goLiteralValue != null) {
+                            for (GoElement goElement : goLiteralValue.getElementList()) {
+
+                                if (goElement.getKey() != null && goElement.getKey().getFieldName() != null && goElement.getValue() != null && goElement.getValue().getExpression() instanceof GoStringLiteral goStringLiteral) {
+                                    columnMap.put(goElement.getKey().getFieldName().getIdentifier().getText(), goStringLiteral.getDecodedText());
+                                }
+                            }
+                        }
+                    }
+                }
+
+                scanFieldsByGoFrame(parameters, descriptor, result, goTypeSpec, columnMap);
+
+                return null;
+            }
         }
         return argument;
     }
+
+
+    private void scanFieldsByGoFrame(@NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec, HashMap<String, String> columnMap) {
+        if (goTypeSpec.getSpecType().getType() instanceof GoStructType goStructType) {
+            for (GoFieldDeclaration field : goStructType.getFieldDeclarationList()) {
+
+                if (!checkGoFieldDeclaration(field)) continue;
+
+                String name = field.getFieldDefinitionList().get(0).getName();
+
+                String column = columnMap.get(name);
+                String comment = getComment(field);
+                String type = "";
+
+                if (field.getType() != null) {
+                    type = field.getType().getPresentationText();
+                }
+
+                if (column != null && column.isEmpty()) {
+                    column = getColumn(field);
+
+                    if (column != null && column.isEmpty()) {
+                        if (field.getFieldDefinitionList().isEmpty() && field.getAnonymousFieldDefinition() != null) {
+                            GoType goType = field.getAnonymousFieldDefinition().getGoType(ResolveState.initial());
+                            if (goType == null) continue;
+
+                            GoTypeSpec spec = (GoTypeSpec) goType.resolve(ResolveState.initial());
+                            if (spec == null) continue;
+
+                            scanFieldsByGoFrame(parameters, descriptor, result, spec, columnMap);
+                            continue;
+                        }
+
+                        if (name != null) {
+                            column = Strings.replaceCommonInitialisms(name);
+                            column = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, column);
+                        }
+                    }
+                }
+
+
+                if (comment != null && comment.isEmpty()) {
+                    comment = GoDocumentationProvider.getCommentText(GoDocumentationProvider.getCommentsForElement(field), false);
+                }
+
+                if (column != null && !column.contains(result.getPrefixMatcher().getPrefix())) continue;
+
+                addElement(result, column, comment, type, goTypeSpec);
+
+                if (!(parameters.getPosition().getParent().getParent() instanceof GoKey)) {
+                    Map<GoCallableDescriptor, List<String>> queryExpr = queryExpr();
+                    if (queryExpr != null) {
+                        List<String> whereExpr = queryExpr.get(descriptor);
+                        if (whereExpr != null) {
+                            for (String s : whereExpr) {
+                                addElement(result, String.format(s, column), comment, type, goTypeSpec);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 }
