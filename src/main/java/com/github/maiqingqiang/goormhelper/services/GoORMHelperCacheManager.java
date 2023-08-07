@@ -35,8 +35,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 @Service(Service.Level.PROJECT)
-@State(name = "GoORMHelperCache", storages = @Storage(value = "goORMHelperCache.xml"))
-public class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHelperCacheManager.State> {
+@State(name = "GoORMHelperCache", storages = @Storage(value = "GOHCache.xml"))
+public final class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHelperCacheManager.State> {
     private static final Logger LOG = Logger.getInstance(GoORMHelperCacheManager.class);
 
     public final Project project;
@@ -143,11 +143,14 @@ public class GoORMHelperCacheManager implements PersistentStateComponent<GoORMHe
 
                         String plural = English.plural(tableName);
                         if (!plural.equals(tableName)) {
-                            this.state.tableStructMapping.put(plural, structName);
+                            if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
+                                this.state.tableStructMapping.put(tableName, structName);
+                            }
                         }
                     }
-
-                    this.state.tableStructMapping.put(tableName, structName);
+                    if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
+                        this.state.tableStructMapping.put(tableName, structName);
+                    }
                 }
 
                 addScannedPathMapping(file, structList);

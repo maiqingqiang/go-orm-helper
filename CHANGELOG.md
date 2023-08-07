@@ -4,6 +4,11 @@
 
 ## [Unreleased]
 
+## [1.2.3] - 2023-08-07
+
+### Fixed
+- Fix "com.intellij.diagnostic.PluginException: Cannot init component state"
+
 ## [1.2.2] - 2023-08-06
 
 ### Fixed
