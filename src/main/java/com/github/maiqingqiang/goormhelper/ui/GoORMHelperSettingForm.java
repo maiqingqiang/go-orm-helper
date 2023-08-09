@@ -41,7 +41,7 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
     }
 
     private static FileChooserDescriptor getFileChooserDescriptor(@NlsContexts.DialogTitle String title) {
-        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true)
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, false)
                 .withShowFileSystemRoots(true)
                 .withShowHiddenFiles(true);
 
