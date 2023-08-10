@@ -12,10 +12,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <defaultLiveTemplates file="liveTemplates/Go ORM Tags.xml"/>
 
-        <projectService serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager"/>
-        <projectService
-                serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings"/>
-
         <completion.contributor language="go"
                                 implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.GoORMHelperCompletionContributor"/>
 
