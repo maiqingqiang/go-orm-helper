@@ -103,17 +103,16 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
             if (file.isDirectory()) {
                 scanProject(file, excluded);
             } else {
+                if (!(file.isValid() && file.getName().endsWith('.' + GoFileType.DEFAULT_EXTENSION))) continue;
+
                 ScannedPath scanned = this.state.scannedPathMapping.get(file.getUrl());
                 if (scanned != null && scanned.getLastModified() == file.getTimeStamp()) continue;
-                LOG.info("GoORMHelperCache update: " + file.getUrl());
                 parseGoFile(file);
             }
         }
     }
 
     public void parseGoFile(@NotNull VirtualFile file) {
-        if (!(file.isValid() && file.getName().endsWith('.' + GoFileType.DEFAULT_EXTENSION))) return;
-
         DumbService.getInstance(project).runReadActionInSmartMode(() -> {
             Document document = FileDocumentManager.getInstance().getDocument(file);
 

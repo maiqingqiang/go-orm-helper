@@ -30,11 +30,12 @@
                 parentId="tools"
                 key="name"
                 instance="com.github.maiqingqiang.goormhelper.ui.SettingConfigurable"/>
+
+        <backgroundPostStartupActivity
+                implementation="com.github.maiqingqiang.goormhelper.startup.GoORMHelperStartupActivity"/>
     </extensions>
 
     <projectListeners>
-        <listener class="com.github.maiqingqiang.goormhelper.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
         <listener class="com.github.maiqingqiang.goormhelper.listeners.SchemaFileListener"
                   topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
     </projectListeners>
