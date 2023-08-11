@@ -42,8 +42,6 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
         PsiElement currentElement = parameters.getPosition();
 
-        LOG.info("currentElement: " + currentElement + " text: " + currentElement.getText());
-
         Project project = currentElement.getProject();
 
         GoCallExpr goCallExpr = (GoCallExpr) PsiTreeUtil.findFirstParent(currentElement, e -> e instanceof GoCallExpr);
@@ -62,10 +60,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         int lastSpace = prefix.lastIndexOf(' ');
         if (lastSpace >= 0 && lastSpace < prefix.length() - 1) {
             String previous = prefix.substring(0, lastSpace);
-            LOG.info("previous: " + previous + "origin prefix: " + prefix);
-
             prefix = prefix.substring(lastSpace + 1);
-            LOG.info("new prefix: " + prefix);
 
             result = result.withPrefixMatcher(prefix);
 
@@ -91,9 +86,9 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
         GoCompositeElement argument = findTargetGoCompositeElement(currentElement);
 
-        LOG.info("argument: " + argument);
-
         argument = findAgainArgument(argument, parameters, descriptor, result);
+
+        LOG.info("argument: " + argument);
 
         GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
 
@@ -104,13 +99,11 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
             if ((matcher = Types.MODEL_ANNOTATION_PATTERN.matcher(comment)).find()) {
                 schema = matcher.group(1);
-                LOG.info("@Model: " + schema);
             }
 
             if ((matcher = Types.TABLE_ANNOTATION_PATTERN.matcher(comment)).find()) {
                 String table = matcher.group(1);
                 schema = manager.getTableStructMapping().get(table);
-                LOG.info("@Table: " + schema);
             }
 
             handleSchema(parameters, result, project, descriptor, schema);
@@ -181,8 +174,6 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         if (schema != null && !schema.isEmpty()) {
             Set<String> pathList = GoORMHelperCacheManager.getInstance(project).getSchemaMapping().get(schema);
 
-            LOG.info("handleSchema pathList: " + pathList);
-
             if (pathList != null) {
                 for (String path : pathList) {
 
@@ -194,8 +185,6 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
 
                     for (GoTypeSpec goTypeSpec : PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class)) {
                         if (!Objects.equals(goTypeSpec.getName(), schema)) continue;
-
-                        LOG.info("handleSchema path: " + path);
 
                         scanFields(parameters, descriptor, result, goTypeSpec);
                     }
@@ -252,8 +241,6 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
             GoCompositeElement element = customFindGoCompositeElementByGoCallExpr(goCallExpr);
             if (element != null) return element;
 
-            LOG.info("goCallExpr: " + goCallExpr + " text: " + goCallExpr.getText());
-
             GoCallableDescriptor descriptor = callablesSet.find(goCallExpr, false);
             if (descriptor == null) continue;
 
@@ -278,12 +265,8 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         GoCompositeElement argument = findGoCompositeElementByStatement(currentStatement, callablesSet, callables);
         if (argument != null) return argument;
 
-        LOG.info("currentStatement: " + currentStatement);
-
         if (currentStatement instanceof GoAssignmentStatement goAssignmentStatement) {
             for (GoExpression goExpression : goAssignmentStatement.getLeftHandExprList().getExpressionList()) {
-
-                LOG.info("goExpression: " + goExpression + " text: " + goExpression.getText());
 
                 if (checkAllowTypeByGoPointerType(goExpression.getGoType(ResolveState.initial())) && goExpression.getReference() != null) {
                     PsiElement resolved = goExpression.getReference().resolve();
