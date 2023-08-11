@@ -10,7 +10,6 @@ import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.*;
 import com.goide.psi.impl.GoPsiUtil;
-import com.google.common.base.CaseFormat;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.psi.PsiReference;
@@ -212,8 +211,7 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
                         }
 
                         if (name != null) {
-                            column = Strings.replaceCommonInitialisms(name);
-                            column = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, column);
+                            column = Strings.toSnakeCase(name);
                         }
                     }
                 }

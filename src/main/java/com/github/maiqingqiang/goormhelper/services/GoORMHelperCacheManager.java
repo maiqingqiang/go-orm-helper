@@ -9,7 +9,6 @@ import com.github.maiqingqiang.goormhelper.utils.Strings;
 import com.goide.GoFileType;
 import com.goide.psi.*;
 import com.goide.util.Value;
-import com.google.common.base.CaseFormat;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
@@ -62,6 +61,8 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
     }
 
     public void scan() {
+        LOG.info("Scan Schema");
+
         BackgroundTaskQueue taskQueue = new BackgroundTaskQueue(project, GoORMHelperBundle.message("name"));
         taskQueue.run(new Task.Backgroundable(project, GoORMHelperBundle.message("initializing.title")) {
             @Override
@@ -104,7 +105,6 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
                 scanProject(file, excluded);
             } else {
                 if (!(file.isValid() && file.getName().endsWith('.' + GoFileType.DEFAULT_EXTENSION))) continue;
-
                 ScannedPath scanned = this.state.scannedPathMapping.get(file.getUrl());
                 if (scanned != null && scanned.getLastModified() == file.getTimeStamp()) continue;
                 parseGoFile(file);
@@ -133,12 +133,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
                     String tableName = findTableName(typeSpec);
 
                     if (tableName.isEmpty()) {
-                        String structInitialisms = structName;
-                        for (String word : Strings.COMMON_INITIALISMS.keySet()) {
-                            structInitialisms = structInitialisms.replace(word, word.charAt(0) + word.substring(1).toLowerCase());
-                        }
-
-                        tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, structInitialisms);
+                        tableName = Strings.toSnakeCase(structName);
 
                         String plural = English.plural(tableName);
                         if (!plural.equals(tableName)) {

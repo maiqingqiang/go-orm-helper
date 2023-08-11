@@ -24,7 +24,7 @@
                 key="name"
                 instance="com.github.maiqingqiang.goormhelper.ui.SettingConfigurable"/>
 
-        <backgroundPostStartupActivity
+        <postStartupActivity
                 implementation="com.github.maiqingqiang.goormhelper.startup.GoORMHelperStartupActivity"/>
 
         <annotator language="go"

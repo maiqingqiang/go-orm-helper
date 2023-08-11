@@ -10,7 +10,6 @@ import com.goide.documentation.GoDocumentationProvider;
 import com.goide.inspections.core.GoCallableDescriptor;
 import com.goide.inspections.core.GoCallableDescriptorSet;
 import com.goide.psi.*;
-import com.google.common.base.CaseFormat;
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
@@ -355,8 +354,7 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
                     String name = field.getFieldDefinitionList().get(0).getName();
 
                     if (name != null) {
-                        column = Strings.replaceCommonInitialisms(name);
-                        column = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, column);
+                        column = Strings.toSnakeCase(name);
                     }
                 }
 
