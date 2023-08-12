@@ -21,6 +21,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
@@ -80,7 +81,10 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
                 GoORMHelperProjectSettings.State state = Objects.requireNonNull(GoORMHelperProjectSettings.getInstance(project).getState());
 
                 if (state.enableGlobalScan) {
-                    scanProject(project.getBaseDir(), Types.EXCLUDED_SCAN_LIST);
+                    final VirtualFile projectDir = ProjectUtil.guessProjectDir(project);
+                    if (projectDir != null && projectDir.isValid()) {
+                        scanProject(projectDir, Types.EXCLUDED_SCAN_LIST);
+                    }
                 } else {
                     for (String path : state.scanPathList) {
                         VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
