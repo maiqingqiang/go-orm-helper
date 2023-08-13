@@ -151,33 +151,41 @@ public class GoFrameColumnCompletionProvider extends ORMCompletionProvider {
     @Override
     protected GoCompositeElement findAgainArgument(GoCompositeElement argument, @NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result) {
         if (argument instanceof GoCallExpr goCallExpr) {
-            GoType newArgument = findGoTypeByReceiver(goCallExpr, Set.of(GoTypeSpecDescriptor.of("builtin.string")));
-            if (newArgument != null && newArgument.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
-
-                HashMap<String, String> columnMap = new HashMap<>();
-
-                for (PsiReference search : GoReferencesSearch.search(goTypeSpec)) {
-                    if (search.getElement().getParent() instanceof GoCompositeLit goCompositeLit) {
-                        GoLiteralValue goLiteralValue = goCompositeLit.getLiteralValue();
-                        if (goLiteralValue != null) {
-                            for (GoElement goElement : goLiteralValue.getElementList()) {
-
-                                if (goElement.getKey() != null && goElement.getKey().getFieldName() != null && goElement.getValue() != null && goElement.getValue().getExpression() instanceof GoStringLiteral goStringLiteral) {
-                                    columnMap.put(goElement.getKey().getFieldName().getIdentifier().getText(), goStringLiteral.getDecodedText());
-                                }
-                            }
-                        }
-                    }
-                }
-
-                scanFieldsByGoFrame(parameters, descriptor, result, goTypeSpec, columnMap);
-
+            GoType goType = findGoTypeByReceiver(goCallExpr, Set.of(GoTypeSpecDescriptor.of("builtin.string")));
+            if (handleGoTypeSpec(goType, parameters, descriptor, result)) {
                 return null;
             }
+        } else if (argument instanceof GoType goType && handleGoTypeSpec(goType, parameters, descriptor, result)) {
+            return null;
         }
         return argument;
     }
 
+    private boolean handleGoTypeSpec(GoType goType, @NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result) {
+        if (goType != null && goType.resolve(ResolveState.initial()) instanceof GoTypeSpec goTypeSpec) {
+            HashMap<String, String> columnMap = new HashMap<>();
+
+            for (PsiReference search : GoReferencesSearch.search(goTypeSpec)) {
+                if (search.getElement().getParent() instanceof GoCompositeLit goCompositeLit) {
+                    GoLiteralValue goLiteralValue = goCompositeLit.getLiteralValue();
+                    if (goLiteralValue != null) {
+                        for (GoElement goElement : goLiteralValue.getElementList()) {
+
+                            if (goElement.getKey() != null && goElement.getKey().getFieldName() != null && goElement.getValue() != null && goElement.getValue().getExpression() instanceof GoStringLiteral goStringLiteral) {
+                                columnMap.put(goElement.getKey().getFieldName().getIdentifier().getText(), goStringLiteral.getDecodedText());
+                            }
+                        }
+                    }
+                }
+            }
+
+            scanFieldsByGoFrame(parameters, descriptor, result, goTypeSpec, columnMap);
+
+            return true;
+        }
+
+        return false;
+    }
 
     private void scanFieldsByGoFrame(@NotNull CompletionParameters parameters, GoCallableDescriptor descriptor, @NotNull CompletionResultSet result, @NotNull GoTypeSpec goTypeSpec, HashMap<String, String> columnMap) {
         if (goTypeSpec.getSpecType().getType() instanceof GoStructType goStructType) {
