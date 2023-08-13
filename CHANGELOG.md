@@ -6,7 +6,7 @@
 
 ## [1.2.4] - 2023-08-13
 
-## Changed
+### Changed
 
 - Use VfsUtilCore.iterateChildrenRecursively
 - Use ProjectUtil.guessProjectDir()
