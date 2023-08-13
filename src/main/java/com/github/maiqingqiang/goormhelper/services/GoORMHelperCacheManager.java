@@ -24,7 +24,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.ResolveState;
@@ -51,17 +50,6 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
 
     public static GoORMHelperCacheManager getInstance(@NotNull Project project) {
         return project.getService(GoORMHelperCacheManager.class);
-    }
-
-    @NotNull
-    private static VirtualFileFilter scanProjectFilter(List<String> excluded) {
-        return file -> {
-            if ((excluded != null && excluded.contains(file.getName())) || file.getName().startsWith(".")) return false;
-
-            if (file.isDirectory()) return true;
-
-            return file.getFileType() instanceof GoFileType;
-        };
     }
 
     @Override
@@ -114,7 +102,14 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
     }
 
     public void scanProject(@NotNull VirtualFile root, List<String> excluded) {
-        VfsUtilCore.iterateChildrenRecursively(root, scanProjectFilter(excluded), fileOrDir -> {
+        VfsUtilCore.iterateChildrenRecursively(root, file -> {
+            if (!root.getPath().equals(file.getPath()) && ((excluded != null && excluded.contains(file.getName())) || file.getName().startsWith(".")))
+                return false;
+
+            if (file.isDirectory()) return true;
+
+            return file.getFileType() instanceof GoFileType;
+        }, fileOrDir -> {
             if (!fileOrDir.isDirectory()) {
                 ScannedPath scanned = state.scannedPathMapping.get(fileOrDir.getUrl());
                 if (scanned != null && scanned.getLastModified() != fileOrDir.getTimeStamp()) {
