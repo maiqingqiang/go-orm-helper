@@ -8,15 +8,7 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GoTypeSpecDescriptor implements GoCallableDescriptor {
-
-    private final String importPath;
-    private final String name;
-
-    public GoTypeSpecDescriptor(@NotNull String importPath, @NotNull String name) {
-        this.importPath = importPath;
-        this.name = name;
-    }
+public record GoTypeSpecDescriptor(String importPath, String name) implements GoCallableDescriptor {
 
     public static @NotNull GoTypeSpecDescriptor of(@NotNull String descriptorText) {
         int lastDot = descriptorText.lastIndexOf(".");

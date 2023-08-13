@@ -57,13 +57,9 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         databaseComboBox = new ComboBox<>(Types.Database.values());
         enableGlobalScanCheckBox = new JCheckBox(GoORMHelperBundle.message("setting.enableGlobalScanCheckBox.title"));
 
-//        sqlPathTextField = new TextFieldWithBrowseButton();
-//        sqlPathTextField.addBrowseFolderListener(GoORMHelperBundle.message("setting.sqlPathTextField.title"), null, null, FileChooserDescriptorFactory.createSingleFolderDescriptor());
-
         panel = FormBuilder.createFormBuilder()
                 .addLabeledComponent(GoORMHelperBundle.message("setting.ormComboBox.title"), ormComboBox)
                 .addLabeledComponent(GoORMHelperBundle.message("setting.databaseComboBox.title"), databaseComboBox)
-//                .addLabeledComponent(GoORMHelperBundle.message("setting.sqlPathTextField.title"), sqlPathTextField)
                 .addComponent(enableGlobalScanCheckBox)
                 .addComponentFillVertically(initScanPathComponent(), 0)
                 .getPanel();

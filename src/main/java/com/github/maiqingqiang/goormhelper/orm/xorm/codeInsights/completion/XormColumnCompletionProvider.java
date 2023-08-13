@@ -125,7 +125,7 @@ public class XormColumnCompletionProvider extends ORMCompletionProvider {
             @NotNull List<Tag> tags = parseTag(tag.getValue("xorm"));
 
             for (Tag t : tags) {
-                if (t.getName().startsWith("'") && t.getParams().size() == 0) {
+                if (t.getName().startsWith("'") && t.getParams().isEmpty()) {
                     column = t.getName().replaceAll("'", "");
                 }
             }

@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GoORMHelperAnnotator implements Annotator {
-    List<String> annotations = List.of(Types.MODEL_ANNOTATION, Types.TABLE_ANNOTATION);
+    final List<String> annotations = List.of(Types.MODEL_ANNOTATION, Types.TABLE_ANNOTATION);
 
     @Override
     public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {

@@ -53,6 +53,17 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
         return project.getService(GoORMHelperCacheManager.class);
     }
 
+    @NotNull
+    private static VirtualFileFilter scanProjectFilter(List<String> excluded) {
+        return file -> {
+            if ((excluded != null && excluded.contains(file.getName())) || file.getName().startsWith(".")) return false;
+
+            if (file.isDirectory()) return true;
+
+            return file.getFileType() instanceof GoFileType;
+        };
+    }
+
     @Override
     public State getState() {
         return this.state;
@@ -114,17 +125,6 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
         });
     }
 
-    @NotNull
-    private static VirtualFileFilter scanProjectFilter(List<String> excluded) {
-        return file -> {
-            if ((excluded != null && excluded.contains(file.getName())) || file.getName().startsWith(".")) return false;
-
-            if (file.isDirectory()) return true;
-
-            return file.getFileType() instanceof GoFileType;
-        };
-    }
-
     public void parseGoFile(@NotNull VirtualFile file) {
         DumbService.getInstance(project).runReadActionInSmartMode(() -> {
             Document document = FileDocumentManager.getInstance().getDocument(file);
@@ -183,7 +183,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
                 GoReturnStatement goReturnStatement = PsiTreeUtil.findChildOfType(goMethodDeclaration, GoReturnStatement.class);
                 if (goReturnStatement == null) continue;
 
-                Value value = goReturnStatement.getExpressionList().get(0).getValue();
+                Value<?> value = goReturnStatement.getExpressionList().get(0).getValue();
                 if (value != null && value.getString() != null && !value.getString().isEmpty()) {
                     return value.getString();
                 }
@@ -247,7 +247,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
         this.state.lastTimeChecked = 0L;
     }
 
-    static class State {
+    public static class State {
         public final Map<String, Set<String>> schemaMapping = new HashMap<>();
         public final Map<String, ScannedPath> scannedPathMapping = new HashMap<>();
         public final Map<String, String> tableStructMapping = new HashMap<>();
