@@ -22,7 +22,9 @@ import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileFilter;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.ResolveState;
@@ -100,20 +102,27 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
         scanProject(virtualFile, null);
     }
 
-    public void scanProject(@NotNull VirtualFile virtualFile, List<String> excluded) {
-        for (VirtualFile file : virtualFile.getChildren()) {
-            if (!file.isValid() || (excluded != null && excluded.contains(file.getName())) || file.getName().startsWith("."))
-                continue;
-
-            if (file.isDirectory()) {
-                scanProject(file, excluded);
-            } else {
-                if (!(file.isValid() && file.getName().endsWith('.' + GoFileType.DEFAULT_EXTENSION))) continue;
-                ScannedPath scanned = this.state.scannedPathMapping.get(file.getUrl());
-                if (scanned != null && scanned.getLastModified() == file.getTimeStamp()) continue;
-                parseGoFile(file);
+    public void scanProject(@NotNull VirtualFile root, List<String> excluded) {
+        VfsUtilCore.iterateChildrenRecursively(root, scanProjectFilter(excluded), fileOrDir -> {
+            if (!fileOrDir.isDirectory()) {
+                ScannedPath scanned = state.scannedPathMapping.get(fileOrDir.getUrl());
+                if (scanned != null && scanned.getLastModified() != fileOrDir.getTimeStamp()) {
+                    parseGoFile(fileOrDir);
+                }
             }
-        }
+            return true;
+        });
+    }
+
+    @NotNull
+    private static VirtualFileFilter scanProjectFilter(List<String> excluded) {
+        return file -> {
+            if ((excluded != null && excluded.contains(file.getName())) || file.getName().startsWith(".")) return false;
+
+            if (file.isDirectory()) return true;
+
+            return file.getFileType() instanceof GoFileType;
+        };
     }
 
     public void parseGoFile(@NotNull VirtualFile file) {
