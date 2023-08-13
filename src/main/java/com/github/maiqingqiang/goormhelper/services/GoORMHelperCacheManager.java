@@ -9,7 +9,6 @@ import com.github.maiqingqiang.goormhelper.utils.Strings;
 import com.goide.GoFileType;
 import com.goide.psi.*;
 import com.goide.util.Value;
-import com.google.common.base.CaseFormat;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
@@ -22,6 +21,8 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiManager;
@@ -62,6 +63,8 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
     }
 
     public void scan() {
+        LOG.info("Scan Schema");
+
         BackgroundTaskQueue taskQueue = new BackgroundTaskQueue(project, GoORMHelperBundle.message("name"));
         taskQueue.run(new Task.Backgroundable(project, GoORMHelperBundle.message("initializing.title")) {
             @Override
@@ -79,7 +82,10 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
                 GoORMHelperProjectSettings.State state = Objects.requireNonNull(GoORMHelperProjectSettings.getInstance(project).getState());
 
                 if (state.enableGlobalScan) {
-                    scanProject(project.getBaseDir(), Types.EXCLUDED_SCAN_LIST);
+                    final VirtualFile projectDir = ProjectUtil.guessProjectDir(project);
+                    if (projectDir != null && projectDir.isValid()) {
+                        scanProject(projectDir, Types.EXCLUDED_SCAN_LIST);
+                    }
                 } else {
                     for (String path : state.scanPathList) {
                         VirtualFile file = VirtualFileManager.getInstance().findFileByUrl(path);
@@ -95,25 +101,26 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
         scanProject(virtualFile, null);
     }
 
-    public void scanProject(@NotNull VirtualFile virtualFile, List<String> excluded) {
-        for (VirtualFile file : virtualFile.getChildren()) {
-            if (!file.isValid() || (excluded != null && excluded.contains(file.getName())) || file.getName().startsWith("."))
-                continue;
+    public void scanProject(@NotNull VirtualFile root, List<String> excluded) {
+        VfsUtilCore.iterateChildrenRecursively(root, file -> {
+            if (!root.getPath().equals(file.getPath()) && ((excluded != null && excluded.contains(file.getName())) || file.getName().startsWith(".")))
+                return false;
 
-            if (file.isDirectory()) {
-                scanProject(file, excluded);
-            } else {
-                ScannedPath scanned = this.state.scannedPathMapping.get(file.getUrl());
-                if (scanned != null && scanned.getLastModified() == file.getTimeStamp()) continue;
-                LOG.info("GoORMHelperCache update: " + file.getUrl());
-                parseGoFile(file);
+            if (file.isDirectory()) return true;
+
+            return file.getFileType() instanceof GoFileType;
+        }, fileOrDir -> {
+            if (!fileOrDir.isDirectory()) {
+                ScannedPath scanned = state.scannedPathMapping.get(fileOrDir.getUrl());
+                if (scanned == null || scanned.getLastModified() != fileOrDir.getTimeStamp()) {
+                    parseGoFile(fileOrDir);
+                }
             }
-        }
+            return true;
+        });
     }
 
     public void parseGoFile(@NotNull VirtualFile file) {
-        if (!(file.isValid() && file.getName().endsWith('.' + GoFileType.DEFAULT_EXTENSION))) return;
-
         DumbService.getInstance(project).runReadActionInSmartMode(() -> {
             Document document = FileDocumentManager.getInstance().getDocument(file);
 
@@ -134,12 +141,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
                     String tableName = findTableName(typeSpec);
 
                     if (tableName.isEmpty()) {
-                        String structInitialisms = structName;
-                        for (String word : Strings.COMMON_INITIALISMS.keySet()) {
-                            structInitialisms = structInitialisms.replace(word, word.charAt(0) + word.substring(1).toLowerCase());
-                        }
-
-                        tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, structInitialisms);
+                        tableName = Strings.toSnakeCase(structName);
 
                         String plural = English.plural(tableName);
                         if (!plural.equals(tableName)) {
@@ -176,7 +178,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
                 GoReturnStatement goReturnStatement = PsiTreeUtil.findChildOfType(goMethodDeclaration, GoReturnStatement.class);
                 if (goReturnStatement == null) continue;
 
-                Value value = goReturnStatement.getExpressionList().get(0).getValue();
+                Value<?> value = goReturnStatement.getExpressionList().get(0).getValue();
                 if (value != null && value.getString() != null && !value.getString().isEmpty()) {
                     return value.getString();
                 }
@@ -240,7 +242,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
         this.state.lastTimeChecked = 0L;
     }
 
-    static class State {
+    public static class State {
         public final Map<String, Set<String>> schemaMapping = new HashMap<>();
         public final Map<String, ScannedPath> scannedPathMapping = new HashMap<>();
         public final Map<String, String> tableStructMapping = new HashMap<>();

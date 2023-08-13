@@ -14,7 +14,7 @@
         </constraints>
         <properties>
           <labelLocation value="West"/>
-          <text value="选择数据库"/>
+          <text resource-bundle="messages/GoORMHelperBundle" key="setting.databaseComboBox.title"/>
         </properties>
       </component>
       <component id="7396f" class="com.intellij.openapi.ui.LabeledComponent" binding="ormComponent">
@@ -23,7 +23,7 @@
         </constraints>
         <properties>
           <labelLocation value="West"/>
-          <text value="选择ORM"/>
+          <text resource-bundle="messages/GoORMHelperBundle" key="setting.ormComboBox.title"/>
         </properties>
       </component>
     </children>

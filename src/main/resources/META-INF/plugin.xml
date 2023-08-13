@@ -12,15 +12,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <defaultLiveTemplates file="liveTemplates/Go ORM Tags.xml"/>
 
-        <projectService serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperCacheManager"/>
-        <projectService
-                serviceImplementation="com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings"/>
-
         <completion.contributor language="go"
                                 implementationClass="com.github.maiqingqiang.goormhelper.codeInsights.completion.GoORMHelperCompletionContributor"/>
-
-        <highlightVisitor
-                implementation="com.github.maiqingqiang.goormhelper.codeInsights.daemon.GoORMHelperHighlightVisitor"/>
 
         <editorActionHandler action="EditorPaste"
                              implementationClass="com.github.maiqingqiang.goormhelper.actions.EditorPasteListener"
@@ -30,11 +23,15 @@
                 parentId="tools"
                 key="name"
                 instance="com.github.maiqingqiang.goormhelper.ui.SettingConfigurable"/>
+
+        <postStartupActivity
+                implementation="com.github.maiqingqiang.goormhelper.startup.GoORMHelperStartupActivity"/>
+
+        <annotator language="go"
+                   implementationClass="com.github.maiqingqiang.goormhelper.lang.annotation.GoORMHelperAnnotator"/>
     </extensions>
 
     <projectListeners>
-        <listener class="com.github.maiqingqiang.goormhelper.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
         <listener class="com.github.maiqingqiang.goormhelper.listeners.SchemaFileListener"
                   topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
     </projectListeners>

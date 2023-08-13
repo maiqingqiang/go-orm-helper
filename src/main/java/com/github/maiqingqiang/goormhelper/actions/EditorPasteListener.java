@@ -87,7 +87,7 @@ public class EditorPasteListener extends EditorActionHandler {
             Validation validation = new Validation(Collections.singletonList(FeaturesAllowed.CREATE), sql);
             List<ValidationError> errors = validation.validate();
 
-            return errors.size() == 0;
+            return errors.isEmpty();
         } catch (Exception e) {
             return false;
         }

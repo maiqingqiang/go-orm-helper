@@ -9,7 +9,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ToolbarDecorator;
@@ -40,8 +39,8 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         initComponent();
     }
 
-    private static FileChooserDescriptor getFileChooserDescriptor(@NlsContexts.DialogTitle String title) {
-        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true)
+    private static FileChooserDescriptor getFileChooserDescriptor(String title) {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, false)
                 .withShowFileSystemRoots(true)
                 .withShowHiddenFiles(true);
 
@@ -57,13 +56,9 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         databaseComboBox = new ComboBox<>(Types.Database.values());
         enableGlobalScanCheckBox = new JCheckBox(GoORMHelperBundle.message("setting.enableGlobalScanCheckBox.title"));
 
-//        sqlPathTextField = new TextFieldWithBrowseButton();
-//        sqlPathTextField.addBrowseFolderListener(GoORMHelperBundle.message("setting.sqlPathTextField.title"), null, null, FileChooserDescriptorFactory.createSingleFolderDescriptor());
-
         panel = FormBuilder.createFormBuilder()
                 .addLabeledComponent(GoORMHelperBundle.message("setting.ormComboBox.title"), ormComboBox)
                 .addLabeledComponent(GoORMHelperBundle.message("setting.databaseComboBox.title"), databaseComboBox)
-//                .addLabeledComponent(GoORMHelperBundle.message("setting.sqlPathTextField.title"), sqlPathTextField)
                 .addComponent(enableGlobalScanCheckBox)
                 .addComponentFillVertically(initScanPathComponent(), 0)
                 .getPanel();
