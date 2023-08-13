@@ -9,7 +9,6 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.ConfigurableUi;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.NlsContexts;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ToolbarDecorator;
@@ -40,7 +39,7 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         initComponent();
     }
 
-    private static FileChooserDescriptor getFileChooserDescriptor(@NlsContexts.DialogTitle String title) {
+    private static FileChooserDescriptor getFileChooserDescriptor(String title) {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, false)
                 .withShowFileSystemRoots(true)
                 .withShowHiddenFiles(true);
