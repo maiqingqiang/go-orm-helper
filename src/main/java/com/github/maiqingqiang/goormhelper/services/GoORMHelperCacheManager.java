@@ -122,40 +122,43 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
 
     public void parseGoFile(@NotNull VirtualFile file) {
         DumbService.getInstance(project).runReadActionInSmartMode(() -> {
-            Document document = FileDocumentManager.getInstance().getDocument(file);
+            if (!DumbService.getInstance(project).isDumb()) {
 
-            if (document != null && PsiManager.getInstance(project).findFile(file) instanceof GoFile goFile) {
+                Document document = FileDocumentManager.getInstance().getDocument(file);
 
-                List<String> structList = new ArrayList<>();
+                if (document != null && PsiManager.getInstance(project).findFile(file) instanceof GoFile goFile) {
 
-                Collection<GoTypeSpec> goTypeSpecCollection = PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class);
+                    List<String> structList = new ArrayList<>();
 
-                for (GoTypeSpec typeSpec : goTypeSpecCollection) {
-                    String structName = typeSpec.getName();
-                    if (!(typeSpec.getSpecType().getType() instanceof GoStructType && structName != null))
-                        continue;
+                    Collection<GoTypeSpec> goTypeSpecCollection = PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class);
 
-                    addSchemaMapping(structName, file);
-                    structList.add(structName);
+                    for (GoTypeSpec typeSpec : goTypeSpecCollection) {
+                        String structName = typeSpec.getName();
+                        if (!(typeSpec.getSpecType().getType() instanceof GoStructType && structName != null))
+                            continue;
 
-                    String tableName = findTableName(typeSpec);
+                        addSchemaMapping(structName, file);
+                        structList.add(structName);
 
-                    if (tableName.isEmpty()) {
-                        tableName = Strings.toSnakeCase(structName);
+                        String tableName = findTableName(typeSpec);
 
-                        String plural = English.plural(tableName);
-                        if (!plural.equals(tableName)) {
-                            if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
-                                this.state.tableStructMapping.put(tableName, structName);
+                        if (tableName.isEmpty()) {
+                            tableName = Strings.toSnakeCase(structName);
+
+                            String plural = English.plural(tableName);
+                            if (!plural.equals(tableName)) {
+                                if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
+                                    this.state.tableStructMapping.put(tableName, structName);
+                                }
                             }
                         }
+                        if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
+                            this.state.tableStructMapping.put(tableName, structName);
+                        }
                     }
-                    if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
-                        this.state.tableStructMapping.put(tableName, structName);
-                    }
-                }
 
-                addScannedPathMapping(file, structList);
+                    addScannedPathMapping(file, structList);
+                }
             }
         });
     }
