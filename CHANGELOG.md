@@ -4,6 +4,14 @@
 
 ## [Unreleased]
 
+## [1.2.5] - 2023-09-10
+
+### Changed
+- upgrade libraries
+
+### Fixed
+- Fixed PSI and index do not match
+
 ## [1.2.4] - 2023-08-13
 
 ### Changed
@@ -78,7 +86,8 @@
 - ORM Code Completion
 - SQL to Struct
 
-[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.4...HEAD
+[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.5...HEAD
+[1.2.5]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.1...v1.2.2
