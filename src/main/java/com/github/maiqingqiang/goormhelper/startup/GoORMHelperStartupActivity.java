@@ -10,6 +10,15 @@ import org.jetbrains.annotations.NotNull;
 public class GoORMHelperStartupActivity implements StartupActivity, DumbAware {
     @Override
     public void runActivity(@NotNull Project project) {
-        ReadAction.run(() -> GoORMHelperCacheManager.getInstance(project).scan());
+        ReadAction.run(() -> {
+            try {
+                Thread.sleep(2 * 1000);
+                GoORMHelperCacheManager.getInstance(project).scan();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
     }
+
+
 }
