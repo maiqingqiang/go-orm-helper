@@ -122,43 +122,40 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
 
     public void parseGoFile(@NotNull VirtualFile file) {
         DumbService.getInstance(project).runReadActionInSmartMode(() -> {
-            if (!DumbService.getInstance(project).isDumb()) {
+            Document document = FileDocumentManager.getInstance().getDocument(file);
 
-                Document document = FileDocumentManager.getInstance().getDocument(file);
+            if (document != null && PsiManager.getInstance(project).findFile(file) instanceof GoFile goFile) {
 
-                if (document != null && PsiManager.getInstance(project).findFile(file) instanceof GoFile goFile) {
+                List<String> structList = new ArrayList<>();
 
-                    List<String> structList = new ArrayList<>();
+                Collection<GoTypeSpec> goTypeSpecCollection = PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class);
 
-                    Collection<GoTypeSpec> goTypeSpecCollection = PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class);
+                for (GoTypeSpec typeSpec : goTypeSpecCollection) {
+                    String structName = typeSpec.getName();
+                    if (!(typeSpec.getSpecType().getType() instanceof GoStructType && structName != null))
+                        continue;
 
-                    for (GoTypeSpec typeSpec : goTypeSpecCollection) {
-                        String structName = typeSpec.getName();
-                        if (!(typeSpec.getSpecType().getType() instanceof GoStructType && structName != null))
-                            continue;
+                    addSchemaMapping(structName, file);
+                    structList.add(structName);
 
-                        addSchemaMapping(structName, file);
-                        structList.add(structName);
+                    String tableName = findTableName(typeSpec);
 
-                        String tableName = findTableName(typeSpec);
+                    if (tableName.isEmpty()) {
+                        tableName = Strings.toSnakeCase(structName);
 
-                        if (tableName.isEmpty()) {
-                            tableName = Strings.toSnakeCase(structName);
-
-                            String plural = English.plural(tableName);
-                            if (!plural.equals(tableName)) {
-                                if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
-                                    this.state.tableStructMapping.put(tableName, structName);
-                                }
+                        String plural = English.plural(tableName);
+                        if (!plural.equals(tableName)) {
+                            if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
+                                this.state.tableStructMapping.put(tableName, structName);
                             }
                         }
-                        if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
-                            this.state.tableStructMapping.put(tableName, structName);
-                        }
                     }
-
-                    addScannedPathMapping(file, structList);
+                    if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
+                        this.state.tableStructMapping.put(tableName, structName);
+                    }
                 }
+
+                addScannedPathMapping(file, structList);
             }
         });
     }
@@ -176,7 +173,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
     }
 
     private String findTableName(@NotNull GoTypeSpec typeSpec) {
-        for (GoNamedSignatureOwner method : typeSpec.getAllMethods()) {
+        for (GoNamedSignatureOwner method : typeSpec.getMethods()) {
             if (method.getName() != null && method.getName().equals(Types.TABLE_NAME_FUNC) && method instanceof GoMethodDeclaration goMethodDeclaration) {
                 GoReturnStatement goReturnStatement = PsiTreeUtil.findChildOfType(goMethodDeclaration, GoReturnStatement.class);
                 if (goReturnStatement == null) continue;
