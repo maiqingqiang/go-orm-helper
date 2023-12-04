@@ -48,6 +48,10 @@ public final class GoORMHelperProjectSettings implements PersistentStateComponen
         state.enableGlobalScan = enable;
     }
 
+    public void setFindStructTableNameFunc(boolean findStructTableNameFunc) {
+        state.findStructTableNameFunc = findStructTableNameFunc;
+    }
+
     public void setScanPathList(List<String> scanPathList) {
         state.scanPathList = scanPathList;
     }
@@ -56,6 +60,9 @@ public final class GoORMHelperProjectSettings implements PersistentStateComponen
         public Types.ORM defaultORM = Types.ORM.AskEveryTime;
         public Types.Database defaultDatabase = Types.Database.AskEveryTime;
         public boolean enableGlobalScan = true;
+
+
+        public boolean findStructTableNameFunc = false;
         public List<String> scanPathList = new SmartList<>();
 
 //        public String sqlPath = "";

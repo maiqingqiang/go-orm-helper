@@ -8,7 +8,9 @@ import com.github.maiqingqiang.goormhelper.orm.goframe.GoFrameTypes;
 import com.github.maiqingqiang.goormhelper.utils.Strings;
 import com.goide.GoFileType;
 import com.goide.psi.*;
+import com.goide.psi.impl.GoPsiImplUtil;
 import com.goide.util.Value;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
@@ -19,7 +21,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
@@ -121,43 +123,53 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
     }
 
     public void parseGoFile(@NotNull VirtualFile file) {
-        DumbService.getInstance(project).runReadActionInSmartMode(() -> {
-            Document document = FileDocumentManager.getInstance().getDocument(file);
+        try {
+            ApplicationManager.getApplication().runReadAction(() -> {
+                if (!project.isDisposed()) {
+                    Document document = FileDocumentManager.getInstance().getDocument(file);
 
-            if (document != null && PsiManager.getInstance(project).findFile(file) instanceof GoFile goFile) {
+                    if (document != null && PsiManager.getInstance(project).findFile(file) instanceof GoFile goFile) {
 
-                List<String> structList = new ArrayList<>();
+                        List<String> structList = new ArrayList<>();
 
-                Collection<GoTypeSpec> goTypeSpecCollection = PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class);
+                        Collection<GoTypeSpec> goTypeSpecCollection = PsiTreeUtil.findChildrenOfType(goFile, GoTypeSpec.class);
 
-                for (GoTypeSpec typeSpec : goTypeSpecCollection) {
-                    String structName = typeSpec.getName();
-                    if (!(typeSpec.getSpecType().getType() instanceof GoStructType && structName != null))
-                        continue;
+                        for (GoTypeSpec typeSpec : goTypeSpecCollection) {
+                            String structName = typeSpec.getName();
+                            if (!(typeSpec.getSpecType().getType() instanceof GoStructType && structName != null))
+                                continue;
 
-                    addSchemaMapping(structName, file);
-                    structList.add(structName);
+                            addSchemaMapping(structName, file);
+                            structList.add(structName);
 
-                    String tableName = findTableName(typeSpec);
+                            GoORMHelperProjectSettings.State state = Objects.requireNonNull(GoORMHelperProjectSettings.getInstance(project).getState());
 
-                    if (tableName.isEmpty()) {
-                        tableName = Strings.toSnakeCase(structName);
+                            String tableName = "";
+                            if (state.findStructTableNameFunc) {
+                                tableName = findTableName(typeSpec);
+                            }
 
-                        String plural = English.plural(tableName);
-                        if (!plural.equals(tableName)) {
+                            if (tableName.isEmpty()) {
+                                tableName = Strings.toSnakeCase(structName);
+
+                                String plural = English.plural(tableName);
+                                if (!plural.equals(tableName)) {
+                                    if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
+                                        this.state.tableStructMapping.put(tableName, structName);
+                                    }
+                                }
+                            }
                             if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
                                 this.state.tableStructMapping.put(tableName, structName);
                             }
                         }
-                    }
-                    if (!tableName.trim().isEmpty() && !structName.trim().isEmpty()) {
-                        this.state.tableStructMapping.put(tableName, structName);
+
+                        addScannedPathMapping(file, structList);
                     }
                 }
-
-                addScannedPathMapping(file, structList);
-            }
-        });
+            });
+        } catch (IndexNotReadyException | IndexOutOfBoundsException ignored) {
+        }
     }
 
     public void addSchemaMapping(String key, @NotNull VirtualFile file) {
@@ -173,9 +185,9 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
     }
 
     private String findTableName(@NotNull GoTypeSpec typeSpec) {
-        for (GoNamedSignatureOwner method : typeSpec.getMethods()) {
-            if (method.getName() != null && method.getName().equals(Types.TABLE_NAME_FUNC) && method instanceof GoMethodDeclaration goMethodDeclaration) {
-                GoReturnStatement goReturnStatement = PsiTreeUtil.findChildOfType(goMethodDeclaration, GoReturnStatement.class);
+        for (GoMethodDeclaration method : GoPsiImplUtil.getMethods(typeSpec)) {
+            if (method.getName() != null && method.getName().equals(Types.TABLE_NAME_FUNC)) {
+                GoReturnStatement goReturnStatement = PsiTreeUtil.findChildOfType(method, GoReturnStatement.class);
                 if (goReturnStatement == null) continue;
 
                 Value<?> value = goReturnStatement.getExpressionList().get(0).getValue();
