@@ -4,11 +4,11 @@
 
 ## [Unreleased]
 
-## [1.2.7] - 2023-12-04
+## [1.2.7] - 2023-12-05
 
 ### Fixed
 
-- Fixed PSI and index do not match, FindStructTableName is disabled by default.
+- Fixed PSI and index do not match. The function of locating the Struct table name has been migrated to an experimental option, with the default setting of search disabled.
 
 ## [1.2.6] - 2023-12-02
 

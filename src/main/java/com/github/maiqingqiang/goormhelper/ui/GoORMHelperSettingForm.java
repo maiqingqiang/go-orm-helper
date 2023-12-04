@@ -57,7 +57,16 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
         enableGlobalScanCheckBox = new JCheckBox(GoORMHelperBundle.message("setting.enableGlobalScanCheckBox.title"));
         findStructTableNameFuncCheckBox = new JCheckBox(GoORMHelperBundle.message("setting.findStructTableNameFuncCheckBox.title"));
 
-        panel = FormBuilder.createFormBuilder().addLabeledComponent(GoORMHelperBundle.message("setting.ormComboBox.title"), ormComboBox).addLabeledComponent(GoORMHelperBundle.message("setting.databaseComboBox.title"), databaseComboBox).addComponent(findStructTableNameFuncCheckBox).addComponent(new JSeparator()).addComponent(enableGlobalScanCheckBox).addComponentFillVertically(initScanPathComponent(), 0).getPanel();
+        panel = FormBuilder
+                .createFormBuilder()
+                .addLabeledComponent(GoORMHelperBundle.message("setting.ormComboBox.title"), ormComboBox)
+                .addLabeledComponent(GoORMHelperBundle.message("setting.databaseComboBox.title"), databaseComboBox)
+                .addComponent(enableGlobalScanCheckBox)
+                .addComponentFillVertically(initScanPathComponent(), 0)
+                .addComponent(new JSeparator())
+                .addComponent(new JLabel(GoORMHelperBundle.message("setting.experimental.title")))
+                .addComponent(findStructTableNameFuncCheckBox)
+                .getPanel();
 
 
         enableGlobalScanCheckBox.addChangeListener(e -> scanPathTableView.setEnabled(!enableGlobalScanCheckBox.isSelected()));
