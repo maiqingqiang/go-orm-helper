@@ -42,7 +42,16 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
     }
 
     private static FileChooserDescriptor getFileChooserDescriptor(String title) {
-        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, false).withShowFileSystemRoots(true).withShowHiddenFiles(true);
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(
+                true,
+                true,
+                false,
+                false,
+                false,
+                false
+        )
+                .withShowFileSystemRoots(true)
+                .withShowHiddenFiles(true);
 
         if (title != null) {
             descriptor.setTitle(title);
@@ -136,7 +145,8 @@ public class GoORMHelperSettingForm implements ConfigurableUi<GoORMHelperProject
     public boolean isModified(@NotNull GoORMHelperProjectSettings settings) {
         GoORMHelperProjectSettings.State state = Objects.requireNonNull(settings.getState());
 
-        return !(ormComboBox.getSelectedItem() == state.defaultORM && databaseComboBox.getSelectedItem() == state.defaultDatabase
+        return !(ormComboBox.getSelectedItem() == state.defaultORM
+                && databaseComboBox.getSelectedItem() == state.defaultDatabase
 //                && sqlPathTextField.getText().equals(state.sqlPath)
                 && enableGlobalScanCheckBox.isSelected() == state.enableGlobalScan
                 && findStructTableNameFuncCheckBox.isSelected() == state.findStructTableNameFunc

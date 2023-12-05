@@ -36,8 +36,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 public abstract class ORMCompletionProvider extends CompletionProvider<CompletionParameters> {
-    private static final Logger LOG = Logger.getInstance(ORMCompletionProvider.class);
-
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context, @NotNull CompletionResultSet result) {
         PsiElement currentElement = parameters.getPosition();
 
@@ -86,8 +84,6 @@ public abstract class ORMCompletionProvider extends CompletionProvider<Completio
         GoCompositeElement argument = findTargetGoCompositeElement(currentElement);
 
         argument = findAgainArgument(argument, parameters, descriptor, result);
-
-        LOG.info("argument: " + argument);
 
         GoORMHelperCacheManager manager = GoORMHelperCacheManager.getInstance(project);
 
