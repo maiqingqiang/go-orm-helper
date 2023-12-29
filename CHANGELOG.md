@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 
+## [1.2.8] - 2023-12-29
+
+### Fixed
+
+- Fixed data type uppercase issue
+- Handle SQL that cannot be converted to a Struct
+
+### Changed
+
+- upgrade guava 33.0.0-jre
+- upgrade jsqlparser 4.8
+
 ## [1.2.7] - 2023-12-05
 
 ### Fixed
@@ -117,7 +129,8 @@
 - ORM Code Completion
 - SQL to Struct
 
-[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.7...HEAD
+[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.8...HEAD
+[1.2.8]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.5...v1.2.6
 [1.2.5]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.4...v1.2.5
