@@ -93,7 +93,8 @@ public class SQL2Struct implements ISQL2Struct {
     }
 
     private String getGoType(String type) {
-        return dataType.getOrDefault(type, defaultDataType);
+        System.out.println("type -> "+type);
+        return dataType.getOrDefault(type.toLowerCase(), defaultDataType);
     }
 
     protected String getGoType(@NotNull SQLColumnDefinition definition) {
