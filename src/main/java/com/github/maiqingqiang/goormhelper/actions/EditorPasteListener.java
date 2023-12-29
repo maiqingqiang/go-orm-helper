@@ -1,10 +1,14 @@
 package com.github.maiqingqiang.goormhelper.actions;
 
+import com.github.maiqingqiang.goormhelper.GoORMHelperBundle;
 import com.github.maiqingqiang.goormhelper.Types;
 import com.github.maiqingqiang.goormhelper.services.GoORMHelperProjectSettings;
 import com.github.maiqingqiang.goormhelper.sql2struct.ISQL2Struct;
 import com.github.maiqingqiang.goormhelper.ui.ConvertSettingDialogWrapper;
 import com.goide.psi.GoFile;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -44,7 +48,9 @@ public class EditorPasteListener extends EditorActionHandler {
             if (verifySQL(text)) {
                 Project project = editor.getProject();
 
-                GoORMHelperProjectSettings.State state = Objects.requireNonNull(GoORMHelperProjectSettings.getInstance(Objects.requireNonNull(project)).getState());
+                GoORMHelperProjectSettings.State state = Objects.requireNonNull(
+                        GoORMHelperProjectSettings.getInstance(Objects.requireNonNull(project)).getState()
+                );
 
                 Types.ORM selectedORM = state.defaultORM;
                 Types.Database selectedDatabase = state.defaultDatabase;
@@ -72,7 +78,19 @@ public class EditorPasteListener extends EditorActionHandler {
                     Caret currentCaret = editor.getCaretModel().getCurrentCaret();
                     int start = currentCaret.getSelectionStart();
 
-                    editor.getDocument().insertString(start, sql2Struct.convert());
+                    try {
+                        editor.getDocument().insertString(start, sql2Struct.convert());
+                    } catch (Exception ignored) {
+                        Notifications.Bus.notify(
+                                new Notification(
+                                        GoORMHelperBundle.message("name"),
+                                        GoORMHelperBundle.message("sql.convert.struct.not.support"),
+                                        GoORMHelperBundle.message("sql.convert.struct.check"),
+                                        NotificationType.WARNING),
+                                project
+                        );
+                        this.handler.execute(editor, caret, dataContext);
+                    }
                 });
 
                 return;
