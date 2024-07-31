@@ -36,6 +36,8 @@ dependencies {
     implementation(libs.druid)
     implementation(libs.jsqlparser)
     implementation(libs.evoInflector)
+    implementation(libs.annotations)
+
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
@@ -65,7 +67,7 @@ intellijPlatform {
         version = providers.gradleProperty("pluginVersion")
 
         // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription = projectDir.resolve("DESCRIPTION.md").readText()
+        description = projectDir.resolve("DESCRIPTION.md").readText()
 
         val changelog = project.changelog // local variable for configuration cache compatibility
         // Get the latest available change notes from the changelog file
