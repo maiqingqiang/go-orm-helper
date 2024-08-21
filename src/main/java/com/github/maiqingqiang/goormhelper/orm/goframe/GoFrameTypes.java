@@ -151,7 +151,10 @@ public interface GoFrameTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindValue"), Types.OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindCount"), Types.OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindScan"), Types.OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Having"), Types.OPERATOR_EXPR)
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Having"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Where"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Wheref"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOr"), Types.OPERATOR_EXPR)
     );
 
     Set<GoCallableDescriptor> ALLOW_TYPES = Set.of(
