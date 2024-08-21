@@ -2,6 +2,7 @@ package com.github.maiqingqiang.goormhelper.sql2struct.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLDataTypeImpl;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
@@ -19,9 +20,9 @@ public class SQL2Struct implements ISQL2Struct {
             Map.entry("numeric", "int32"),
             Map.entry("integer", "int32"),
             Map.entry("int", "int32"),
-            Map.entry("smallint", "int32"),
+            Map.entry("tinyint", "int8"),
+            Map.entry("smallint", "int16"),
             Map.entry("mediumint", "int32"),
-            Map.entry("tinyint", "int32"),
             Map.entry("bigint", "int64"),
             Map.entry("float", "float32"),
             Map.entry("real", "float64"),
@@ -45,11 +46,21 @@ public class SQL2Struct implements ISQL2Struct {
             Map.entry("date", "time.Time"),
             Map.entry("datetime", "time.Time"),
             Map.entry("timestamp", "time.Time"),
-            Map.entry("year", "int32"),
+            Map.entry("year", "uint16"),
             Map.entry("bit", "[]uint8"),
             Map.entry("boolean", "bool")
     );
+
+    private static final Map<String, String> unsignedDataType = Map.ofEntries(
+            Map.entry("tinyint", "uint8"),
+            Map.entry("smallint", "uint16"),
+            Map.entry("mediumint", "uint32"),
+            Map.entry("int", "uint32"),
+            Map.entry("bigint", "uint64")
+    );
+
     private static final String defaultDataType = "string";
+    private static final String defaultUnsignedDataType = "uint32";
     private final String sql;
     private final DbType dbType;
 
@@ -92,13 +103,11 @@ public class SQL2Struct implements ISQL2Struct {
         stringBuilder.append("}\n\n");
     }
 
-    private String getGoType(String type) {
-        System.out.println("type -> "+type);
-        return dataType.getOrDefault(type.toLowerCase(), defaultDataType);
-    }
-
     protected String getGoType(@NotNull SQLColumnDefinition definition) {
-        return getGoType(definition.getDataType().getName());
+        String typeName = definition.getDataType().getName().toLowerCase();
+        boolean isUnsigned = ((SQLDataTypeImpl) definition.getDataType()).isUnsigned();
+
+        return isUnsigned ? unsignedDataType.getOrDefault(typeName, defaultUnsignedDataType) : dataType.getOrDefault(typeName, defaultDataType);
     }
 
     protected void generateStructField(@NotNull StringBuilder stringBuilder, @NotNull SQLColumnDefinition definition) {
