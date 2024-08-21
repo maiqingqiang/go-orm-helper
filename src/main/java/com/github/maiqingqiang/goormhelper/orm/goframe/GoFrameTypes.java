@@ -58,8 +58,7 @@ public interface GoFrameTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).WhereOrNotIn"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).WhereOrNotNull"), -1),
 
-            // @Doc https://goframe.org/pages/viewpage.action?pageId=7301832#ORM%E6%9F%A5%E8%AF%A2Where/WhereOr/WhereNot-WherePri%E6%94%AF%E6%8C%81%E4%B8%BB%E9%94%AE%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%9D%A1%E4%BB%B6
-            // WhereBuilder
+            // @Doc https://goframe.org/pages/viewpage.action?pageId=7301832#ORM%E6%9F%A5%E8%AF%A2Where/WhereOr/WhereNot-WhereBuilder%E5%A4%8D%E6%9D%82%E6%9D%A1%E4%BB%B6%E7%BB%84%E5%90%88
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Where"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Wheref"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereBetween"), 0),
