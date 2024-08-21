@@ -49,3 +49,19 @@ func test5() {
 	query = query.Where("id = ?", "")
 	return
 }
+
+func test6() {
+	model := g.Model(&User{})
+	builder := model.Builder()
+	// @Model(User)
+	builder = builder.Where("id IN ?", g.Slice{1, 2, 3, 4})
+	// @Model(User)
+	builder = builder.WhereOr("user_name = ?", "张三")
+	// @Model(User)
+	builder = builder.WhereGT("age", 11)
+	model.Where(builder)
+	// where, args := builder.Build()
+	// model.Where(where, args)
+	return
+
+}
