@@ -53,17 +53,13 @@ func test5() {
 func test6() {
 	model := g.Model(&User{})
 	condition := model.Builder()
-	// @Table(user)
 	condition = condition.Where("id IN ?", g.Slice{1, 2, 3, 4})
+
 	// @Table(user)
 	condition = condition.WhereOr(`id IN ?`, g.Slice{1, 2, 3, 4})
-	// @Model(User)
+
 	condition = condition.WhereOr("user_name = ?", "zhangsan")
+
 	// @Model(User)
 	condition = condition.WhereGT("age", 11)
-	model.Where(condition)
-// 	where, args := condition.Build()
-// 	model.Where(where, args)
-	return
-
 }
