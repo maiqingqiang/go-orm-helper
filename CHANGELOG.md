@@ -140,7 +140,8 @@
 - ORM Code Completion
 - SQL to Struct
 
-[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.8...HEAD
+[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.9...HEAD
+[1.2.9]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.6...v1.2.7
 [1.2.6]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.5...v1.2.6
@@ -153,4 +154,4 @@
 [1.1.0]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/maiqingqiang/go-orm-helper/tree/v1.0.0
+[1.0.0]: https://github.com/maiqingqiang/go-orm-helper/commits/v1.0.0
