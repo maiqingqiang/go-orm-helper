@@ -158,7 +158,8 @@ public interface GoFrameTypes {
     );
 
     Set<GoCallableDescriptor> ALLOW_TYPES = Set.of(
-            GoTypeSpecDescriptor.of("github.com/gogf/gf/database/gdb.Model")
+            GoTypeSpecDescriptor.of("github.com/gogf/gf/database/gdb.Model"),
+            GoTypeSpecDescriptor.of("github.com/gogf/gf/database/gdb.WhereBuilder")
     );
 
     GoTypeSpecDescriptor G_META = GoTypeSpecDescriptor.of("github.com/gogf/gf/frame/g.Meta");
