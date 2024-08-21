@@ -58,6 +58,35 @@ public interface GoFrameTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).WhereOrNotIn"), 0),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).WhereOrNotNull"), -1),
 
+            // @Doc https://goframe.org/pages/viewpage.action?pageId=7301832#ORM%E6%9F%A5%E8%AF%A2Where/WhereOr/WhereNot-WhereBuilder%E5%A4%8D%E6%9D%82%E6%9D%A1%E4%BB%B6%E7%BB%84%E5%90%88
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Where"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Wheref"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereBetween"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereLike"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereIn"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereNull"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereLT"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereLTE"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereGT"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereGTE"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereNotBetween"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereNotLike"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereNotIn"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereNotNull"), -1),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOr"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrBetween"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrLike"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrIn"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrNull"), -1),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrLT"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrLTE"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrGT"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrGTE"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrNotBetween"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrNotLike"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrNotIn"), 0),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOrNotNull"), -1),
+
             // @Doc https://goframe.org/pages/viewpage.action?pageId=7301838
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).All"), -1),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).One"), -1),
@@ -121,11 +150,15 @@ public interface GoFrameTypes {
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindValue"), Types.OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindCount"), Types.OPERATOR_EXPR),
             Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).FindScan"), Types.OPERATOR_EXPR),
-            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Having"), Types.OPERATOR_EXPR)
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.Model).Having"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Where"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).Wheref"), Types.OPERATOR_EXPR),
+            Map.entry(GoMethodDescriptor.of("(*github.com/gogf/gf/database/gdb.WhereBuilder).WhereOr"), Types.OPERATOR_EXPR)
     );
 
     Set<GoCallableDescriptor> ALLOW_TYPES = Set.of(
-            GoTypeSpecDescriptor.of("github.com/gogf/gf/database/gdb.Model")
+            GoTypeSpecDescriptor.of("github.com/gogf/gf/database/gdb.Model"),
+            GoTypeSpecDescriptor.of("github.com/gogf/gf/database/gdb.WhereBuilder")
     );
 
     GoTypeSpecDescriptor G_META = GoTypeSpecDescriptor.of("github.com/gogf/gf/frame/g.Meta");
