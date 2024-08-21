@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+## [1.2.9] - 2024-08-22
+
+### Fixed
+
+- Fixed unsigned data type 
+- Supoort goframe WhereBuilder
+
+### Changed
+
+- upgrade libraries
+
 ## [1.2.8] - 2023-12-29
 
 ### Fixed
