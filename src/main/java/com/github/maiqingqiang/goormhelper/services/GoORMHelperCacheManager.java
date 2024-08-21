@@ -115,7 +115,7 @@ public final class GoORMHelperCacheManager implements PersistentStateComponent<G
             if (!fileOrDir.isDirectory()) {
                 ScannedPath scanned = state.scannedPathMapping.get(fileOrDir.getUrl());
                 if (scanned == null || scanned.getLastModified() != fileOrDir.getTimeStamp()) {
-                    parseGoFile(fileOrDir);
+                    fileOrDir.refresh(true, true, () -> parseGoFile(fileOrDir));
                 }
             }
             return true;
