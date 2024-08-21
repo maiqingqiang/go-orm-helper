@@ -49,3 +49,17 @@ func test5() {
 	query = query.Where("id = ?", "")
 	return
 }
+
+func test6() {
+	model := g.Model(&User{})
+	condition := model.Builder()
+	condition = condition.Where("id IN ?", g.Slice{1, 2, 3, 4})
+
+	// @Table(user)
+	condition = condition.WhereOr(`id IN ?`, g.Slice{1, 2, 3, 4})
+
+	condition = condition.WhereOr("user_name = ?", "zhangsan")
+
+	// @Model(User)
+	condition = condition.WhereGT("age", 11)
+}
