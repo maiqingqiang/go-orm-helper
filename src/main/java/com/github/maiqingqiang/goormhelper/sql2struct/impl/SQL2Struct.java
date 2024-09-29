@@ -164,7 +164,13 @@ public class SQL2Struct implements ISQL2Struct {
     protected String getComment(@NotNull SQLColumnDefinition definition) {
         if (definition.getComment() == null) return "";
 
-        return Strings.clearSingleQuotn(definition.getComment().toString());
+        String comment = definition.getComment().toString();
+
+        comment = Strings.clearSingleQuotn(comment);
+
+        comment = comment.replaceAll("\\R", " ");
+
+        return comment;
     }
 
 }

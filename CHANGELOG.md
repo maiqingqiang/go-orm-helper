@@ -4,6 +4,17 @@
 
 ## [Unreleased]
 
+## [1.2.10] - 2024-09-29
+
+### Fixed
+
+- Fix SQL2Struct copy and paste bug. 
+- Fix SQL2Struct comment line break bug.
+
+### Changed
+
+- Bump guava
+
 ## [1.2.9] - 2024-08-22
 
 ### Fixed
@@ -140,7 +151,8 @@
 - ORM Code Completion
 - SQL to Struct
 
-[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.9...HEAD
+[Unreleased]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.10...HEAD
+[1.2.9]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.9...v1.2.10
 [1.2.9]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.8...v1.2.9
 [1.2.8]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.7...v1.2.8
 [1.2.7]: https://github.com/maiqingqiang/go-orm-helper/compare/v1.2.6...v1.2.7
