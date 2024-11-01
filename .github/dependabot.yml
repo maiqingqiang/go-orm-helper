@@ -5,13 +5,14 @@
 
 version: 2
 updates:
-  - package-ecosystem: maven
+  - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: daily
-    ignore:
-      # ignore Maven APIs/SPIs
-      - dependency-name: org.apache.maven:*
+      interval: "daily"
+  - package-ecosystem: "gradle"
+    directory: "/gradle/"
+    schedule:
+      interval: "daily"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
